@@ -1,12 +1,15 @@
 # encoding: utf-8
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class res_partner_sequence(osv.osv):
     _name = 'res.partner.sequence'
 
     _columns = {
-        'country_id': fields.many2one('res.country', 'Country'),
+        'country_id': fields.many2one('res.country', 'Country', required=True),
         'sequence_id': fields.many2one('ir.sequence', 'Sequence', required=True)
         }
 
@@ -94,30 +97,34 @@ class res_partner(osv.osv):
     def create(self, cr, uid, vals, context={}):
         
         context.update({'active_test': False})
-        ## Check if sequence exists for specific country
-        if not 'ref' in vals or vals['ref'] == '[Auto]':
-            if 'is_company' in vals:
-                if vals['is_company'] == True:
-                    if 'country_id' in vals:
-                        partner_sequence_id = self.pool.get('res.partner.sequence').search(cr, uid,[('country_id','=',vals['country_id'])])
-                    if not(partner_sequence_id):
-                        partner_sequence_id = self.pool.get('res.partner.sequence').search(cr, uid,[('country_id','=',False)])
-                    if partner_sequence_id:
-                        sequence_ids = self.pool.get('res.partner.sequence').read(cr, uid,[partner_sequence_id[0]],['sequence_id'])
-                        if sequence_ids:
-                            while True:
-                                vals['ref'] = self.pool.get('ir.sequence').next_by_id(cr, uid, sequence_ids[0]['sequence_id'][0])
-                                if self.search(cr,uid,[('ref','=',vals['ref'])],context=context):
-                                    _logger.debug("res_partner get next id")
-                                else:
-                                    break
 
-        if not 'is_company' in vals:
-            vals['is_company'] = False
+        # Check if sequence exists for specific country, and get a new number
+        if vals.get('ref', '[Auto]') == '[Auto]':
+            if 'country_id' in vals:
+                partner_sequence_id = self.pool.get('res.partner.sequence').search(cr, uid,[('country_id','=',vals['country_id'])])
+                if partner_sequence_id:
+                    sequence_ids = self.pool.get('res.partner.sequence').read(cr, uid,[partner_sequence_id[0]],['sequence_id'])
+                    if sequence_ids:
+                        while True:
+                            vals['ref'] = self.pool.get('ir.sequence').next_by_id(cr, uid, sequence_ids[0]['sequence_id'][0])
+                            if self.search(cr,uid,[('ref','=',vals['ref'])],context=context):
+                                _logger.debug("partner get next by code res.partner code already exists in database")
+                            else:
+                                break
+        # If no number was found with the specific country approach the default sequence will be used
+        if vals.get('ref', '[Auto]') == '[Auto]':
+             while True:
+                vals['ref'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'res.partner', context=context)
+                if self.search(cr,uid,[('ref','=',vals['ref'])],context=context):
+                    _logger.debug("partner get next by code res.partner code already exists in database")
+                else:
+                    break
 
-        ## If no sequence was found or
-        if not 'ref' in vals or vals['ref'] == '[Auto]':
-            vals['ref'] = False
+        ## If no sequence was found
+        if vals.get('ref', '[Auto]') == '[Auto]':
+             raise osv.except_osv(
+                 _('Error !'),
+                 _('No partner sequence is defined'))
 
         return super(res_partner, self).create(cr, uid, vals, context)
     
