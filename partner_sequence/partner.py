@@ -17,8 +17,10 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     
     def _check_ref(self, cr, uid, ids, context=None):
-        if not(context):
-            context={}
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
         context.update({'active_test': False})
         for partner in self.browse(cr, uid, ids, context=context):
             if partner.is_company and partner.ref:
@@ -30,6 +32,11 @@ class res_partner(osv.osv):
         return True
     
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
@@ -68,6 +75,9 @@ class res_partner(osv.osv):
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
+        else:
+            context = context.copy()
+
         if isinstance(ids, (int, long)):
             ids = [ids]
         if not len(ids):
@@ -94,8 +104,12 @@ class res_partner(osv.osv):
             result.append(_name_get(mydict))
         return result
     
-    def create(self, cr, uid, vals, context={}):
-        
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+
         context.update({'active_test': False})
 
         # Check if sequence exists for specific country, and get a new number
@@ -129,7 +143,7 @@ class res_partner(osv.osv):
         return super(res_partner, self).create(cr, uid, vals, context)
     
     _columns = {
-        'ref': fields.char("Reference"),
+        'ref': fields.char("Reference", required=True),
         }
 
     _defaults = {

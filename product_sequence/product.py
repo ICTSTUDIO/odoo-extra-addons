@@ -9,8 +9,10 @@ class product_product(osv.osv):
     _inherit = "product.product"
     
     def _check_code(self, cr, uid, ids, context=None):
-        if not(context):
-            context={}
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
         context.update({'active_test': False})
         for product in self.browse(cr, uid, ids, context=context):
             if product.default_code:
@@ -24,8 +26,11 @@ class product_product(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
 
-        if not(context):
-            context={}
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+
         context.update({'active_test': False})
 
         # Check if sequence exists and assign new number to product
