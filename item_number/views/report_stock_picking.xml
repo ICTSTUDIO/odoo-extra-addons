@@ -11,6 +11,17 @@
                     <span t-field="move.item_number"/>
                 </td>
             </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[3]/thead/tr/th[1]" position="before">
+                <th>Item#</th>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[3]/tbody/tr/td[1]" position="before">
+                <t t-if="pack_operation.linked_move_operation_ids and pack_operation.linked_move_operation_ids.move_id"><td><span t-field="pack_operation.linked_move_operation_ids.move_id.item_number"/>
+                </td>
+                </t>
+                <t t-if="not pack_operation.linked_move_operation_ids and not pack_operation.linked_move_operation_ids.move_id"><td>0
+                </td>
+                </t>
+            </xpath>
         </template>
     </data>
 </openerp>
