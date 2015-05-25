@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_picking_itemnumber"
+                  inherit_id="stock.report_picking">
+            <xpath expr="//div[contains(@class, 'page')]/table[2]/thead/tr/th[1]" position="before">
+                <th>Item#</th>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[2]/tbody/tr/t/td[1]" position="before">
+                <td>
+                    <span t-field="move.item_number"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</openerp>
