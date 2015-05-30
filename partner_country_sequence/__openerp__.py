@@ -1,7 +1,7 @@
 {
-    'name': 'Partner Sequence',
+    'name': 'Partner Country Sequence',
     'version': '1.0',
-    'category': 'Custom',
+    'category': 'Sales',
     'description': """Use the standard reference field on partner for the unique partner number. Adds
     extra sequence type: Partner and a sequence with code res.partner. As default this sequence will be
     used to assign to partners. You can use the Partner Sequence forms to set different sequence for a country.
