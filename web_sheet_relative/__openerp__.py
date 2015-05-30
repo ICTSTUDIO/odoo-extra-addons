@@ -23,7 +23,7 @@
 {
     'name' : 'Sheet Width Relative',
     'version': '1.0',
-    'author' : 'André Schenkels',
+    'author' : 'ICTSTUDIO, André Schenkels',
     'category': 'Web',
     'description': 'Sheet width relative to screen size',
     'license': 'AGPL-3',
