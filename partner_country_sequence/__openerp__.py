@@ -19,13 +19,14 @@
 ##############################################################################
 {
     'name': 'Partner Country Sequence',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Sales',
     'description': """Use the standard reference field on partner for the unique partner number. Adds
     extra sequence type: Partner and a sequence with code res.partner. As default this sequence will be
     used to assign to partners. You can use the Partner Sequence forms to set different sequence for a country.
     The partner number will be added to the partner just like with the Products in ODOO.""",
     'author': 'ICTSTUDIO, André Schenkels',
+    'license': 'AGPL-3',
     'website': 'http://www.ictstudio.eu',
     'depends': [
         'base',
@@ -35,4 +36,7 @@
         'data/partner_sequence.xml',
         'security/ir.model.access.csv'
     ],
+    'external_dependencies': {
+        'python': [],
     }
+}
