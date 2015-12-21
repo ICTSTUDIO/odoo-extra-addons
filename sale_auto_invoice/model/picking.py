@@ -30,7 +30,6 @@ _logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    @api.model
     @api.returns('account.journal', lambda r: r.id)
     def _get_journal(self):
         journal_type = self._get_journal_type()
@@ -42,7 +41,6 @@ class StockPicking(models.Model):
                              journal_type,))
         return journal[0]
 
-    @api.model
     def _get_journal_type(self):
 
         if not self.move_lines:
@@ -78,10 +76,10 @@ class StockPicking(models.Model):
 
         if invoice_picking_ids:
             invoice_pickings = self.browse(invoice_picking_ids)
-            journal_id = self._get_journal()
+            journal = self._get_journal()
 
             invoices = invoice_pickings.action_invoice_create(
-                journal_id,
+                journal.id,
             )
             for invoice in invoices:
                 workflow.trg_validate(self.sudo()._uid, 'account.invoice',
