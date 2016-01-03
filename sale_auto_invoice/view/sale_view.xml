@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_order_form_inherit_autoinvoice" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.autoinvoice</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+
+                    <field name="client_order_ref" position="after">
+                        <field name="auto_invoice" attrs="{'readonly': [('shipped','=',True)]}"/>
+                    </field>
+
+                    <field name="company_id" position="after">
+                        <field name="auto_invoiced" readonly="1"/>
+                    </field>
+
+                </data>
+           </field>
+        </record>
+
+    </data>
+</openerp>

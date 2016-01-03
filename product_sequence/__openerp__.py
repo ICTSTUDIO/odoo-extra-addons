@@ -1,14 +1,15 @@
 {
-    'name': 'Partner Sequence',
+    'name': 'Product Sequence',
     'version': '1.0',
     'category': 'Custom',
-    'description': """Adding Partner Number and change name_get like product""",
+    'description': """Adding Product Sequence to the default_code field""",
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'depends': [
-        'base',        
+        'base',
+        'product',
                ],
-    'data': ['partner_view.xml',
+    'data': ['product_sequence.xml',
         ],
     
     'installable': True,

@@ -1,12 +1,34 @@
-# encoding: utf-8
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+import logging
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 class res_partner_sequence(osv.osv):
     _name = 'res.partner.sequence'
 
     _columns = {
-        'country_id': fields.many2one('res.country', 'Country'),
+        'country_id': fields.many2one('res.country', 'Country', required=True),
         'sequence_id': fields.many2one('ir.sequence', 'Sequence', required=True)
         }
 
@@ -14,8 +36,10 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     
     def _check_ref(self, cr, uid, ids, context=None):
-        if not(context):
-            context={}
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
         context.update({'active_test': False})
         for partner in self.browse(cr, uid, ids, context=context):
             if partner.is_company and partner.ref:
@@ -27,6 +51,11 @@ class res_partner(osv.osv):
         return True
     
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
@@ -65,6 +94,9 @@ class res_partner(osv.osv):
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
+        else:
+            context = context.copy()
+
         if isinstance(ids, (int, long)):
             ids = [ids]
         if not len(ids):
@@ -91,38 +123,46 @@ class res_partner(osv.osv):
             result.append(_name_get(mydict))
         return result
     
-    def create(self, cr, uid, vals, context={}):
-        
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+
         context.update({'active_test': False})
-        ## Check if sequence exists for specific country
-        if not 'ref' in vals or vals['ref'] == '[Auto]':
-            if 'is_company' in vals:
-                if vals['is_company'] == True:
-                    if 'country_id' in vals:
-                        partner_sequence_id = self.pool.get('res.partner.sequence').search(cr, uid,[('country_id','=',vals['country_id'])])
-                    if not(partner_sequence_id):
-                        partner_sequence_id = self.pool.get('res.partner.sequence').search(cr, uid,[('country_id','=',False)])
-                    if partner_sequence_id:
-                        sequence_ids = self.pool.get('res.partner.sequence').read(cr, uid,[partner_sequence_id[0]],['sequence_id'])
-                        if sequence_ids:
-                            while True:
-                                vals['ref'] = self.pool.get('ir.sequence').next_by_id(cr, uid, sequence_ids[0]['sequence_id'][0])
-                                if self.search(cr,uid,[('ref','=',vals['ref'])],context=context):
-                                    _logger.debug("res_partner get next id")
-                                else:
-                                    break
 
-        if not 'is_company' in vals:
-            vals['is_company'] = False
+        # Check if sequence exists for specific country, and get a new number
+        if vals.get('ref', '[Auto]') == '[Auto]':
+            if 'country_id' in vals:
+                partner_sequence_id = self.pool.get('res.partner.sequence').search(cr, uid,[('country_id','=',vals['country_id'])])
+                if partner_sequence_id:
+                    sequence_ids = self.pool.get('res.partner.sequence').read(cr, uid,[partner_sequence_id[0]],['sequence_id'])
+                    if sequence_ids:
+                        while True:
+                            vals['ref'] = self.pool.get('ir.sequence').next_by_id(cr, uid, sequence_ids[0]['sequence_id'][0])
+                            if self.search(cr,uid,[('ref','=',vals['ref'])],context=context):
+                                _logger.debug("partner get next by code res.partner code already exists in database")
+                            else:
+                                break
+        # If no number was found with the specific country approach the default sequence will be used
+        if vals.get('ref', '[Auto]') == '[Auto]':
+             while True:
+                vals['ref'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'res.partner', context=context)
+                if self.search(cr,uid,[('ref','=',vals['ref'])],context=context):
+                    _logger.debug("partner get next by code res.partner code already exists in database")
+                else:
+                    break
 
-        ## If no sequence was found or
-        if not 'ref' in vals or vals['ref'] == '[Auto]':
-            vals['ref'] = False
+        ## If no sequence was found
+        if vals.get('ref', '[Auto]') == '[Auto]':
+             raise osv.except_osv(
+                 _('Error !'),
+                 _('No partner sequence is defined'))
 
         return super(res_partner, self).create(cr, uid, vals, context)
     
     _columns = {
-        'ref': fields.char("Reference"),
+        'ref': fields.char("Reference", required=True),
         }
 
     _defaults = {
