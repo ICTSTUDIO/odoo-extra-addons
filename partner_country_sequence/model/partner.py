@@ -90,38 +90,6 @@ class res_partner(osv.osv):
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
-
-    def name_get(self, cr, user, ids, context=None):
-        if context is None:
-            context = {}
-        else:
-            context = context.copy()
-
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if not len(ids):
-            return []
-
-        def _name_get(d):
-            name = d.get('name', '')
-            code = d.get('ref', False)
-            city = d.get('city', '')
-            if code:
-                name = '[%s] %s' % (code, name)
-            return (d['id'], name)
-
-        result = []
-
-        for partner in self.browse(cr, user, ids, context=context):
-            mydict = {
-                          'id': partner.id,
-                          'name': partner.name,
-                          'ref': partner.ref,
-                          'city': partner.city,
-                          'type': partner.type
-                          }
-            result.append(_name_get(mydict))
-        return result
     
     def create(self, cr, uid, vals, context=None):
         if context is None:
