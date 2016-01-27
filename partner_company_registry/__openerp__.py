@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Partner Company Registry',
-    'version': '1.0',
+    'version': '8.0.1.0.0',
     'category': 'CRM',
     'description': """Partner Company Registry
     Adds a Partner Registry field to the partner object.
