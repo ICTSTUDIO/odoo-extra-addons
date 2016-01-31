@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data >
+
+        <record id="product_template_partner_rule" model="ir.rule" >
+            <field name="name">Product Template Partner Rule</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('public_categ_ids.partner_ids','in',user.partner_id.id),('public_categ_ids.partner_ids','in',user.partner_id.parent_id.id)]</field>
+        </record>
+
+</data>
+</openerp>
