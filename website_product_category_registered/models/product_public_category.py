@@ -33,3 +33,13 @@ class ProductPublicCategory(models.Model):
         column1='public_category_id',
         column2='partner_id'
     )
+    partner_count = fields.Integer(
+        compute="_compute_partner_count",
+        string="Partner Count",
+        store=True
+    )
+
+    @api.one
+    @api.depends('partner_ids')
+    def _compute_partner_count(self):
+        self.partner_count=len(self.partner_ids)

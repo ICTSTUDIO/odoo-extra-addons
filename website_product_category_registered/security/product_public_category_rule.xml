@@ -3,19 +3,15 @@
     <data>
 
         <record id="product_public_category_partner_public_rule" model="ir.rule" >
-            <field name="name">Product Public Category Partner Rule</field>
+            <field name="name">Product Public Category Public Rule</field>
             <field name="model_id" ref="model_product_public_category"/>
             <field name="global" eval="False"/>
             <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
-            <field name="domain_force">['|','|',('partner_ids','in',user.partner_id.id),('partner_ids','in',user.partner_id.parent_id.id),('partner_ids','=',False)]</field>
-        </record>
-
-        <record id="product_public_category_partner_employee_rule" model="ir.rule" >
-            <field name="name">Product Public Category Partner Rule</field>
-            <field name="model_id" ref="model_product_public_category"/>
-            <field name="global" eval="False"/>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="domain_force">['|','|',('partner_ids','in',user.partner_id.id),('partner_ids','in',user.partner_id.parent_id.id),('partner_count','=',0)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
 
 </data>
