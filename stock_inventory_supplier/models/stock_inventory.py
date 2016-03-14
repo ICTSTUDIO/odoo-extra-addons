@@ -76,12 +76,12 @@ class StockInventory(models.Model):
 
             self.env.cr.execute('''
                    SELECT sq.product_id as product_id, sum(sq.qty) as product_qty, sq.location_id as location_id,
-                   sq.lot_id as prod_lot_id, sq.package_id as package_id, sq.owner_id as partner_id, si.supplier_id as supplier_id
+                   sq.lot_id as prod_lot_id, sq.package_id as package_id, sq.owner_id as partner_id, si.name as supplier_id
                    FROM stock_quant as sq
                    INNER JOIN product_product as pp on pp.id =  sq.product_id
-                   INNER JOIN product_supplierinfo as si on pp.product_tmpl_id = si.name
+                   INNER JOIN product_supplierinfo as si on pp.product_tmpl_id = si.product_tmpl_id
                    WHERE''' + domain + '''
-                   GROUP BY sq.product_id, sq.location_id, sq.lot_id, sq.package_id, sq.owner_id, si.supplier_id
+                   GROUP BY sq.product_id, sq.location_id, sq.lot_id, sq.package_id, sq.owner_id, si.name
                 ''', args)
             vals = []
             for product_line in self.env.cr.dictfetchall():
