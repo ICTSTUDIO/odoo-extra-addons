@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="product_form_view_procurement_button" model="ir.ui.view">
+            <field name="name">product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(stock.product_open_quants)d']" position="attributes">-->
+                    <attribute name="invisible">1</attribute>-->
+                </xpath>
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button class="oe_stat_button"
+                            name="%(stock_product_location_action_location_stock)d"
+                            icon="fa-building-o"
+                            string="Stock"
+                            type="action" groups="stock.group_locations"
+                    />
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</openerp>
