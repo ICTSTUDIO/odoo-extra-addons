@@ -18,18 +18,22 @@
 #
 ##############################################################################
 {
-   'name': "Stock Interface Locations",
-    'version': '1.0',
-    'depends': ['stock'],
+    'name': "Stock Interface Locations",
+    'version': '8.0.0.0.2',
     'author': "ICTSTUDIO | André Schenkels",
     'website': "http://www.ictstudio.eu",
     'category': 'Warehouse Management',
-    'description': 
-    """
+    'description': """
     Stock interface Locations
     """,
+    'depends': [
+        'stock',
+        'product_labels_picking'
+    ],
     'data': [
         'view/stock.xml',
     ],
-    'qweb': ['static/src/xml/picking_improvements.xml'],
+    'qweb': [
+        'static/src/xml/picking_improvements.xml'
+    ],
 }

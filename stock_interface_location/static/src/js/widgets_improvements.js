@@ -162,6 +162,7 @@ function openerp_picking_widgets(instance){
             this.check_content_screen();
             this.$('.js_pick_done').click(function(){ self.getParent().done(); });
             this.$('.js_pick_print').click(function(){ self.getParent().print_picking(); });
+            this.$('.js_pick_print_labels').click(function(){ self.getParent().print_picking_labels(); });
             this.$('.oe_pick_app_header').text(self.get_header());
             this.$('.oe_pick_app_header_source').text(self.get_header_source());
             this.$('.oe_pick_app_header_destination').text(self.get_header_destination());
@@ -1022,6 +1023,14 @@ function openerp_picking_widgets(instance){
                             return self.do_action(action);
                         });
                 });
+        },
+        print_picking_labels: function(){
+            var self = this;
+            return new instance.web.Model('stock.picking').call('print_labels',[[self.picking.id]])
+                .then(function(action){
+                    return self.do_action(action);
+                });
+
         },
         picking_next: function(){
             for(var i = 0; i < this.pickings.length; i++){

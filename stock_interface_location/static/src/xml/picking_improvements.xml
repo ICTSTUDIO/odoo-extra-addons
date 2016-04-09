@@ -93,6 +93,7 @@
 
                     <button type="button" class='btn btn-default js_pick_done'> Create backorder </button>
                     <button type="button" class='btn btn-default js_pick_print'> Print </button>
+                        <button type="button" class='btn btn-default js_pick_print_labels'> Labels </button>
 
                     </div>
                 </div>

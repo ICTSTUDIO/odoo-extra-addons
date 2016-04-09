@@ -43,4 +43,3 @@ class StockPackOperation(models.Model):
             self.product_location += self.product_id.loc_row
         if self.product_id.loc_case:
             self.product_location += self.product_id.loc_case
-

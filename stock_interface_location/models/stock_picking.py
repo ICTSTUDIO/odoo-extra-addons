@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+﻿# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
@@ -17,5 +17,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import stock_pack_operations
-from . import stock_picking
+
+import logging
+
+from openerp import models, fields, api, _
+
+_logger = logging.getLogger(__name__)
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    @api.multi
+    def print_labels(self):
+        label = self.env['product.product.label']
+        records = label.create({})
+        # Get the products from the picking requiring labels
+        records.label_lines = records.with_context(
+                {'active_model': 'stock.picking', 'active_ids': [self.id]}
+        ).lines_get()
+        return self.env['report'].get_action(
+                records,
+                'product_labels.product_product_label'
+        )
