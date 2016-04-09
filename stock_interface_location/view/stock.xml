@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend_improvements" name="stock assets" inherit_id="stock.assets_backend">
+            <script src="/stock/static/src/js/widgets.js" position="replace">
+                <script type="text/javascript" src="/stock_interface_location/static/src/js/widgets_improvements.js"></script>
+            </script>
+        </template>
+
+    </data>
+</openerp>
