@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="product_product_label_view_form" model="ir.ui.view">
+            <field name="name">product.product.label.view.form</field>
+            <field name="model">product.product.label</field>
+            <field name="arch" type="xml">
+                <form string="Product Labels">
+                    <group col="4" string="Label">
+                        <field name="label_lines">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Print" name="print_labels" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_product_label_view_action" model="ir.actions.act_window">
+            <field name="name">Product Labels</field>
+            <field name="res_model">product.product.label</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_product_label_view_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="product_product_action_product_product_label" model="ir.values">
+            <field name="model_id" ref="product.model_product_product" />
+            <field name="name">Product Labels</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('product_product_label_view_action'))" />
+            <field name="key">action</field>
+            <field name="model">product.product</field>
+        </record>
+
+    </data>
+</openerp>

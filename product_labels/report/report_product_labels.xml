@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <report
+			id="product.report_product_label"
+			string="Product Label"
+			model="product.product"
+			report_type="qweb-pdf"
+			file="product_label"
+			name="product_labels.product_label"
+		/>
+
+
+		<template id="product_label">
+            <!-- Multicompany -->
+            <t t-if="o and 'company_id' in o">
+-				<t t-set="company" t-value="o.company_id"/>
+-			</t>
+-			 <t t-if="not o or not 'company_id' in o">
+-				<t t-set="company" t-value="res_company"/>
+-			</t>
+
+		    <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="product">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <table style="width: 100%; border: 1px solid black; text-align: center;">
+
+                                <tr style="border: 1px solid black;">
+                                        <td colspan="2">
+                                            <h4><span t-field="product.name"/></h4>
+                                        </td>
+                                </tr>
+                                <tr style="border: 1px solid black;">
+                                    <td colspan="2">
+                                        <h4><span>Code: </span><span t-field="product.default_code" /></h4>
+                                    </td>
+                                </tr>
+                                <tr style="border: 1px solid black;">
+                                    <td colspan="2">
+                                        <span t-if="product.ean13">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', product.ean13, 600, 100)" style="margin-top: 5px; width:270px; height:50px"/>
+                                            <h5><span t-esc="product.ean13" /></h5>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                 </t>
+		    </t>
+		</template>
+
+	</data>
+</openerp>
