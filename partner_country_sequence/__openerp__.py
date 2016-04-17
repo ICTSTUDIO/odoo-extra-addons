@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Partner Country Sequence',
-    'version': '1.1',
+    'version': '8.0.0.0.2',
     'category': 'Sales',
     'description': """Use the standard reference field on partner for the unique partner number. Adds
     extra sequence type: Partner and a sequence with code res.partner. As default this sequence will be

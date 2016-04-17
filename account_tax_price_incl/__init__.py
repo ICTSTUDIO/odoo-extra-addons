@@ -17,20 +17,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Partner Company Registry',
-    'version': '8.0.1.0.0',
-    'category': 'CRM',
-    'description': """Partner Company Registry
-    Adds a Partner Registry field to the partner object.
-    """,
-    'author': 'ICTSTUDIO, André Schenkels',
-    'license': 'AGPL-3',
-    'website': 'http://www.ictstudio.eu',
-    'depends': [
-        'base',
-    ],
-    'data': [
-        'view/partner_view.xml',
-    ],
-}
+from . import model

@@ -18,19 +18,18 @@
 #
 ##############################################################################
 {
-    'name': 'Partner Company Registry',
-    'version': '8.0.1.0.0',
-    'category': 'CRM',
-    'description': """Partner Company Registry
-    Adds a Partner Registry field to the partner object.
+    'name': 'Account Tax Price Included',
+    'version': '1.0',
+    'category': 'Account & Finance',
+    'description': """Fix Tax Included Price to different Tax Included price calculation
     """,
     'author': 'ICTSTUDIO, André Schenkels',
     'license': 'AGPL-3',
     'website': 'http://www.ictstudio.eu',
     'depends': [
         'base',
+        'account',
     ],
     'data': [
-        'view/partner_view.xml',
     ],
 }

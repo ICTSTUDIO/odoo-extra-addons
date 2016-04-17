@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -17,20 +17,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
-    'name': 'Partner Company Registry',
+    'name': 'Stock Inventory for specific product brand',
     'version': '8.0.1.0.0',
-    'category': 'CRM',
-    'description': """Partner Company Registry
-    Adds a Partner Registry field to the partner object.
-    """,
-    'author': 'ICTSTUDIO, André Schenkels',
-    'license': 'AGPL-3',
     'website': 'http://www.ictstudio.eu',
+    'category': 'Product',
+    'summary': 'Provide Stock inventory for one specific brand',
+    'description': """
+Stock Inventory Product Brand
+=============================
+- On the stock inventory form make the brand selectable
+""",
+    'author': 'ICTSTUDIO, André Schenkels',
     'depends': [
-        'base',
+        'stock',
+        'product_brand'
     ],
     'data': [
-        'view/partner_view.xml',
+        'views/stock_inventory.xml',
     ],
 }
+

@@ -18,19 +18,17 @@
 #
 ##############################################################################
 {
-    'name': 'Partner Company Registry',
+    'name': 'Website Price Registered',
+    'category': 'Website',
+    'summary': 'Remove Price and Cart from eCommerce if not registered',
     'version': '8.0.1.0.0',
-    'category': 'CRM',
-    'description': """Partner Company Registry
-    Adds a Partner Registry field to the partner object.
-    """,
     'author': 'ICTSTUDIO, André Schenkels',
     'license': 'AGPL-3',
     'website': 'http://www.ictstudio.eu',
     'depends': [
-        'base',
+        'website_sale'
     ],
     'data': [
-        'view/partner_view.xml',
-    ],
+        'views/website_sale_registered.xml',
+    ]
 }

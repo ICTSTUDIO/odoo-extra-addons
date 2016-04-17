@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <template id="products_price_registered_shop" inherit_id="website_sale.products_item">
+        <xpath expr="//div[@class='product_price']" position="attributes">
+            <attribute name="t-if">product.product_variant_ids and website.user_id != user_id</attribute>
+        </xpath>
+    </template>
+
+    <template id="products_price_registered_product" inherit_id="website_sale.product">
+        <xpath expr="//div[@class='js_product']" position="attributes">
+            <attribute name="t-if">website.user_id != user_id</attribute>
+        </xpath>
+    </template>
+
+</data>
+</openerp>
