@@ -33,8 +33,8 @@ class ProductBarcode(models.Model):
     name = fields.Char(string="Barcode")
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
-        required=True)
+        string="Product"
+    )
 
     @api.one
     @api.constrains('name')
@@ -51,48 +51,3 @@ class ProductBarcode(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'Barcode needs to be unique'),
     ]
-
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    @api.one
-    @api.depends('barcode_ids.name')
-    def _get_barcodes(self):
-        barcode_list=[]
-        for barcode in self.barcode_ids:
-            barcode_list.append(barcode.name)
-
-        self.ean13=str(barcode_list)
-
-    barcode_ids = fields.One2many(
-        comodel_name="product.barcode",
-        inverse_name="product_id",
-        string='Barcodes'
-    )
-    ean13 = fields.Char(
-            compute="_get_barcodes",
-            string="Barcodes",
-            size=200,
-            readonly=True,
-            store=True
-    )
-
-    @api.one
-    @api.depends('barcode_ids.name')
-    def _get_barcodes(self):
-        barcode_list=''
-        for barcode in self.barcode_ids:
-            if not barcode_list:
-                barcode_list = barcode.name
-            else:
-                barcode_list += ', ' + barcode.name
-
-        self.ean13=str(barcode_list)
-
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
-
-    barcode_ids = fields.One2many(
-        related='product_variant_ids.barcode_ids',
-        string='Barcodes'
-    )

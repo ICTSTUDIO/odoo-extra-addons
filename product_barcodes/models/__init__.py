@@ -19,22 +19,8 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Product Barcodes',
-    'version': '8.0.0.0.2',
-    'category': 'BBA',
-    'author': 'ERP|OPEN | André Schenkels',
-    'website': 'http://www.erpopen.nl',
-    'license': 'AGPL-3',
-    'summary': 'Barcodes on Products',
-    'depends': [
-        'base',
-        'product',
-        ],
-    'data': [
-        'views/product_product.xml',
-        'views/product_template.xml',
-        'security/ir.model.access.csv'
-        ],
-}
 
+from . import product_barcode
+from . import product_v7
+from . import product_product
+from . import product_template

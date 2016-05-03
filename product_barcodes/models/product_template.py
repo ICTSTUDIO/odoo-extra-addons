@@ -20,5 +20,17 @@
 #
 ##############################################################################
 
-from . import product_v7
-from . import product
+import logging
+from openerp import models, fields, api, _
+from openerp.exceptions import ValidationError
+
+_logger = logging.getLogger(__name__)
+
+
+class ProductTemplate(models.Model):
+    _inherit = "product.template"
+
+    barcode_ids = fields.One2many(
+        related='product_variant_ids.barcode_ids',
+        string='Barcodes'
+    )

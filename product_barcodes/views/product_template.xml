@@ -1,0 +1,39 @@
+<openerp>
+    <data>
+
+        <record id="product_template_only_form_view_inh" model="ir.ui.view">
+            <field name="name">product.template.product.form.inh</field>
+            <field name="model">product.template</field>
+            <field name="priority" eval="900" />
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_code']" position="after">
+
+                    <field name="barcode_ids">
+                        <form string="Barcode">
+                            <field name="name"/>
+                        </form>
+                        <tree string="Barcode">
+                            <field name="name"/>
+                        </tree>
+                    </field>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_search_form_view" model="ir.ui.view">
+            <field name="name">product.template.search.product.barcode</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view" />
+            <field eval="900" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="filter_domain">['|','|',('default_code','ilike',self),('name','ilike',self),('ean13','ilike',self)]</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>
