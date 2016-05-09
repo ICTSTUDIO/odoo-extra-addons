@@ -17,26 +17,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Partner Country Sequence',
-    'version': '8.0.0.1.2',
-    'category': 'Sales',
-    'description': """Use the standard reference field on partner for the unique partner number. Adds
-    extra sequence type: Partner and a sequence with code res.partner. As default this sequence will be
-    used to assign to partners. You can use the Partner Sequence forms to set different sequence for a country.
-    The partner number will be added to the partner just like with the Products in ODOO.""",
-    'author': 'ICTSTUDIO, André Schenkels',
-    'license': 'AGPL-3',
-    'website': 'http://www.ictstudio.eu',
-    'depends': [
-        'base',
-    ],
-    'data': [
-        'view/partner_view.xml',
-        'data/partner_sequence.xml',
-        'security/ir.model.access.csv'
-    ],
-    'external_dependencies': {
-        'python': [],
-    }
-}
+
+import logging
+from openerp import models, fields, api, _
+from openerp.osv.expression import get_unaccent_wrapper
+
+_logger = logging.getLogger(__name__)
+
+class ResPartnerSequence(models.Model):
+    _name = 'res.partner.sequence'
+
+    country_id = fields.Many2one(
+            comodel_name='res.country',
+            string='Country',
+            required=True
+    )
+    sequence_id = fields.Many2one(
+            comodel_name='ir.sequence',
+            string='Sequence',
+            required=True
+    )

@@ -17,4 +17,5 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import partner
+from . import res_partner
+from . import res_partner_sequence
