@@ -20,7 +20,7 @@
 
 {
     'name': 'Product Stock Location Qty',
-    'version': '8.0.1.0.1',
+    'version': '8.0.1.0.2',
     'website': 'http://www.ictstudio.eu',
     'category': 'Product',
     'summary': 'Show Product Qty On Stock for Location',

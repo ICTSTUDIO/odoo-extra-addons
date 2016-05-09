@@ -38,7 +38,10 @@
                         <field name="min_qty"/>
                         <field name="qty_multiple"/>
                         <field name="qty_on_hand"  sum="Qty On Hand"/>
-                        <field name="qty_processing"  sum="Qty Processing"/>
+                        <field name="qty_internal"  sum="Internal"/>
+                        <field name="qty_outgoing"  sum="Outgoing"/>
+                        <field name="qty_incoming"  sum="Incoming"/>
+                        <field name="qty_manual"  sum="Qty Manual" invisible="1"/>
                         <field name="qty_backorder"  sum="Qty Backorder"/>
                     </group>
                 </form>
@@ -52,12 +55,15 @@
                 <tree string="Location Product Stock" >
                     <field name="location_id"/>
                     <field name="categ_id" invisible="1"/>
-                    <field name="product_id" invisible="1"/>
+                    <field name="product_id"/>
                     <field name="uom_id" invisible="1"/>
                     <field name="min_qty"/>
                     <field name="qty_multiple"/>
                     <field name="qty_on_hand"  sum="Qty On Hand"/>
-                    <field name="qty_processing"  sum="Qty Processing"/>
+                    <field name="qty_internal"  sum="Internal" invisible="1"/>
+                    <field name="qty_outgoing"  sum="Outgoing"/>
+                    <field name="qty_incoming"  sum="Incoming"/>
+                    <field name="qty_manual"  sum="Qty Manual" invisible="1"/>
                     <field name="qty_backorder"  sum="Qty Backorder"/>
                     <button  type="action" icon="terp-check"
                              name="%(stock_product_location_action_location_stock_moves)d"
@@ -89,19 +95,6 @@
             <field name="view_id" ref="stock_product_location_view_tree"/>
             <field name="search_view_id" ref="stock_product_location_view_search"/>
         </record>
-
-        <!--<record id="stock_product_location_action_tree" model="ir.actions.act_window.view" >-->
-            <!--<field name="sequence" eval="1"/>-->
-            <!--<field name="view_mode">tree</field>-->
-            <!--<field name="view_id" ref="stock_product_location_view_tree"/>-->
-            <!--<field name="act_window_id" ref="stock_product_location_action"/>-->
-        <!--</record>-->
-        <!--<record id="stock_product_location_action_form" model="ir.actions.act_window.view" >-->
-            <!--<field name="sequence" eval="2"/>-->
-            <!--<field name="view_mode">form</field>-->
-            <!--<field name="view_id" ref="stock_product_location_view_form"/>-->
-            <!--<field name="act_window_id" ref="stock_product_location_action"/>-->
-        <!--</record>-->
 
   </data>
 </openerp>

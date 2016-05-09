@@ -83,8 +83,23 @@ class StockProductLocation(models.Model):
             digits=(16,2),
             readonly=True
     )
-    qty_processing = fields.Float(
-            string='Quantity Processing',
+    qty_internal = fields.Float(
+            string='Quantity Internal',
+            digits=(16,2),
+            readonly=True
+    )
+    qty_outgoing = fields.Float(
+            string='Quantity Outgoing',
+            digits=(16,2),
+            readonly=True
+    )
+    qty_incoming = fields.Float(
+            string='Quantity Incoming',
+            digits=(16,2),
+            readonly=True
+    )
+    qty_manual = fields.Float(
+            string='Quantity Manual',
             digits=(16,2),
             readonly=True
     )
@@ -104,16 +119,18 @@ class StockProductLocation(models.Model):
             readonly=True
     )
 
-
     def _select(self):
         select_str = """select min(sml.id) as id , sml.location_id, sml.product_id,
        sum(sml.qty_on_hand) as qty_on_hand,
-       sum(sml.qty_processing) as qty_processing,
-       sum(sml.qty_backorder) as qty_backorder,
+       sum(sml.qty_internal) as qty_internal,
+       sum(sml.qty_outgoing) as qty_outgoing,
+       sum(sml.qty_incoming) as qty_incoming,
+       sum(sml.qty_manual) as qty_manual,
+       CASE WHEN (sum(sml.qty_on_hand)+sum(sml.qty_outgoing)) < 0 THEN sum(sml.qty_on_hand)+sum(sml.qty_outgoing) ELSE 0 END as qty_backorder,
        sml.company_id,
        CASE WHEN swo.product_min_qty is null THEN 0 ELSE swo.product_min_qty END as min_qty,
        CASE WHEN swo.qty_multiple is null THEN 0 ELSE swo.qty_multiple END as qty_multiple,
-       sml.complete_name as location_name
+       sml.location_name as location_name
        """
         return select_str
 
@@ -125,7 +142,7 @@ class StockProductLocation(models.Model):
 
 
     def _group_by(self):
-        groupby_str = """group by sml.complete_name,sml.location_id,sml.product_id,sml.company_id,swo.product_min_qty,swo.qty_multiple"""
+        groupby_str = """group by sml.location_name,sml.location_id,sml.product_id,sml.company_id,swo.product_min_qty,swo.qty_multiple"""
         return groupby_str
 
     def init(self, cr):

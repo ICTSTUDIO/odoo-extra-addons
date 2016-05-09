@@ -2,23 +2,6 @@
 <openerp>
     <data>
 
-        <record id="view_template_property_form" model="ir.ui.view">
-            <field name="name">ProductTemplateFormView</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="stock.view_template_property_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='loc_rack']" position="attributes">
-                    <attribute name="string">Location</attribute>
-                </xpath>
-                <xpath expr="//field[@name='loc_row']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="//field[@name='loc_case']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="product_template_form_view_procurement_button">
             <field name="name">product.template_procurement</field>
             <field name="model">product.template</field>
