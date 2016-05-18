@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_product_marker_public","product_marker_public","model_product_marker",,1,0,0,0
+"access_product_marker_user","product_marker_user","model_product_marker","base.group_user",1,1,1,0
+"access_product_marker_product_marker_manager","product_marker_product_marker_manager","model_product_marker","group_product_marker_manager",1,1,1,1
