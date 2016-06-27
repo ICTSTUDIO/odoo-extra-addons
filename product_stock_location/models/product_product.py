@@ -42,8 +42,8 @@ class ProductProduct(models.Model):
 
     @api.model
     def _get_default_warehouse(self):
-        if 'default_operating_unit_id' in self.env.user.fields:
-            warehouse_id = self.env.user.default_operating_unit_id.warehouse_id.id
+        if 'default_operating_unit_id' in self.env.user._fields:
+            warehouse_id = self.env.user.default_operating_unit_id.sale_warehouse.id
         else:
             warehouse = self.env['stock.warehouse'].search([])[0]
             warehouse_id = warehouse.id
@@ -51,15 +51,14 @@ class ProductProduct(models.Model):
 
     @api.one
     def _get_product_location(self):
+        warehouse_id = False
         if self.env.context.get('warehouse'):
             warehouse_id = self.env.context.get('warehouse')
         if self.env.context.get('warehouse_id'):
             warehouse_id = self.env.context.get('warehouse_id')
 
         if not warehouse_id:
-            warehouse = self._get_default_warehouse
-            if warehouse:
-                warehouse_id = warehouse.id
+            warehouse_id = self._get_default_warehouse()
 
         if warehouse_id:
             warehouse_location = self.env['product.stock.location'].search(
