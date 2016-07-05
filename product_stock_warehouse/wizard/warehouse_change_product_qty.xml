@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="warehouse_change_product_qty_view" model="ir.ui.view">
+            <field name="name">warehouse.change.product.qty.view</field>
+            <field name="model">warehouse.change.product.qty</field>
+            <field name="arch" type="xml">
+                <form string="Update Product Quantity Available">
+                    <group>
+                        <field name="product_id" invisible="1"/>
+                        <field name="location_id" invisible="1"/>
+                        <field name="new_quantity"/>
+                    </group>
+                    <footer>
+                        <button name="set_quantity" string="_Apply" type="object" class="oe_highlight"/>
+                        or
+                        <button string="_Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

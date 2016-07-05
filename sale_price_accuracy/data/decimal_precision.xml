@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record forcecreate="True" id="decimal_sale_price" model="decimal.precision">
+            <field name="name">Product Sale Price</field>
+            <field name="digits">2</field>
+        </record>
+
+    </data>
+</openerp>

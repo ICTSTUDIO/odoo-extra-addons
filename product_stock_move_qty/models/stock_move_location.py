@@ -48,9 +48,8 @@ class StockMoveLocation(models.Model):
             readonly=True
     )
     location_name = fields.Char(
-            string='Location',
-            readonly=True,
-            store=True
+            string='Location Full Name',
+            readonly=True
     )
     product_id = fields.Many2one(
             comodel_name='product.product',
@@ -68,7 +67,7 @@ class StockMoveLocation(models.Model):
             string='Category',
             readonly=True
     )
-    uom_id = fields.Many2one (
+    uom_id = fields.Many2one(
             related='product_id.uom_id',
             comodel_name="product.uom",
             string="UoM",
@@ -98,37 +97,58 @@ class StockMoveLocation(models.Model):
             digits=(16,2),
             readonly=True
     )
-    qty_processing = fields.Float(
-            string='Quantity Processing',
+    qty_incoming = fields.Float(
+            string='Incoming',
             digits=(16,2),
             readonly=True
     )
-    qty_backorder = fields.Float(
-            string='Quantity Backorder',
+    qty_outgoing = fields.Float(
+            string='Outgoing',
             digits=(16,2),
             readonly=True
     )
+    qty_internal = fields.Float(
+            string='Internal',
+            digits=(16,2),
+            readonly=True
+    )
+    qty_manual = fields.Float(
+            string='Manual',
+            digits=(16,2),
+            readonly=True
+    )
+    move_type = fields.Char(
+            string='Move Type',
+            readonly=True
+    )
+
+
 
     def _view_internal_add(self):
         view_str = """select sm.id ,
  sl.id as location_id,sm.product_id, sm.warehouse_id,
  sm.name as description,
  case when sm.state ='done' then sm.product_qty else 0 end as qty_on_hand,
- case when sm.state !='done' then sm.product_qty else 0 end as qty_processing,
- 0 as qty_backorder,
+ case when sm.state != 'done' and spt.code = 'internal' then sm.product_qty else 0 end as qty_internal,
+ case when sm.state != 'done' and spt.code = 'incoming' then sm.product_qty else 0 end as qty_incoming,
+ case when sm.state != 'done' and spt.code = 'outgoing' then sm.product_qty else 0 end as qty_outgoing,
+ case when sm.state != 'done' and sm.picking_type_id = NULL then sm.product_qty else 0 end as qty_manual,
  sm.date,
  sm.picking_id,sl.company_id,
- sl.complete_name as location_name
+ sl.complete_name as location_name,
+ spt.code as move_type
 from
      stock_move sm
      left join stock_location sl ON
         sm.location_dest_id = sl.id
-left join stock_picking sp ON
-    sp.id = sm.picking_id
+    left join stock_picking sp ON
+        sp.id = sm.picking_id
+    left join stock_picking_type spt ON
+        sm.picking_type_id = spt.id
 where sl.usage='internal'
   and sm.state != 'cancel'
   and sm.company_id = sl.company_id
-  and sp.backorder_id is null"""
+  """
         return view_str
 
     def _view_internal_deduct(self):
@@ -136,65 +156,26 @@ where sl.usage='internal'
 sl.id as location_id ,sm.product_id, sm.warehouse_id,
  sm.name as description,
  case when sm.state ='done' then -sm.product_qty else 0 end as qty_on_hand,
- case when sm.state !='done' then -sm.product_qty else 0 end as qty_processing,
- 0 as qty_backorder,
+ case when sm.state != 'done' and spt.code = 'internal' then -sm.product_qty else 0 end as qty_internal,
+ case when sm.state != 'done' and spt.code = 'incoming' then -sm.product_qty else 0 end as qty_incoming,
+ case when sm.state != 'done' and spt.code = 'outgoing' then -sm.product_qty else 0 end as qty_outgoing,
+ case when sm.state != 'done' and sm.picking_type_id = NULL then -sm.product_qty else 0 end as qty_manual,
  sm.date,
  sm.picking_id,sl.company_id,
- sl.complete_name as location_name
+ sl.complete_name as location_name,
+ spt.code as move_type
 from
      stock_move sm
      left join stock_location sl ON
      sm.location_id = sl.id
+     left join stock_picking_type spt ON
+     sm.picking_type_id = spt.id
 left join stock_picking sp ON
     sp.id = sm.picking_id
 where sl.usage='internal'
   and sm.state != 'cancel'
   and sm.company_id = sl.company_id
-  and sp.backorder_id is null"""
-        return view_str
-
-    def _view_backorder_add(self):
-        view_str = """select sm.id ,
- sl.id as location_id,sm.product_id, sm.warehouse_id,
- sm.name as description,
- 0 as qty_on_hand,
- 0 as qty_processing,
- sm.product_qty as qty_backorder,
- sm.date,
- sm.picking_id,sl.company_id,
- sl.complete_name as location_name
-from
-     stock_move sm
-     left join stock_location sl ON
-     sm.location_dest_id = sl.id
-left join stock_picking sp ON
-    sp.id = sm.picking_id
-where sl.usage='internal'
-  and sm.state not in ('cancel','done')
-  and sm.company_id = sl.company_id
-  and sp.backorder_id is not null"""
-        return view_str
-
-    def _view_backorder_deduct(self):
-        view_str = """select -sm.id ,
-sl.id as location_id ,sm.product_id, sm.warehouse_id,
- sm.name as description,
- 0 as qty_on_hand,
- 0 as qty_processing,
- -sm.product_qty as qty_backorder,
- sm.date,
- sm.picking_id,sl.company_id,
- sl.complete_name as location_name
-from
-     stock_move sm
-     left join stock_location sl ON
-     sm.location_id = sl.id
-left join stock_picking sp ON
-    sp.id = sm.picking_id
-where sl.usage='internal'
-  and sm.state not in ('cancel','done')
-  and sm.company_id = sl.company_id
-  and sp.backorder_id is not null"""
+  """
         return view_str
 
     def init(self, cr):
@@ -203,14 +184,8 @@ where sl.usage='internal'
             %s
             union all
             %s
-            union all
-            %s
-            union all
-            %s
             )""" % (self._table,
                     self._view_internal_add(),
-                    self._view_internal_deduct(),
-                    self._view_backorder_add(),
-                    self._view_backorder_deduct(),
+                    self._view_internal_deduct()
                     )
         cr.execute(sql)

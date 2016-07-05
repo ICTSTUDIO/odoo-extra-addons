@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Product Stock Move Qty',
-    'version': '8.0.1.0.1',
+    'version': '8.0.1.1.3',
     'website': 'http://www.ictstudio.eu',
     'category': 'Product',
     'summary': 'Show Product Stock Moves Qty for Location/Warehouse',

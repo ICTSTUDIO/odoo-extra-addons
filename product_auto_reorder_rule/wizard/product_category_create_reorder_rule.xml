@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data>
+        <record id="product_category_create_reorder_rule_view_wizard" model="ir.ui.view">
+            <field name="name">product.category.create.reorder.rule</field>
+            <field name="model">product.category.create.reorder.rule</field>
+            <field name="arch" type="xml">
+                <form string="Create Reorder Rule for Selected Product Categories">
+                    <group>
+                        <field name="overwrite"/>
+                        <field name="min_qty"/>
+                        <field name="max_qty"/>
+                        <field name="qty_multiple"/>
+                    </group>
+                    <footer>
+                        <button string="Create"
+                                name="create_rules"
+                                type="object"
+                                class="oe_highlight"
+                        />
+                        or
+                        <button string="Cancel"
+                                special="cancel"
+                        />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_category_create_reorder_rule_action" model="ir.actions.act_window">
+            <field name="name">Create Reorder Rule</field>
+            <field name="res_model">product.category.create.reorder.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="product_category_create_reorder_rule_ir_value" model="ir.values">
+            <field eval="'client_action_multi'" name="key2"/>
+            <field name="model">product.category</field>
+            <field name="name">Create Reorder Rule</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('product_category_create_reorder_rule_action'))" />
+        </record>
+
+    </data>
+</openerp>

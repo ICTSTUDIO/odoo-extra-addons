@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="view_inventory_form" model="ir.ui.view">
+            <field name="name">stock.inventory.form</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lot_id']" position="after">
+                    <field name="categ_id"
+                           attrs="{'invisible': [('filter', '!=', 'category')],'required': [('filter', '=', 'category')]}"
+                           />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

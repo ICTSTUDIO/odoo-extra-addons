@@ -49,6 +49,12 @@ class StockWarehouse(models.Model):
             digits=dp.get_precision('Product Unit of Measure')
 
     )
+    product_transit = fields.Float(
+            compute="_get_product_stock",
+            string="Products in Transit",
+            digits=dp.get_precision('Product Unit of Measure')
+
+    )
     product_outgoing = fields.Float(
             compute="_get_product_stock",
             string="Outgoing Products",
@@ -74,7 +80,7 @@ class StockWarehouse(models.Model):
 
     product_qty_available = fields.Float(
             compute="_get_product_stock",
-            inverse="_set_product_stock",
+            #inverse="_set_product_stock",
             string="Qty On Hand",
             digits=dp.get_precision('Product Unit of Measure')
     )
@@ -104,7 +110,8 @@ class StockWarehouse(models.Model):
         else: 
             return False
 
-        product = self.env['product.product'].with_context(warehouse=self.id).browse(product_id)
+
+        product = self.env['product.product'].with_context(location=self.lot_stock_id.id).browse(product_id)
         self.product_qty_available = product.qty_available
         self.product_free_available = product.qty_available-product.outgoing_qty
         self.product_virtual_available = product.virtual_available
@@ -114,6 +121,15 @@ class StockWarehouse(models.Model):
             self.product_backorder = product.qty_available+product.outgoing_qty
         else:
             self.product_backorder = 0
+
+        transit_locations = self.env['stock.location'].search([('usage', '=', 'transit')])
+        self.product_transit = 0
+        for transit_location in transit_locations:
+            warehouse = transit_location.get_warehouse(transit_location)
+            if warehouse and warehouse == self.id:
+                product = self.env['product.product'].with_context(location=transit_location.id).browse(product_id)
+                self.product_transit = product.qty_available
+
         self.product_id = product_id
 
     @api.one
@@ -202,5 +218,30 @@ class StockWarehouse(models.Model):
             # 'views': [(compose_form.id, 'form')],
             # 'view_id': compose_form.id,
             'target': 'current',
+            'context': ctx,
+        }
+
+    @api.multi
+    def change_product_quantity(self):
+        """ Change Stock
+        """
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        _logger.debug("Product_id: %s", self.product_id)
+        ctx = dict(
+                warehouse_product_id=self.product_id,
+                warehouse_location_id=self.lot_stock_id.id,
+                warehouse_product_qty=self.product_qty_available or 1
+        )
+
+        return {
+            'name': _('Change Product Qty'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'warehouse.change.product.qty',
+            'src_model': 'stock.warehouse',
+            # 'views': [(compose_form.id, 'form')],
+            # 'view_id': compose_form.id,
+            'target': 'new',
             'context': ctx,
         }

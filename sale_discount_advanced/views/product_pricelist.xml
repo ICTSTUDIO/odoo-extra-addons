@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="product_pricelist_version_form_view" model="ir.ui.view">
+        <field name="name">product.pricelist.version.form</field>
+        <field name="model">product.pricelist.version</field>
+        <field name="inherit_id" ref="product.product_pricelist_version_form_view"/>
+        <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <field name="business_unit_id" widget="selection" groups="business_unit.group_multi_business_unit"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

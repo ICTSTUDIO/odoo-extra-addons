@@ -1,0 +1,69 @@
+<openerp>
+    <data>
+
+        <!--<record id="purchase_order_form" model="ir.ui.view">-->
+            <!--<field name="name">PurchaseOrderViewForm</field>-->
+            <!--<field name="model">purchase.order</field>-->
+            <!--<field name="inherit_id" ref="purchase.purchase_order_form"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<data>-->
+                    <!--<xpath expr="//field[@name='picking_type_id']" position="after">-->
+                        <!--<field name="priority" readonly="1"/>-->
+                    <!--</xpath>-->
+                    <!--<xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="before">-->
+                        <!--<field name="priority" readonly="1"/>-->
+                        <!--<field name="product_stock_stock" readonly="1"/>-->
+                        <!--<field name="product_stock_incoming" readonly="1"/>-->
+                        <!--<field name="product_stock_outgoing" readonly="1"/>-->
+                    <!--</xpath>-->
+                    <!--<xpath expr="//field[@name='order_line']/tree" position="attributes">-->
+                        <!--<attribute name="colors">red:priority=='urgent'</attribute>-->
+                    <!--</xpath>-->
+                <!--</data>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <!--<record id="purchase_order_tree" model="ir.ui.view">-->
+            <!--<field name="name">PurchaseOrderViewTree</field>-->
+            <!--<field name="model">purchase.order</field>-->
+            <!--<field name="inherit_id" ref="purchase.purchase_order_tree"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<data>-->
+                    <!--<xpath expr="//field[@name='state']" position="before">-->
+                        <!--<field name="priority" readonly="1"/>-->
+                    <!--</xpath>-->
+                    <!--<xpath expr="//tree" position="attributes">-->
+                        <!--<attribute name="colors">red:priority=='urgent';grey:state=='done'</attribute>-->
+                    <!--</xpath>-->
+                <!--</data>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <!--<record id="view_request_for_quotation_filter" model="ir.ui.view">-->
+            <!--<field name="name">request.quotation.select</field>-->
+            <!--<field name="model">purchase.order</field>-->
+            <!--<field name="inherit_id" ref="purchase.view_request_for_quotation_filter"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<data>-->
+                    <!--<xpath expr="//filter[@name='exception']" position="after">-->
+                        <!--<filter name="highpriority" string="High Priority" domain="[('priority','in',('high','urgent'))]"/>-->
+                    <!--</xpath>-->
+                <!--</data>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <!--<record id="view_purchase_order_filter" model="ir.ui.view">-->
+            <!--<field name="name">purchase.order.list.select</field>-->
+            <!--<field name="model">purchase.order</field>-->
+            <!--<field name="inherit_id" ref="purchase.view_purchase_order_filter"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<data>-->
+                    <!--<xpath expr="//filter[@name='exception']" position="after">-->
+                        <!--<filter name="highpriority" string="High Priority" domain="[('priority','in',('high','urgent'))]"/>-->
+                    <!--</xpath>-->
+                <!--</data>-->
+            <!--</field>-->
+        <!--</record>-->
+
+    </data>
+</openerp>

@@ -69,7 +69,6 @@ class StockPicking(models.Model):
         return_val = super(StockPicking, self).do_transfer()
         invoice_picking_ids = []
         for rec in self:
-            _logger.debug("Stock Picking Code: %s", rec.picking_type_id.code)
             if rec.picking_type_id.code == 'outgoing' and rec.sale_id:
                 if rec.sale_id.auto_invoice and rec.sale_id.order_policy == 'picking' and rec.invoice_state == '2binvoiced':
                     invoice_picking_ids.append(rec.id)

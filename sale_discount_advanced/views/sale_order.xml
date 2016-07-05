@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">ViewOrderFormSaleDiscount</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree/field[@name='discount']" position="after">
+                    <field name="sale_discounts" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

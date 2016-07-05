@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="sale_discount_view_form" model="ir.ui.view">
+            <field name="name">SaleDiscountViewForm</field>
+            <field name="model">sale.discount</field>
+            <field name="arch" type="xml">
+                <form string="Discounts">
+                    <group>
+                        <field name="name"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="active"/>
+                        <field name="discount_base"/>
+                        <field name="product_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Rules" name="rules">
+                            <field name="rules" nolabel="1" colspan="4">
+                                <tree name="discount_rules" string="Discount Rules">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="discount_type"/>
+                                    <field name="discount" />
+                                </tree>
+                                <form name="Discount Rule">
+                                    <field name="discount_type"/>
+                                    <field name="discount" />
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Pricelists" name="pricelists">
+                            <field name="pricelists" nolabel="1" colspan="4"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="sale_discount_view_tree" model="ir.ui.view">
+            <field name="name">SaleDiscountViewTree</field>
+            <field name="model">sale.discount</field>
+            <field name="arch" type="xml">
+                <tree string="Discounts">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sale_discount_action" model="ir.actions.act_window">
+            <field name="name">Sale Discounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.discount</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="sale_discount_menu"
+                  name="Discounts"
+                  parent="base.menu_sales"
+                  action="sale_discount_action"
+        />
+
+    </data>
+</openerp>

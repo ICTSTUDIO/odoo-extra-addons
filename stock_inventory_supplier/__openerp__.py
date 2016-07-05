@@ -25,8 +25,8 @@
     'category': 'Product',
     'summary': 'Provide Stock inventory for one specific supplier',
     'description': """
-Stock Inventory Product Brand
-=============================
+Stock Inventory Supplier
+========================
 - On the stock inventory form make the supplier selectable
 """,
     'author': 'ICTSTUDIO, André Schenkels',

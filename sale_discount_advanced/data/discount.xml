@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="discount_product" model="product.product">
+            <field name="name">Discount</field>
+            <field name="type">service</field>
+        </record>
+        
+        <!-- discount pricelist -->
+        <record id="list0" model="product.pricelist">
+            <field name="name">Discount Pricelist</field>
+            <field name="type">sale</field>
+        </record>
+        <record id="ver0" model="product.pricelist.version">
+            <field name="pricelist_id" ref="list0"/>
+            <field name="name">Default Discount Pricelist Version</field>
+        </record>
+        <record id="item0" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver0"/>
+            <field name="base" ref="product.list_price"/>
+            <field name="sequence">1000</field>
+            <field name="name">Default Discount Pricelist Line</field>
+        </record>
+
+        <!-- discount  -->
+        <record id="discount1" model="sale.order.line.discount">
+            <field name="name">Demo discount</field>
+            <field name="start_date">1970-01-01</field>
+            <field name="discount_active">1</field>
+            <field name="product_id" ref="discount_product"/>
+            <field name="base">order_amount</field>
+            <field name="pricelists" eval="[(6,0,[ref('list0')])]"/>
+        </record>
+        <record id="discount1_line1" model="sale.order.line.discount.line">
+            <field name="discount_id" ref="discount1"/>
+            <field name="max_base">1000000</field>
+            <field name="sequence">10</field>
+            <field name="discount_type">rel</field>
+            <field name="amount">5</field>
+        </record>
+        <record id="discount1_line2" model="sale.order.line.discount.line">
+            <field name="discount_id" ref="discount1"/>
+            <field name="sequence">20</field>
+            <field name="discount_type">abs</field>
+            <field name="amount">50000</field>
+        </record>
+
+        
+        
+    </data>
+</openerp>

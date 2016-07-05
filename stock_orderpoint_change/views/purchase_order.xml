@@ -1,0 +1,61 @@
+<openerp>
+    <data>
+
+        <record id="purchase_order_form" model="ir.ui.view">
+            <field name="name">PurchaseOrderViewForm</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='picking_type_id']" position="after">
+                        <field name="closed_planner" readonly="1"/>
+                    </xpath>
+                    <xpath expr="//button[@name='action_cancel']" position="after">
+                        <button name="close_for_planner" string="Close for Planner" type="object" attrs="{'invisible': ['|',('closed_planner', '=', True),('state', '!=', 'draft')]}"/>
+                        <button name="open_for_planner" string="Open for Planner" type="object" attrs="{'invisible': ['|',('closed_planner', '=', False),('state', '!=', 'draft')]}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="purchase_order_tree" model="ir.ui.view">
+            <field name="name">PurchaseOrderViewTree</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='state']" position="before">
+                        <field name="closed_planner"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_request_for_quotation_filter" model="ir.ui.view">
+            <field name="name">request.quotation.select</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_request_for_quotation_filter"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//filter[@name='exception']" position="after">
+                        <filter name="filerclosedplanner" string="Closed for Planner" domain="[('closed_planner','=',True)]"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_purchase_order_filter" model="ir.ui.view">
+            <field name="name">purchase.order.list.select</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//filter[@name='exception']" position="after">
+                        <filter name="filerclosedplanner" string="Closed for Planner" domain="[('closed_planner','=',True)]"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
