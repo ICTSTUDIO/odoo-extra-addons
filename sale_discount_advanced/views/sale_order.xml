@@ -7,6 +7,10 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='pricelist_id']" position="after">
+                    <field name="discount_amount"/>
+                    <field name="discount_base_amount"/>
+                </xpath>
                 <xpath expr="//tree/field[@name='discount']" position="after">
                     <field name="sale_discounts" widget="many2many_tags"/>
                 </xpath>

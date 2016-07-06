@@ -29,7 +29,7 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     sale_discount_line = fields.Boolean(
-            compute = '_compute_line_discount',
+            #compute = '_compute_line_discount',
             string="Line is a sale discount line",
             help="This field is used to manage the lines made by the sale discount module."
     )
@@ -54,19 +54,26 @@ class SaleOrderLine(models.Model):
                 if discount not in self.sale_discounts:
                     self.sale_discounts += discount
 
-            # _logger.debug("Write Discounts on line: %s", line_sale_discounts)
-            #  = [(6, 0, line_sale_discounts)]
 
-    @api.one
-    @api.onchange('price_unit','product_uom_qty','product_id')
-    def _onchange_discount(self):
-        # if not self.env.context.get('discount_calc'):
-        active_discounts = self.order_id._get_active_discounts()
-        if not self.sale_discount_line:
-            line_sale_discounts = []
-            for discount in active_discounts:
-                if discount not in self.sale_discounts:
-                    self.sale_discounts += discount
+    @api.model
+    def existing_discountline(self, values):
+        exists = self.search(
+                [
+                    ('order_id', '=', values.get('order_id')),
+                    ('product_id', '=', values.get('product_id')),
+                    ('name', '=', values.get('name')),
+                    ('sale_discount_line', '=', True)
+                ]
+        )
+        equal = self.search(
+                [
+                    ('order_id', '=', values.get('order_id')),
+                    ('product_id', '=', values.get('product_id')),
+                    ('name', '=', values.get('name')),
+                    ('price_unit', '=', values.get('price_unit')),
+                    ('product_uom_qty', '=', values.get('product_uom_qty')),
+                    ('sale_discount_line', '=', True)
+                ]
+        )
 
-                    # _logger.debug("Write Discounts on line: %s", line_sale_discounts)
-                    #  = [(6, 0, line_sale_discounts)]
+        return exists, equal

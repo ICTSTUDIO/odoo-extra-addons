@@ -29,62 +29,89 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    discount_amount = fields.Float(compute='_compute_discount')
+
+    discount_amount = fields.Float(
+            compute='_compute_discount',
+            string="Total Discount Amount",
+            store=True
+    )
+    discount_base_amount = fields.Float(
+            compute='_compute_discount',
+            string="Order Amount before Discount",
+            store=True
+    )
+
     def _get_active_discounts(self):
         discounts = []
         if self.pricelist_id and self.pricelist_id.sale_discounts:
             for discount in self.pricelist_id.sale_discounts:
-                if discount.active and discount.check_active_date(self.date_order):
+                if discount.active and \
+                        discount.check_active_date(self.date_order):
                     discounts.append(discount)
         _logger.debug("Active Discounts: %s", discounts)
         return discounts
 
 
-    @api.depends('order_line')
+    @api.one
+    @api.depends('pricelist_id','partner_id','order_line')
     def _compute_discount(self):
-        # if not self.env.context.get('discount_calc'):
-        #     active_discounts = self._get_active_discounts()
-        #
+
+        order_id =self.id
+        _logger.debug('Order_id: %s', self.id)
         grouped_discounts = {}
         sale_discount_order_lines = []
-        for line in self.order_line:
-            if line.sale_discount_line:
-                _logger.debug("Sale Line With Discount: %s", line.id)
-                sale_discount_order_lines.append((2, line.id))
-                continue
+        _logger.debug('Compute Discount')
+        _logger.debug(self.env.context)
+        if not self.env.context.get('discount_calc'):
+            for line in self.order_line:
+                if line.sale_discount_line:
+                    _logger.debug("Sale Line With Discount: %s", line.id)
+                    sale_discount_order_lines.append((2, line.id))
+                    continue
 
-            line_sale_discounts = []
-            for discount in line.sale_discounts:
-                line_sale_discounts.append(discount)
-                grouped_discounts.setdefault(discount.id,
-                                             {
-                                                 'sale_discount': discount,
-                                                 'discount_base': 0,
-                                                 'amount': 0,
-                                                 'discount_qty': 0
-                                             }
-                                             )
-                grouped_discounts[discount.id]['discount_base'] += line.price_subtotal
-                grouped_discounts[discount.id]['discount_qty'] += line.product_uom_qty
-            # _logger.debug("Write Discounts on line: %s", line_sale_discounts)
-            # line.with_context({'discount_calc': True}).write({'sale_discounts': [(6, 0, [ld.id for ld in line_sale_discounts])]})
+                line_sale_discounts = []
+                for discount in line.sale_discounts:
+                    line_sale_discounts.append(discount)
+                    grouped_discounts.setdefault(discount.id,
+                                                 {
+                                                     'sale_discount': discount,
+                                                     'discount_base': 0,
+                                                     'amount': 0,
+                                                     'discount_qty': 0
+                                                 }
+                                                 )
+                    grouped_discounts[discount.id]['discount_base'] += line.price_subtotal
+                    grouped_discounts[discount.id]['discount_qty'] += line.product_uom_qty
+
+            total_discount_amount = 0.0
+            total_discount_base_amount = 0.0
+
+            for discount in grouped_discounts.values():
+                discount['amount'] = discount['sale_discount']._calculate_discount(discount['discount_base'], discount['discount_qty'])
+                if not discount['amount']:
+                    continue
+
+                order_line_values = {
+                    'order_id': order_id,
+                    'sale_discount_line': True,
+                    'name': discount['sale_discount'].name,
+                    'product_id': discount['sale_discount'].product_id.id,
+                    'price_unit': -discount['amount'],
+                    'product_uom_qty': 1
+                }
+
+                ctx = dict(self._context, discount_calc=True)
+
+                _logger.debug('Vals: %s', order_line_values)
+                exists, equal = self.order_line.with_context(ctx).existing_discountline(order_line_values)
+                if exists and not equal:
+                    exists.with_context(ctx).write(order_line_values)
+                elif not exists and not equal:
+                    self.order_line.with_context(ctx).create(order_line_values)
 
 
-        for discount in grouped_discounts.values():
-            discount['amount'] = discount['sale_discount']._calculate_discount(discount['discount_base'], discount['discount_qty'], self)
-            if not discount['amount']:
-                continue
+                total_discount_amount += discount['amount'] or 0.0
+                total_discount_base_amount = discount['discount_base']
 
-            sale_discount_order_lines.append((0,0,{
-                'order_id': self.id,
-                'sale_discount_line': True,
-                'name': discount['sale_discount'].name,
-                'product_id': discount['sale_discount'].product_id.id,
-                'price_unit': discount['amount'],
-                'product_uom_qty': -1
-            }))
-
-        _logger.debug("Write Order Line: %s", sale_discount_order_lines)
-        if sale_discount_order_lines:
-            self.order_line.with_context({'discount_calc': True}).write(sale_discount_order_lines)
-
+            self.discount_amount = total_discount_amount
+            self.discount_base_amount = total_discount_base_amount

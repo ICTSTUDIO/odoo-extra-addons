@@ -22,10 +22,12 @@
                                     <field name="sequence" invisible="1"/>
                                     <field name="discount_type"/>
                                     <field name="discount" />
+                                    <field name="max_base" />
                                 </tree>
                                 <form name="Discount Rule">
                                     <field name="discount_type"/>
                                     <field name="discount" />
+                                    <field name="max_base" />
                                 </form>
                             </field>
                         </page>

@@ -100,14 +100,17 @@ class SaleDiscount(models.Model):
             return False
 
     @api.multi
-    def _calculate_discount(self, base, qty, order):
+    def _calculate_discount(self, base, qty):
         assert len(self) == 1
         for discount in self:
             for rule in discount.rules:
-                if rule.max_base > 0 and rule.max_base < base:
+                if rule.max_base > 0 and rule.max_base > base:
+                    _logger.debug("No Discount")
                     continue
 
                 if rule.discount_type == 'perc':
+                    _logger.debug("Calculate Discount Perc")
                     return base * rule.discount / 100
                 else:
+                    _logger.debug("Calculate Discount Amount")
                     return min(rule.discount * qty, base)
