@@ -19,18 +19,17 @@
 ##############################################################################
 
 {
-    'name': 'Stock Warehouse Orderpoint - Change',
+    'name': 'Stock Warehouse Orderpoint - Product State',
     'version': '8.0.0.0.1',
     'license': 'AGPL-3',
     'author': 'ICTSTUDIO',
     'website': 'http://www.ictstudio.eu',
     'category': 'Purchase',
     'complexity': 'normal',
-    'summary': 'When changing the parameters in the orderpoint the procurements needs to be cancelled and all chained.',
+    'summary': "Don't run the orderpoints for products with state not 'sellable'",
     'depends': [
         'stock',
     ],
     'data': [
-        'views/stock_warehouse_orderpoint.xml'
     ],
 }

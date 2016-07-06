@@ -27,26 +27,9 @@ _logger = logging.getLogger(__name__)
 class ProcurementOrder(models.Model):
     _inherit = 'procurement.order'
 
-    @api.multi
-    def get_chained_procurements(self):
-        chained_procurements = self.env['procurement.order']
-        for rec in self:
-            for move in rec.move_ids:
-                _logger.debug("move.procurement_id: %s", move.procurement_id)
-                chained_procurements += move.procurement_id
-                chained_procurements += move.move_dest_id.procurement_id.get_chained_procurements()
-        return chained_procurements
-
-    @api.multi
-    def cancel_chain(self):
-        error_procurements = self.env['procurement.order']
-        cancel_procurements = self.env['procurement.order']
-        for rec in self:
-            try:
-                if rec.state not in ('cancel', 'done'):
-                    rec.cancel()
-                    cancel_procurements += rec
-            except:
-                _logger.error("Cancel Procurement Failed: %s", rec)
-                error_procurements += rec
-        return cancel_procurements, error_procurements
+    @api.model
+    def _product_virtual_get(self, order_point):
+        if order_point.product_id.state == 'sellable':
+            return super(ProcurementOrder, self)._product_virtual_get(order_point)
+        else:
+            return None

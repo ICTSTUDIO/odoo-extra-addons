@@ -28,3 +28,13 @@ _logger = logging.getLogger(__name__)
 class StockWarehouseOrderpoint(models.Model):
     _inherit = 'stock.warehouse.orderpoint'
 
+    @api.multi
+    def action_cancel_chain(self):
+        for rec in self:
+            chained_procurements = rec.procurement_ids.get_chained_procurements()
+            _logger.debug("Chained Procurements: %s", chained_procurements)
+            cancel_procurements, error_procurements = chained_procurements.cancel_chain()
+            if error_procurements:
+                _logger.debug("Errors: %s", error_procurements)
+            if cancel_procurements:
+                _logger.debug("Cancel: %s", cancel_procurements)

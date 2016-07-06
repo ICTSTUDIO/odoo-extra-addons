@@ -1,9 +1,9 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
 :alt: License: AGPL-3
 
-Stock Warehouse Orderpoint - Change
-===================================
-When changing the parameters in the orderpoint the procurements needs to be cancelled and all chained.
+Stock Warehouse Orderpoint - Product State
+==========================================
+Don't run the orderpoints for products with state not 'sellable'
 
 Bug Tracker
 ===========
