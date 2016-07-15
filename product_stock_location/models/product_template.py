@@ -29,7 +29,6 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     locations = fields.One2many(
-            comodel_name="stock.warehouse",
             string="Locations",
             related="product_variant_ids.locations"
     )

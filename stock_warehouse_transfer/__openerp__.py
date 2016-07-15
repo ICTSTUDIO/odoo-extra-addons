@@ -31,6 +31,7 @@
         'stock',
     ],
     'data': [
-        'views/stock_warehouse_transfer.xml'
+        'views/stock_warehouse_transfer.xml',
+        'data/ir_sequence.xml'
     ],
 }

@@ -17,17 +17,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Stock Move Sort On Location',
-    'version': '8.0.0.0.3',
-    'author': 'ICTSTUDIO, André Schenkels',
-    'category': 'Stock Management',
-    'website': 'https://www.odoo.com',
-    'depends': ['product_stock_location'],
-    'demo': [],
-    'summary': "Show Move sort on location",
-    'data': [
-        'views/stock_move.xml'
-    ],
-}
 
+from . import stock_warehouse
+from . import product_template
+from . import product_stock_location
+from . import product_product

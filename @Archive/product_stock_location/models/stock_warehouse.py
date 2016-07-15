@@ -41,10 +41,29 @@ class StockWarehouse(models.Model):
             string="product_id"
     )
 
-    @api.one
+    @api.multi
     def _set_product_location(self):
         """ Wrapper to do nothing """
+        _logger.debug(self.product_id)
+        product = self.env['product.product'].browse(self.product_id)
+        _logger.debug('Product: %s', product)
         _logger.debug("Not used")
+        _logger.debug("self: %s", self)
+        _logger.debug("location: %s", self.product_location)
+        if not self.product_location:
+            new_location = '-'
+        else:
+            new_location = self.product_location
+            _logger.debug("New Location")
+        _logger.debug("Context: %s", self._context)
+        update_location = {'warehouse_id': self.id, 'location': self.product_location}
+        if self._context.get('updated_locations'):
+            changed_locations = self._context.get('updated_locations')
+        else:
+            changed_locations = []
+        changed_locations.append(update_location)
+        ctx = dict(self._context, updated_locations=changed_locations)
+        super(self.with_context(ctx))._set_product_location()
 
     @api.one
     def _get_product_location(self):
@@ -67,9 +86,16 @@ class StockWarehouse(models.Model):
         else: 
             return False
 
-        product = self.env['product.stock.location'].search([('product_id','=', product_id),('warehouse_id','=', self.id)])
+        product = self.env['product.stock.location'].search(
+                [
+                    ('product_id','=', product_id),
+                    ('warehouse_id','=', self.id)
+                ]
+        )
         if product and product[0]:
             self.product_location = product[0].location
+        else:
+            self.product_location = '-'
 
     @api.model
     def location_set(self, product, new_location):

@@ -13,10 +13,10 @@
                     </xpath>
                     <xpath expr="//group[@name='store']" position="before">
                         <group string="Warehouse Locations">
-                        <field name="locations" nolabel="1" colspan="2">
-                            <tree string="Location" editable="bottom">
-                                <field name="warehouse_id"/>
-                                <field name="location"/>
+                        <field name="locations" nolabel="1" colspan="2" context="{'product_template_id': active_id}">
+                            <tree string="Location" editable="bottom" create="false">
+                                <field name="name" readonly="1"/>
+                                <field name="product_location"/>
                             </tree>
                         </field>
                         </group>

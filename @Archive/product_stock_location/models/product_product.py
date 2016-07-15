@@ -29,9 +29,10 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     locations = fields.One2many(
-            comodel_name="product.stock.location",
-            inverse_name="product_id",
+            comodel_name="stock.warehouse",
             string="Locations",
+            compute="_get_locations",
+            inverse="_set_locations"
     )
 
     product_location = fields.Char(
@@ -57,22 +58,36 @@ class ProductProduct(models.Model):
         if self.env.context.get('warehouse_id'):
             warehouse_id = self.env.context.get('warehouse_id')
 
-        location_id = False
-        if self.env.context.get('location_id'):
-            location_id = self.env.context.get('location_id')
-
-        self.product_location = '-'
         if not warehouse_id:
             warehouse_id = self._get_default_warehouse()
 
         if warehouse_id:
-            location = self.locations.filtered(lambda r: r.warehouse_id.id == warehouse_id)
+            warehouse_location = self.env['product.stock.location'].search(
+                [
+                    ('warehouse_id', '=', warehouse_id),
+                    ('product_id', '=', self.id)
 
-            if location and location[0] and location[0].location:
-                self.product_location = location[0].location
+                ]
+            )
 
-        if location_id:
-            location = self.locations.filtered(lambda r: r.warehouse_location_id.id == location_id)
+            if warehouse_location and warehouse_location[0]:
+                self.product_location = warehouse_location[0].location
 
-            if location and location[0] and location[0].location:
-                self.product_location = location[0].location
+
+    @api.one
+    def _get_locations(self):
+        self.locations = self.env['stock.warehouse'].search(
+                [
+                    ('show_location_on_products', '=', True)
+                ]
+        )
+
+    @api.one
+    def _set_locations(self):
+        for location in self.locations:
+
+            _logger.debug("location: %s", location)
+            _logger.debug("location: %s", self)
+            _logger.debug("location: %s", location.product_location)
+            # if location.product_location:
+            #         location.location_set(self, location.product_location)

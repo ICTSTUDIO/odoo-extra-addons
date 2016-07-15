@@ -84,9 +84,15 @@ class StockWarehouseTransferLine(models.Model):
             else:
                 rec.dest_location = dest_location
 
-
     @api.multi
-    def get_move_vals(self, picking):
+    def get_move_vals(self, picking, group):
+        """
+        Get the correct move values
+        :param picking:
+        :param group:
+        :return: dict
+        """
+
         self.ensure_one()
         return {
             'name' : 'Warehouse Transfer',
@@ -96,6 +102,7 @@ class StockWarehouseTransferLine(models.Model):
             'location_id' : self.source_location.id,
             'location_dest_id' : self.dest_location.id,
             'picking_id' : picking.id,
+            'group_id': group.id,
             'note': self.note
         }
 

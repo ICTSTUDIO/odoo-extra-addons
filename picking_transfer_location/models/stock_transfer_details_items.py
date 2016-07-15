@@ -44,8 +44,11 @@ class StockTransferDetailsItems(models.TransientModel):
     @api.depends('product_id')
     def _get_product_info(self):
         picking = self.transfer_id.picking_id
-        if picking.picking_type_id.warehouse_id:
-            self.product_location = self.product_id.with_context(warehouse=picking.picking_type_id.warehouse_id.id).product_location
+        self.product_location = '-'
+        if picking and picking.picking_type_id.warehouse_id:
+            locations = self.product_id.locations.filtered(lambda r: r.warehouse_id.id == picking.picking_type_id.warehouse_id.id)
+            if locations and locations[0] and locations[0].location:
+                self.product_location = locations[0].location
         else:
             self.product_location = self.product_id.product_location
         self.product_code = self.product_id.default_code

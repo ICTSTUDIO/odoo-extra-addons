@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,16 +18,19 @@
 #
 ##############################################################################
 {
-    'name': 'Stock Move Sort On Location',
-    'version': '8.0.0.0.3',
-    'author': 'ICTSTUDIO, André Schenkels',
-    'category': 'Stock Management',
-    'website': 'https://www.odoo.com',
-    'depends': ['product_stock_location'],
-    'demo': [],
-    'summary': "Show Move sort on location",
+    'name': 'Procurement Manual Picking',
+    'version': '8.0.0.0.1',
+    'category': 'Stock',
+    'author': 'ICTSTUDIO | André Schenkels',
+    'website': 'http://www.ictstudio.eu',
+    'license': 'AGPL-3',
+    'summary': 'Automatic created pickings for transit location can be hold unassigned so the pikcing can be reused for extra moves',
+    'depends': [
+        'stock',
+    ],
     'data': [
-        'views/stock_move.xml'
+        'views/stock_picking.xml',
+        'views/procurement_rule.xml',
+
     ],
 }
-

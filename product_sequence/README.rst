@@ -1,9 +1,11 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
 :alt: License: AGPL-3
 
-Product Sequence
-================
-Add a sequence to the product (default_)code field
+Purchase Order - Close for Planner
+==================================
+Creates a button on the Purchase Order to Close the PO for additions by the Planner.
+- Creates Button when PO in Draft State
+- Boolean field on PO: close_planner (default: False)
 
 Bug Tracker
 ===========

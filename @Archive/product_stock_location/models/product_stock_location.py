@@ -17,17 +17,26 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Stock Move Sort On Location',
-    'version': '8.0.0.0.3',
-    'author': 'ICTSTUDIO, André Schenkels',
-    'category': 'Stock Management',
-    'website': 'https://www.odoo.com',
-    'depends': ['product_stock_location'],
-    'demo': [],
-    'summary': "Show Move sort on location",
-    'data': [
-        'views/stock_move.xml'
-    ],
-}
+
+import logging
+
+from openerp import models, fields, api, _
+
+_logger = logging.getLogger(__name__)
+
+class ProductStockLocation(models.Model):
+    _name = 'product.stock.location'
+
+    warehouse_id = fields.Many2one(
+            comodel_name="stock.warehouse",
+            string="Warehouse"
+    )
+    product_id = fields.Many2one(
+            comodel_name="product.product",
+            string="Product"
+    )
+    location = fields.Char(
+            string="Location",
+            default="-"
+    )
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="stock_warehouse_transfer_ir_seq_type" model="ir.sequence.type">
+            <field name="name">Stock Warehouse Transfer</field>
+            <field name="code">stock.warehouse.transfer</field>
+        </record>
+
+        <record id="stock_warehouse_transfer_ir_sequence" model="ir.sequence">
+            <field name="name">Stock Warehouse Transfer</field>
+            <field name="code">stock.warehouse.transfer</field>
+            <field name="prefix">SWT</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+    </data>
+</openerp>

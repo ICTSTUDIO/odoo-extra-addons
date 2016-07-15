@@ -111,10 +111,9 @@ class StockWarehouseTransfer(models.Model):
         picking_type = self.get_transfer_picking_type()
         picking_vals = {
             'picking_type_id' : picking_type.id,
-            'transfer' : self.id
+            'transfer' : self.id,
+            'origin': self.name
         }
-        if 'linked_group' in self.env['stock.picking']._fields:
-            picking_vals['linked_group'] = True
 
         return picking_vals
 
@@ -128,11 +127,31 @@ class StockWarehouseTransfer(models.Model):
                 _logger.error("Error Creating Picking")
                 #TODO: Add  Exception
 
+            pc_group = rec._get_procurement_group()
+
             for line in rec.lines:
-                move_vals = line.get_move_vals(picking)
+                move_vals = line.get_move_vals(picking, pc_group)
                 if move_vals:
                     _logger.debug("Move Vals: %s", move_vals)
                     self.env['stock.move'].create(move_vals)
 
             picking.action_confirm()
             picking.action_assign()
+
+    @api.model
+    def _prepare_procurement_group(self):
+        return {'name': self.name}
+
+    @api.model
+    def _get_procurement_group(self):
+        pc_groups = self.env['procurement.group'].search(
+                [
+                    ('name', '=', self.name)
+                ]
+        )
+        if pc_groups:
+            pc_group = pc_groups[0]
+        else:
+            pc_vals = self._prepare_procurement_group()
+            pc_group = self.env['procurement.group'].create(pc_vals)
+        return pc_group or False

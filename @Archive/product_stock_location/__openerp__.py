@@ -18,16 +18,19 @@
 #
 ##############################################################################
 {
-    'name': 'Stock Move Sort On Location',
-    'version': '8.0.0.0.3',
+    'name': 'Products Location Warehouse',
+    'version': '8.0.0.1.1',
     'author': 'ICTSTUDIO, André Schenkels',
     'category': 'Stock Management',
     'website': 'https://www.odoo.com',
-    'depends': ['product_stock_location'],
+    'depends': ['stock'],
     'demo': [],
-    'summary': "Show Move sort on location",
+    'summary': "Show Location each Warehouse",
     'data': [
-        'views/stock_move.xml'
+        'views/stock_warehouse.xml',
+        'views/product_product.xml',
+        'views/product_template.xml',
+        'security/ir.model.access.csv',
     ],
 }
 

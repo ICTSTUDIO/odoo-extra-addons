@@ -56,6 +56,7 @@ class StockMove(models.Model):
                                    ('name', operator, name),
                                    ('default_code', operator, name)
                                ]
+
                 products = self.env['product.product'].search(product_args)
                 args = [('product_id', 'in', products.ids)]
                 args = [('picking_id', '=', self.env.context.get('return_line'))] + args

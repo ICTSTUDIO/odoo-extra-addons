@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Selective Picking Return',
-    'version': '8.0.0.0.1',
+    'version': '8.0.0.0.2',
     'author': 'ICTSTUDIO, André Schenkels',
     'category': 'Stock Management',
     'website': 'https://www.odoo.com',

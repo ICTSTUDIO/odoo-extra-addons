@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Products Location Warehouse',
-    'version': '8.0.0.1.1',
+    'version': '8.0.0.2.1',
     'author': 'ICTSTUDIO, André Schenkels',
     'category': 'Stock Management',
     'website': 'https://www.odoo.com',
@@ -27,7 +27,6 @@
     'demo': [],
     'summary': "Show Location each Warehouse",
     'data': [
-        'views/stock_warehouse.xml',
         'views/product_product.xml',
         'views/product_template.xml',
         'security/ir.model.access.csv',
