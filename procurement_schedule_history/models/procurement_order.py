@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    OpenERP, Open Source Management Solution
+#
+#    Copyright (c) 2015 ICTSTUDIO (www.ictstudio.eu).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -10,30 +12,26 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import logging
-
 from openerp import models, fields, api, _
+import logging
 
 _logger = logging.getLogger(__name__)
 
+class ProcurementOrder(models.Model):
+    _inherit = 'procurement.order'
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    locations = fields.One2many(
-            string="Locations",
-            related="product_variant_ids.locations"
-    )
-
-    product_location = fields.Char(
-            string="Current Location",
-            related="product_variant_ids.product_location"
-    )
+    @api.model
+    def run_scheduler(self, use_new_cursor=False, company_id=False):
+        return super(ProcurementOrder, self.with_context(
+                {'no_assign_manual': True})).run_scheduler(
+                use_new_cursor=use_new_cursor,
+                company_id=company_id
+        )

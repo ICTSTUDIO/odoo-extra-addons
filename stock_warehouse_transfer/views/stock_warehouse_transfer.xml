@@ -49,8 +49,8 @@
                                         <field name="product_id" domain="[('type','!=','service')]" required="1"/>
                                         <field name="product_qty" required="1"/>
                                         <field name="product_uom_id" required="1"/>
-                                        <field name="source_location"/>
-                                        <field name="dest_location"/>
+                                        <field name="source_location" invisible="1"/>
+                                        <field name="dest_location" invisible="1"/>
                                         <field name="note"/>
                                     </tree>
                                 </field>

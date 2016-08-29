@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -17,23 +17,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import logging
-
-from openerp import models, fields, api, _
-
-_logger = logging.getLogger(__name__)
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    locations = fields.One2many(
-            string="Locations",
-            related="product_variant_ids.locations"
-    )
-
-    product_location = fields.Char(
-            string="Current Location",
-            related="product_variant_ids.product_location"
-    )
+{
+    'name': 'Stock Picking Backorder',
+    'version': '8.0.0.0.1',
+    'category': 'Stock',
+    'author': 'ICTSTUDIO | André Schenkels',
+    'website': 'http://www.ictstudio.eu',
+    'license': 'AGPL-3',
+    'summary': 'Create a backorder from the Picking, without the wizard',
+    'depends': [
+        'stock',
+    ],
+    'data': [
+        'views/stock_picking.xml',
+    ],
+}
