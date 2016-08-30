@@ -17,23 +17,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+{
+    'name': 'Stock Move Sort On Location Product Code',
+    'version': '8.0.0.0.1',
+    'author': 'ICTSTUDIO, André Schenkels',
+    'category': 'Stock Management',
+    'website': 'https://www.odoo.com',
+    'depends': [
+        'stock_move_product_code',
+        'stock_move_location'
+    ],
+    'demo': [],
+    'data': [
+    ],
+}
 
-import logging
-
-from openerp import models, fields, api, _
-
-_logger = logging.getLogger(__name__)
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    locations = fields.One2many(
-            string="Locations",
-            related="product_variant_ids.locations"
-    )
-
-    product_location = fields.Char(
-            string="Location",
-            related="product_variant_ids.product_location"
-    )

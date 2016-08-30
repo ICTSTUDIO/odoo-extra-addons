@@ -43,3 +43,5 @@ class ProductStockLocation(models.Model):
             related='warehouse_id.lot_stock_id'
     )
 
+    def _search_locations(self, operator, value):
+        return self.search([('location',operator, value)])

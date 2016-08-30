@@ -17,37 +17,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+{
+    'name': 'Sale Order Line Seperate Product Code',
+    'version': '8.0.0.0.1',
+    'license': 'AGPL-3',
+    'author': 'ICTSTUDIO',
+    'website': 'http://www.ictstudio.eu',
+    'category':	'Sales Management',
+    'complexity': 'normal',
+    'depends':	[
+        'sale',
 
-import logging
-from openerp import models, fields, api, _
-
-_logger = logging.getLogger(__name__)
-
-
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
-
-    @api.multi
-    @api.onchange('product_id')
-    def product_id_change(self):
-
-        domain = super(SaleOrderLine, self).product_id_change()
-        if not self.product_id:
-            return {'domain': domain}
-
-        vals = {}
-
-        product = self.product_id.with_context(
-            lang=self.order_id.partner_id.lang,
-            partner=self.order_id.partner_id.id,
-            quantity=self.product_uom_qty,
-            date=self.order_id.date_order,
-            pricelist=self.order_id.pricelist_id.id,
-            uom=self.product_uom.id
-        )
-
-        name = product.name_get()[0][1]
-        vals['name'] = name
-
-        self.update(vals)
-        return {'domain': domain}
+    ],
+    'data': [
+        'views/sale_order.xml',
+    ],
+}

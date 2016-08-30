@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,22 +18,4 @@
 #
 ##############################################################################
 
-import logging
-
-from openerp import models, fields, api, _
-
-_logger = logging.getLogger(__name__)
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    locations = fields.One2many(
-            string="Locations",
-            related="product_variant_ids.locations"
-    )
-
-    product_location = fields.Char(
-            string="Location",
-            related="product_variant_ids.product_location"
-    )
+from . import sale_order_line

@@ -35,9 +35,9 @@ class ProductProduct(models.Model):
     )
 
     product_location = fields.Char(
-            string="Current Location",
+            string="Location",
             compute="_get_product_location",
-
+            search="_search_product_location"
     )
 
     @api.model
@@ -76,3 +76,9 @@ class ProductProduct(models.Model):
 
             if location and location[0] and location[0].location:
                 self.product_location = location[0].location
+
+    def _search_product_location(self, operator, value):
+        locations = self.env['product.stock.location']._search_locations(operator, value)
+        _logger.debug("Products: %s", locations)
+        _logger.debug("ProductsIDS: %s", locations.ids)
+        return [('locations', 'in', locations.ids)]

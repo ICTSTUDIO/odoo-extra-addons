@@ -18,22 +18,4 @@
 #
 ##############################################################################
 
-import logging
-
-from openerp import models, fields, api, _
-
-_logger = logging.getLogger(__name__)
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    locations = fields.One2many(
-            string="Locations",
-            related="product_variant_ids.locations"
-    )
-
-    product_location = fields.Char(
-            string="Location",
-            related="product_variant_ids.product_location"
-    )
+from . import sale_order_line

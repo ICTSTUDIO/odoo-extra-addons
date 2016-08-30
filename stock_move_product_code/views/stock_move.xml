@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="stock.view_move_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="before">
-                    <field name="product_location"/>
+                    <field name="product_code"/>
                 </xpath>
             </field>
         </record>
@@ -18,8 +18,9 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_picking_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='product_id']" position="before">
-                    <field name="product_location"/>
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="product_code"/>
+                    <field name="name"/>
                 </xpath>
             </field>
         </record>

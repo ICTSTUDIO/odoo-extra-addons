@@ -25,15 +25,18 @@ from openerp import models, fields, api, _
 _logger = logging.getLogger(__name__)
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+    _order = 'product_code'
 
-    locations = fields.One2many(
-            string="Locations",
-            related="product_variant_ids.locations"
+    product_code = fields.Char(
+        compute="_get_product_code",
+        string="Code",
+        store=True
     )
 
-    product_location = fields.Char(
-            string="Location",
-            related="product_variant_ids.product_location"
-    )
+    @api.one
+    @api.depends('product_id', 'product_id.default_code')
+    def _get_product_code(self):
+        if self.product_id:
+            self.product_code = self.product_id.default_code

@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Products Location Warehouse',
-    'version': '8.0.0.2.1',
+    'version': '8.0.0.2.2',
     'author': 'ICTSTUDIO, André Schenkels',
     'category': 'Stock Management',
     'website': 'https://www.odoo.com',

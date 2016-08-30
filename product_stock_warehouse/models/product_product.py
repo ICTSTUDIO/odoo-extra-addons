@@ -33,22 +33,22 @@ class ProductProduct(models.Model):
 
     qty_available = fields.Float(
             compute="_new_product_available",
-            # search="_new_search_product_quantity",
+            search="_search_product_qty_available",
             digits_compute=dp.get_precision('Product Unit of Measure')
     )
     virtual_available = fields.Float(
             compute="_new_product_available",
-            # search="_new_search_product_quantity",
+            search="_search_product_virtual_available",
             digits_compute=dp.get_precision('Product Unit of Measure')
     )
     incoming_qty = fields.Float(
             compute="_new_product_available",
-            # search="_new_search_product_quantity",
+            search="_search_product_incoming_qty",
             digits_compute=dp.get_precision('Product Unit of Measure')
     )
     outgoing_qty = fields.Float(
             compute="_new_product_available",
-            # search="_new_search_product_quantity",
+            search="_search_product_outgoing_qty",
             digits_compute=dp.get_precision('Product Unit of Measure')
     )
 
@@ -59,7 +59,7 @@ class ProductProduct(models.Model):
             inverse="_set_stock"
     )
 
-    @api.one
+    @api.multi
     def _new_product_available(self):
 
         domain_products = [('product_id', 'in', self.ids)]
@@ -91,17 +91,17 @@ class ProductProduct(models.Model):
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
 
+        for product in self:
+            id = product.id
+            qty_available = float_round(quants.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            incoming_qty = float_round(moves_in.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            outgoing_qty = float_round(moves_out.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            virtual_available = float_round(quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0), precision_rounding=product.uom_id.rounding)
 
-        qty_available = float_round(quants.get(self.id, 0.0), precision_rounding=self.uom_id.rounding)
-        incoming_qty = float_round(moves_in.get(self.id, 0.0), precision_rounding=self.uom_id.rounding)
-        outgoing_qty = float_round(moves_out.get(self.id, 0.0), precision_rounding=self.uom_id.rounding)
-        virtual_available = float_round(quants.get(self.id, 0.0) + moves_in.get(self.id, 0.0) - moves_out.get(self.id, 0.0), precision_rounding=self.uom_id.rounding)
-        _logger.debug('Qty Av: %s', qty_available)
-        self.qty_available = qty_available or 0.0
-        self.incoming_qty = incoming_qty or 0.0
-        self.outgoing_qty = outgoing_qty or 0.0
-        self.virtual_available = virtual_available or 0.0
-
+            product.qty_available = qty_available or 0.0
+            product.incoming_qty = incoming_qty or 0.0
+            product.outgoing_qty = outgoing_qty or 0.0
+            product.virtual_available = virtual_available or 0.0
 
     @api.one
     def _get_stock(self):
@@ -121,27 +121,59 @@ class ProductProduct(models.Model):
                 _logger.debug("PP Set Stock: Warehouse Stock: %s", warehouse.product_qty_available)
                 warehouse.stock_set(self, warehouse.product_qty_available)
 
-    # @api.model
-    # def _new_search_product_quantity(self, obj, name, domain):
-    #     res = []
-    #     for field, operator, value in domain:
-    #         #to prevent sql injections
-    #         assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-    #         assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
-    #         assert isinstance(value, (float, int)), 'Invalid domain right operand'
-    #
-    #         if operator == '=':
-    #             operator = '=='
-    #
-    #         ids = []
-    #         if name == 'qty_available' and (value != 0.0 or operator not in  ('==', '>=', '<=')):
-    #             res.append(('id', 'in', self._search_qty_available(operator, value)))
-    #         else:
-    #             product_ids = self.search([])
-    #             if product_ids:
-    #                 #TODO: Still optimization possible when searching virtual quantities
-    #                 for element in self.browse(product_ids):
-    #                     if eval(str(element[field]) + operator + str(value)):
-    #                         ids.append(element.id)
-    #                 res.append(('id', 'in', ids))
-    #     return res
+
+    def _search_product_qty_available(self, operator, value):
+        res = self._search_product_filter_quantity(operator, value, 'qty_available')
+        return res
+
+    def _search_product_virtual_available(self, operator, value):
+        res = self._search_product_filter_quantity(operator, value, 'virtual_available')
+        return res
+
+    def _search_product_incoming_qty(self, operator, value):
+        res = self._search_product_filter_quantity(operator, value, 'incoming_qty')
+        return res
+
+
+    def _search_product_outgoing_qty(self, operator, value):
+        res = self._search_product_filter_quantity(operator, value, 'outgoing_qty')
+        return res
+
+    def _get_qty_filter_fields(self):
+        return  ['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty']
+
+    def _search_product_filter_quantity(self, operator, value, filter_field):
+        res = []
+        ids = []
+        assert filter_field in self._get_qty_filter_fields(), 'Invalid domain left operand'
+        assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
+        assert isinstance(value, (float, int)), 'Invalid domain right operand'
+        if operator == '=':
+            operator = '=='
+
+        if filter_field == 'qty_available' and (value != 0.0 or operator not in  ('==', '>=', '<=')):
+            res.append(('id', 'in', self._search_product_filter_qty_available(operator, value)))
+        else:
+            products = self.search([])
+
+            if products:
+            #TODO: Still optimization possible when searching virtual quantities
+                for element in products:
+                    if eval(str(element[filter_field]) + operator + str(value)):
+                        ids.append(element.id)
+            res.append(('id', 'in', ids))
+        return res
+
+    def _search_product_filter_qty_available(self, operator, value):
+        domain_quant = []
+        if self._context.get('lot_id'):
+            domain_quant.append(('lot_id', '=', self._context['lot_id']))
+        if self._context.get('owner_id'):
+            domain_quant.append(('owner_id', '=', self._context['owner_id']))
+        if self._context.get('package_id'):
+            domain_quant.append(('package_id', '=', self._context['package_id']))
+        domain_quant += self._get_domain_locations()[0]
+        quants = self.pool.get('stock.quant').read_group(self._cr, self._uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=self._context)
+        quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
+        quants = dict((k, v) for k, v in quants.iteritems() if eval(str(v) + operator + str(value)))
+        return(list(quants))

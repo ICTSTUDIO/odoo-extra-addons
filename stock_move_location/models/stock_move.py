@@ -27,22 +27,16 @@ _logger = logging.getLogger(__name__)
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
-    _order = 'product_location,product_code'
 
     product_location = fields.Char(
-        compute="_get_product_info",
+        compute="_get_product_location",
         string="Location",
-        store=True
-    )
-    product_code = fields.Char(
-        compute="_get_product_info",
-        string="Code",
         store=True
     )
 
     @api.one
     @api.depends('product_id', 'picking_id')
-    def _get_product_info(self):
+    def _get_product_location(self):
         picking = self.picking_id
         self.product_location = '-'
         if picking and picking.picking_type_id.warehouse_id:
@@ -51,6 +45,3 @@ class StockMove(models.Model):
                 self.product_location = locations[0].location
         elif self.product_id.product_location:
             self.product_location = self.product_id.product_location
-
-        if self.product_id:
-            self.product_code = self.product_id.default_code
