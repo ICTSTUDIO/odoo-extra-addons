@@ -35,6 +35,7 @@ class ProcurementOrder(models.Model):
                 _logger.debug("move.procurement_id: %s", move.procurement_id)
                 chained_procurements += move.procurement_id
                 chained_procurements += move.move_dest_id.procurement_id.get_chained_procurements()
+            chained_procurements += rec
         return chained_procurements
 
     @api.multi
@@ -43,6 +44,7 @@ class ProcurementOrder(models.Model):
         cancel_procurements = self.env['procurement.order']
         for rec in self:
             try:
+                _logger.debug("Proc State: %s", rec.state)
                 if rec.state not in ('cancel', 'done'):
                     rec.cancel()
                     cancel_procurements += rec

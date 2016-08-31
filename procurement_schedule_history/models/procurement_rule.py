@@ -25,10 +25,10 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-class ProcurementRule(models.Model):
-    _inherit = 'procurement.rule'
+class ProcurementOrderScheduleHistory(models.Model):
+    _name = 'procurement.order.schedule.history'
 
-    manual_assign = fields.Boolean(
-        string="Manual assign picking",
-        default=False
-    )
+    name = fields.Char(string="Context")
+    start_date = fields.Datetime(string="Start Date")
+    end_date = fields.Datetime(string="End Date")
+
