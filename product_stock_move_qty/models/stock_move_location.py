@@ -39,7 +39,6 @@ class StockMoveLocation(models.Model):
     )
     description = fields.Char(
             string='Description',
-            size=16,
             readonly=True
     )
     location_id = fields.Many2one(
