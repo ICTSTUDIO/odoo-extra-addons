@@ -37,12 +37,15 @@ class PurchaseOrderLine(models.Model):
     product_stock_outgoing = fields.Float(
             compute='_get_stock'
     )
+    product_stock_virtual = fields.Float(
+            compute='_get_stock'
+    )
     product_stock_web = fields.Float(
             compute='_get_web_stock'
     )
 
     priority = fields.Selection(
-        selection=[('urgent', 'Urgent'), ('normal', 'Normaal'), ('none', 'Geen')],
+        selection=[('urgent', 'Urgent'), ('high','Hoog'), ('normal', 'Normaal'), ('none', 'Geen')],
         compute="_get_priority",
         string="Priority"
     )
@@ -62,13 +65,16 @@ class PurchaseOrderLine(models.Model):
         self.product_stock_stock = product.qty_available
         self.product_stock_incoming = product.incoming_qty
         self.product_stock_outgoing = product.outgoing_qty
+        self.product_stock_virtual = product.virtual_available
 
     @api.one
     @api.depends('product_stock_web')
     def _get_priority(self):
         if self.order_id.state not in ('done','cancel','except_picking','except_invoice','approved'):
-            if self.product_stock_web < 0:
+            if self.product_stock_web < 0 and self.product_stock_virtual < 0:
                 self.priority = 'urgent'
+            elif self.product_stock_web < 0 and self.product_stock_virtual >= 0:
+                self.priority = 'high'
             else:
                 self.priority = 'normal'
         else:

@@ -28,13 +28,17 @@ _logger = logging.getLogger(__name__)
 class ProcurementOrder(models.Model):
     _inherit = 'procurement.order'
 
-    #def run_scheduler(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
-
-
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
-        return super(ProcurementOrder, self.with_context(
-                {'no_assign_manual': True})).run_scheduler(
+        history = self.env['procurement.order.schedule.history'].create(
+                {
+                    'start_date': fields.Datetime.now(),
+                    'name': self._context or 'No Context'
+                }
+        )
+        ret_val = super(ProcurementOrder, self).run_scheduler(
                 use_new_cursor=use_new_cursor,
                 company_id=company_id
         )
+        history.end_date = fields.Datetime.now()
+        return ret_val

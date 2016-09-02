@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_picking_nsn"
+                  inherit_id="stock.report_picking"
+                  priority = "95">
+            <xpath expr="//div[contains(@class, 'page')]/table[2]/thead/tr/th[1]" position="after">
+                <th>NSN</th>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[2]/tbody/tr/t/td[1]" position="after">
+                <td>
+                    <span t-field="move.nsn"/>
+                </td>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[3]/thead/tr/th[1]" position="after">
+                <th>NSN</th>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[3]/tbody/tr/t[1]" position="after">
+                <t t-if="pack_operation.linked_move_operation_ids and pack_operation.linked_move_operation_ids.move_id"><td><span t-field="pack_operation.linked_move_operation_ids.move_id.nsn"/>
+                </td>
+                </t>
+                <t t-if="not pack_operation.linked_move_operation_ids and not pack_operation.linked_move_operation_ids.move_id"><td>0
+                </td>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</openerp>

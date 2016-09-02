@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="report_picking_intro_note"
+                  inherit_id="stock.report_picking">
+            <xpath expr="//div[contains(@class, 'page')]/table[1]" position="before">
+                <p t-field="o.intro_note" />
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[3]" position="after">
+                <div>
+                    <p t-field="o.after_note" />
+                </div>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>

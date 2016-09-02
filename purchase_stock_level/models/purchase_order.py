@@ -29,7 +29,7 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     priority = fields.Selection(
-            selection=[('urgent', 'Urgent'), ('normal', 'Normaal'), ('none', 'Geen')],
+            selection=[('urgent', 'Urgent'), ('high', 'Hoog'), ('normal', 'Normaal'), ('none', 'Geen')],
             compute="_get_priority",
             search="_search_priority",
             string="Priority"
@@ -49,15 +49,19 @@ class PurchaseOrder(models.Model):
     @api.one
     @api.depends('order_line.priority')
     def _get_priority(self):
-        count = {'urgent': 0, 'normal': 0}
+        count = {'urgent': 0, 'high': 0, 'normal': 0}
         for line in self.order_line:
             if line.priority == 'urgent':
                 count['urgent'] += 1
+            if line.priority == 'high':
+                count['high'] += 1
             if line.priority == 'normal':
                 count['normal'] += 1
 
         if count['urgent'] > 0:
             self.priority = 'urgent'
+        elif count['high'] > 0:
+            self.priority = 'high'
         elif count['normal'] > 0:
             self.priority = 'normal'
         else:

@@ -21,7 +21,7 @@
 ##############################################################################
 {
     'name': 'Purchase Stock Levels',
-    'version': '8.0.0.1.3',
+    'version': '8.0.0.1.4',
     'category': 'Purchase',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',

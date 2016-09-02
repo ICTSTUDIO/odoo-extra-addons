@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.nsn</field>
+            <field name="model">sale.order</field>
+            <field name="priority" eval="900"/>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="after">
+                        <field name="nsn"/>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="after">
+                        <field name="nsn"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

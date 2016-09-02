@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Inherit Normal Purchase Order and add nsn -->
+        <template id="report_purchaseorder_document_nsn"
+                  inherit_id="purchase.report_purchaseorder_document"
+                  priority = "95">
+            <xpath expr="//div[contains(@class, 'page')]/table[1]/tbody/tr/td[2]/span[1]" position="after">
+                <br/>
+                <span t-if="line.nsn">
+                    <strong>NSN:</strong>
+                    <span t-field="line.nsn"/>
+                </span>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[1]/thead/tr/th[2]" position="before">
+                <th>Part number</th>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[1]/tbody/tr/td[2]" position="before">
+                <td>
+                    <span t-field="line.part_number"/>
+                </td>
+            </xpath>
+
+        </template>
+
+        <!-- Inherit Normal Purchase Quotation and add nsn -->
+        <template id="report_purchasequotation_document_nsn"
+                  inherit_id="purchase.report_purchasequotation_document"
+                  priority = "95">
+            <xpath expr="//div[contains(@class, 'page')]/table[1]/tbody/tr/td[2]/span[1]" position="after">
+                <br/>
+                <span t-if="order_line.nsn">
+                    <strong>NSN:</strong>
+                    <span t-field="order_line.nsn"/>
+                </span>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[1]/thead/tr/th[2]" position="before">
+                <th>Part number</th>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[1]/tbody/tr/td[2]" position="before">
+                <td>
+                    <span t-field="order_line.part_number"/>
+                </td>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>

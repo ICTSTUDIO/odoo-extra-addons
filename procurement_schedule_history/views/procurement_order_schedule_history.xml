@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="procurement_order_schedule_history_view_form" model="ir.ui.view">
+            <field name="name">procurement.order.schedule.history.view.form</field>
+            <field name="model">procurement.order.schedule.history</field>
+            <field name="arch" type="xml">
+                <form string="Procurement History">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="start_date" read_only="1"/>
+                                <field name="end_date" read_only="1"/>
+                            </group>
+                            <group>
+                                <field name="name" read_only="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="procurement_order_schedule_history_view_tree" model="ir.ui.view">
+            <field name="name">procurement.order.schedule.history.view.tree</field>
+            <field name="model">procurement.order.schedule.history</field>
+            <field name="arch" type="xml">
+                <tree string="Procurement Histories">
+                    <field name="start_date" read_only="1"/>
+                    <field name="end_date" read_only="1"/>
+                    <field name="name" read_only="1"/>
+                </tree>
+            </field>
+        </record>
+    
+        <record id="procurement_order_schedule_history_action" model="ir.actions.act_window">
+            <field name="name">Procurement Scheduler History</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order.schedule.history</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+              </p><p>
+                <!-- More details about what a user can do with this object will be OK --> 
+              </p>
+            </field>
+        </record>
+    
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="procurement_order_schedule_history_menu" name="Procurement Schedule History" parent="stock.menu_stock_sched" action="procurement_order_schedule_history_action" sequence=""/>
+    
+    </data>
+</openerp>

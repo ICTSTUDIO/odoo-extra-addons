@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_saleorder_document_nsn"
+                  inherit_id="sale.report_saleorder_document"
+                  priority = "95">
+            <xpath expr="//div[contains(@class, 'page')]/table[1]/thead/tr/th[1]" position="after">
+                <th>NSN</th>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'page')]/table[1]/tbody/tr/td[1]" position="after">
+                <td>
+                    <span t-field="l.nsn"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</openerp>

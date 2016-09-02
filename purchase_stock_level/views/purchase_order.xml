@@ -17,7 +17,7 @@
                         <field name="product_stock_outgoing" readonly="1"/>
                     </xpath>
                     <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                        <attribute name="colors">red:priority=='urgent'</attribute>
+                        <attribute name="colors">red:priority=='urgent';orange:priority=='high';</attribute>
                     </xpath>
                 </data>
             </field>
@@ -33,7 +33,7 @@
                         <field name="priority" readonly="1"/>
                     </xpath>
                     <xpath expr="//tree" position="attributes">
-                        <attribute name="colors">red:priority=='urgent';grey:state=='done'</attribute>
+                        <attribute name="colors">red:priority=='urgent';orange:priority=='high';grey:state in ('done','cancel')</attribute>
                     </xpath>
                 </data>
             </field>
@@ -46,7 +46,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//filter[@name='exception']" position="after">
-                        <filter name="highpriority" string="High Priority" domain="[('priority','in',('high','urgent'))]"/>
+                        <filter name="urgentpriority" string="Urgent Priority" domain="[('priority','in',('urgent'))]"/>
+                        <filter name="highpriority" string="High Priority" domain="[('priority','in',('high'))]"/>
                     </xpath>
                 </data>
             </field>
@@ -59,7 +60,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//filter[@name='exception']" position="after">
-                        <filter name="highpriority" string="High Priority" domain="[('priority','in',('high','urgent'))]"/>
+                        <filter name="urgentpriority" string="Urgent Priority" domain="[('priority','in',('urgent'))]"/>
+                        <filter name="highpriority" string="High Priority" domain="[('priority','in',('high'))]"/>
                     </xpath>
                 </data>
             </field>

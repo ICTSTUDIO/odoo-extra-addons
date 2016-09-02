@@ -20,7 +20,5 @@
 #
 ##############################################################################
 
-from . import procurement_rule
-from . import stock_picking
+from . import procurement_order_schedule_history
 from . import procurement_order
-from . import stock_move

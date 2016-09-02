@@ -18,19 +18,17 @@
 #
 ##############################################################################
 {
-    'name': 'Procurement Manual Picking',
+    'name': 'Procurement Scheduler History',
     'version': '8.0.0.0.1',
     'category': 'Stock',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
-    'summary': 'Automatic created pickings for transit location can be hold unassigned so the pikcing can be reused for extra moves',
+    'summary': 'Show history of scheduler',
     'depends': [
         'stock',
     ],
     'data': [
-        'views/stock_picking.xml',
-        'views/procurement_rule.xml',
-
+        'views/procurement_order_schedule_history.xml',
     ],
 }
