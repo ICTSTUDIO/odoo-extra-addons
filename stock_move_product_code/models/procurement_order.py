@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -17,20 +17,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Sale Auto Invoice',
-    'version': '8.0.1.1.1',
-    'category': 'Sales & Invoicing',
-    'summary': """Automatic creation of invoice on transfer of delivery
-    """,
-    'author': 'ICTSTUDIO, André Schenkels',
-    'license': 'AGPL-3',
-    'website': 'http://www.ictstudio.eu',
-    'depends': [
-        'sale_stock',
-        'stock_account',
-    ],
-    'data': [
-        'views/sale_order.xml',
-    ],
-}
+
+import logging
+
+from openerp import models, fields, api, _
+
+_logger = logging.getLogger(__name__)
+
+
+class ProcurementOrder(models.Model):
+    _inherit = 'procurement.order'
+
+    @api.model
+    def _run_move_create(self, procurement):
+        res = super(ProcurementOrder, self)._run_move_create(procurement)
+        if procurement.product_id:
+            res.update({'name': procurement.product_id.name})
+        return res

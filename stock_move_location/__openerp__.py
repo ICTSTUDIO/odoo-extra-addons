@@ -19,10 +19,10 @@
 ##############################################################################
 {
     'name': 'Stock Move Sort On Location',
-    'version': '8.0.0.0.3',
+    'version': '8.0.0.0.4',
     'author': 'ICTSTUDIO, André Schenkels',
     'category': 'Stock Management',
-    'website': 'https://www.odoo.com',
+    'website': 'https://www.ictstudio.eu',
     'depends': ['product_stock_location'],
     'demo': [],
     'summary': "Show Move sort on location",

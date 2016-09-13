@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,19 +18,18 @@
 #
 ##############################################################################
 {
-    'name': 'Sale Auto Invoice',
+    'name': 'Purchase Auto Invoice',
     'version': '8.0.1.1.1',
-    'category': 'Sales & Invoicing',
-    'summary': """Automatic creation of invoice on transfer of delivery
-    """,
     'author': 'ICTSTUDIO, André Schenkels',
     'license': 'AGPL-3',
     'website': 'http://www.ictstudio.eu',
+    'category': 'Purchase Management',
+    'summary': """Automaticly create invoice on receiving goods
+    """,
     'depends': [
-        'sale_stock',
-        'stock_account',
+        'purchase',
     ],
     'data': [
-        'views/sale_order.xml',
+        'views/purchase_order.xml',
     ],
 }

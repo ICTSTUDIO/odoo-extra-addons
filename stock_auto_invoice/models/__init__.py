@@ -17,20 +17,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Sale Auto Invoice',
-    'version': '8.0.1.1.1',
-    'category': 'Sales & Invoicing',
-    'summary': """Automatic creation of invoice on transfer of delivery
-    """,
-    'author': 'ICTSTUDIO, André Schenkels',
-    'license': 'AGPL-3',
-    'website': 'http://www.ictstudio.eu',
-    'depends': [
-        'sale_stock',
-        'stock_account',
-    ],
-    'data': [
-        'views/sale_order.xml',
-    ],
-}
+from . import stock_picking

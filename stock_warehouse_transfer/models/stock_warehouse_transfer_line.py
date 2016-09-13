@@ -95,7 +95,7 @@ class StockWarehouseTransferLine(models.Model):
 
         self.ensure_one()
         return {
-            'name' : 'Warehouse Transfer',
+            'name' : self.product_id and self.product_id.name or 'Warehouse Transfer',
             'product_id' : self.product_id.id,
             'product_uom' : self.product_uom_id.id,
             'product_uom_qty' : self.product_qty,
