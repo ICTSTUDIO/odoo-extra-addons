@@ -22,7 +22,7 @@
 
 {
     'name' : 'Sheet Width Relative',
-    'version': '1.0',
+    'version': '8.0.1.0.1',
     'author' : 'ICTSTUDIO, André Schenkels',
     'category': 'Web',
     'description': 'Sheet width relative to screen size',
