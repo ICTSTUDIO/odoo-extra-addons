@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<openerp>
+    <data>
+        <template id="assets_backend" name="web_form_pinned_header" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/web_form_pinned_header/static/src/css/web_form_pinned_header.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>

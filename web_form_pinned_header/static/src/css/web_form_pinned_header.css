@@ -1,0 +1,15 @@
+/*
+ * Copyright © 2016 ICTSTUDIO <http://www.ictstudio.eu>
+ * License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+ */
+
+@charset "utf-8";
+
+.openerp .oe_application .oe_form_sheetbg {
+    padding-top: 60px;
+}
+.openerp .oe_form header{
+    position: fixed;
+    z-index: 1;
+    width: 87%;
+}
