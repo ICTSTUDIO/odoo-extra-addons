@@ -1,24 +1,6 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2015 ERP|OPEN (www.erpopen.nl).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Copyright© 2016 ICTSTUDIO <http://www.ictstudio.eu>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
 from openerp import models, fields, api, _
@@ -29,6 +11,44 @@ _logger = logging.getLogger(__name__)
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
+
+    auto_invoiced = fields.Boolean(
+            string='Automaticly Invoiced',
+            compute='_get_auto_invoice',
+            store=True
+    )
+
+    @api.one
+    @api.depends('state')
+    def _get_auto_invoice(self):
+        ctx2 = dict(self._context, auto_invoice=self.id)
+        if self._context.get('auto_invoice') and self._context.get('auto_invoice') == self.id:
+            _logger.debug("Picking: %s Already Invoiced", self.id)
+        elif self.invoice_state == '2binvoiced':
+            if all([move.state in ['cancel', 'done'] for move in self.move_lines]):
+
+                # Invoice Picking Related to Sale
+                if self.picking_type_id.code == 'outgoing' and self.sale_id:
+                    ctx = dict(ctx2, inv_type='out_invoice')
+                    if self.sale_id.auto_invoice in ['yes', 'valid'] and self.sale_id.order_policy == 'picking':
+                        if self.sale_id.auto_invoice == 'valid':
+                            self.with_context(ctx).create_and_validate_invoice(validate=True, type='out_invoice')
+                        else:
+                            self.with_context(ctx).create_and_validate_invoice(type='out_invoice')
+                        self.auto_invoiced = True
+
+                # Invoice Picking Related to Purchase
+                elif self.picking_type_id.code == 'incoming' and self.get_purchases():
+                    ctx = dict(ctx2, inv_type='in_invoice')
+                    purchases = self.get_purchases()
+                    if purchases:
+                        purchase = purchases[0]
+                        if purchase.auto_invoice in ['yes', 'valid'] and purchase.invoice_method == 'picking':
+                            if purchase.auto_invoice == 'valid':
+                                self.with_context(ctx).create_and_validate_invoice(validate=True, type='in_invoice')
+                            else:
+                                self.with_context(ctx).create_and_validate_invoice(type='in_invoice')
+                            self.auto_invoiced = True
 
     @api.returns('account.journal', lambda r: r.id)
     def _get_journal(self):
@@ -61,59 +81,65 @@ class StockPicking(models.Model):
                 journal_type = 'sale'
             return journal_type
 
-    def get_purchase_id(self):
-        return self.env['purchase.order'].search([('picking_ids','in',self.id)])
 
-
-    @api.model
-    def create_and_validate_invoice(self, picking_ids, validate=False):
-        for picking in self.browse(picking_ids):
-            journal = self._get_journal()
-
-            invoices = picking.action_invoice_create(
-                    journal.id,
-            )
-            if validate:
-                for invoice in invoices:
-                    workflow.trg_validate(
-                            self.sudo()._uid,
-                            'account.invoice',
-                            invoice,
-                            'invoice_open',
-                            self._cr
-                    )
+    def get_purchases(self):
+        purchases = self.env['purchase.order']
+        for line in self.move_lines:
+            if line.purchase_line_id:
+                if line.purchase_line_id.order_id not in purchases:
+                    purchases += line.purchase_line_id.order_id
+        _logger.debug("Purchase Orders: %s, Related to Picking: %s", purchases, self.name)
+        return purchases
 
 
     @api.multi
-    def do_transfer(self):
-        """
-            On transfer create invoice
-        """
-        return_val = super(StockPicking, self).do_transfer()
+    def create_and_validate_invoice(self, validate=False, type='out_invoice'):
+        self.ensure_one()
+        journal = self._get_journal()
 
-        try:
-            for rec in self:
-                invoice_picking_ids = []
-                invoice_valid_picking_ids = []
-                if rec.picking_type_id.code == 'outgoing' and rec.sale_id:
-                    if rec.sale_id.auto_invoice in ['yes', 'valid'] and rec.sale_id.order_policy == 'picking' and rec.invoice_state == '2binvoiced':
-                        if rec.sale_id.auto_invoice == ['valid']:
-                            invoice_valid_picking_ids.append(rec.id)
-                        else:
-                            invoice_picking_ids.append(rec.id)
-                elif rec.picking_type_id.code == 'incoming' and rec.get_purchase_id():
-                    purchases = rec.get_purchase_id()
-                    if purchases:
-                        purchase = purchases[0]
-                        if rec.purchase.auto_invoice in ['yes', 'valid'] and purchase.invoice_method == 'picking' and rec.invoice_state == '2binvoiced':
-                            if rec.purchase.auto_invoice == ['valid']:
-                                invoice_valid_picking_ids.append(rec.id)
-                            else:
-                                invoice_picking_ids.append(rec.id)
+        invoices = self.action_invoice_create(
+                journal.id, type=type
+        )
+        _logger.debug("Invoices: %s", invoices)
+        if validate:
+            for invoice in invoices:
+                _logger.debug('Validating Invoice: %s',(invoice))
+                workflow.trg_validate(
+                        self.sudo()._uid,
+                        'account.invoice',
+                        invoice,
+                        'invoice_open',
+                        self._cr
+                )
 
-                rec.create_and_validate_invoice(invoice_picking_ids)
-                rec.create_and_validate_invoice(invoice_valid_picking_ids, validate=True)
-        except:
-            _logger.error("Unable to automaticly create invoice")
 
-        return return_val
+    # @api.multi
+    # def do_transfer(self):
+    #     """
+    #         On transfer create invoice
+    #     """
+    #     return_val = super(StockPicking, self).do_transfer()
+    #
+    #     try:
+    #         for rec in self:
+    #             if rec.picking_type_id.code == 'outgoing' and rec.sale_id:
+    #                 ctx = dict(self._context, inv_type='out_invoice')
+    #                 if rec.sale_id.auto_invoice in ['yes', 'valid'] and rec.sale_id.order_policy == 'picking' and rec.invoice_state == '2binvoiced':
+    #                     if rec.sale_id.auto_invoice == 'valid':
+    #                         rec.with_context(ctx).create_and_validate_invoice(validate=True, type='out_invoice')
+    #                     else:
+    #                         rec.with_context(ctx).create_and_validate_invoice(type='out_invoice')
+    #             elif rec.picking_type_id.code == 'incoming' and rec.get_purchases():
+    #                 ctx = dict(self._context, inv_type='in_invoice')
+    #                 purchases = rec.get_purchases()
+    #                 if purchases:
+    #                     purchase = purchases[0]
+    #                     if purchase.auto_invoice in ['yes', 'valid'] and purchase.invoice_method == 'picking' and rec.invoice_state == '2binvoiced':
+    #                         if purchase.auto_invoice == 'valid':
+    #                             rec.with_context(ctx).create_and_validate_invoice(validate=True, type='in_invoice')
+    #                         else:
+    #                             rec.with_context(ctx).create_and_validate_invoice(type='in_invoice')
+    #     except:
+    #          _logger.error("Unable to automaticly create invoice")
+    #
+    #     return return_val

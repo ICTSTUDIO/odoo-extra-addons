@@ -45,36 +45,39 @@ class PurchaseOrder(models.Model):
         store=True
     )
 
+    @api.one
     @api.depends('order_line.move_ids.state')
     def _get_auto_invoice(self):
-        for rec in self:
+        ctx2 = dict(self._context, auto_invoice=self.id)
+        if self._context.get('auto_invoice') and self._context.get('auto_invoice') == self.id:
+            _logger.debug("Purchase Order: %s Already Invoiced", self.id)
+        if self.auto_invoice in ['yes', 'valid'] and self.invoice_method == 'manual':
+            if all([move.state in ['cancel', 'done'] for move in [line.move_ids for line in self.order_line]]):
+                ctx = dict(ctx2, inv_type='in_invoice')
 
-            if rec.auto_invoice in ['yes', 'valid'] and rec.invoice_method == 'manual':
-                if all([move.state in ['cancel', 'done'] for move in rec.order_line.move_ids]):
-                    invoice = self.env['purchase.order'].sudo().action_invoice_create()
-                    if invoice:
-                        _logger.debug(
-                            'Automaticly Created Invoice: %s',(
-                                invoice
-                            )
-                        )
-                        rec.auto_invoiced = True
-
-                        if rec.auto_invoice == ['valid']:
-                            _logger.debug('Validating Invoice: %s',(invoice))
-                            workflow.trg_validate(
-                                    self.sudo()._uid,
-                                    'account.invoice',
-                                    invoice,
-                                    'invoice_open',
-                                    self._cr
-                            )
-                    else:
-                        _logger.debug(
-                            'Error automatic Invoice creation for order: %s',(
-                                rec.id
-                            )
-                        )
-                        rec.auto_invoiced = False
+                if self.auto_invoice == 'valid':
+                    self.sudo().with_context(ctx).create_and_validate_invoice(validate=True)
                 else:
-                    rec.auto_invoiced = False
+                    self.sudo().with_context(ctx).create_and_validate_invoice()
+                self.auto_invoiced = True
+
+
+    @api.multi
+    def create_and_validate_invoice(self, validate=False):
+        self.ensure_one()
+        invoices = self.action_invoice_create()
+        _logger.debug("Invoices: %s", invoices)
+
+        if isinstance(invoices, (int, long)):
+            invoices = [invoices]
+
+        if validate:
+            for invoice in invoices:
+                _logger.debug('Validating Invoice: %s',(invoice))
+                workflow.trg_validate(
+                        self.sudo()._uid,
+                        'account.invoice',
+                        invoice,
+                        'invoice_open',
+                        self._cr
+                )

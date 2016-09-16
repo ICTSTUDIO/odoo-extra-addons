@@ -1,24 +1,6 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2015 ERP|OPEN (www.erpopen.nl).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Copyright© 2016 ICTSTUDIO <http://www.ictstudio.eu>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
 from openerp import models, fields, api, _
@@ -45,37 +27,42 @@ class SaleOrder(models.Model):
         store=True
     )
 
+    @api.one
     @api.depends('order_line.procurement_ids.state')
     def _get_auto_invoice(self):
-        for rec in self:
-            group = rec.procurement_group_id
-            if group and rec.auto_invoice in ['yes', 'valid'] and rec.order_policy == 'manual':
-                if all([proc.state in ['cancel', 'done'] for proc in group.procurement_ids]):
+        ctx2 = dict(self._context, auto_invoice=self.id)
+        if self._context.get('auto_invoice') and self._context.get('auto_invoice') == self.id:
+            _logger.debug("Sale Order: %s Already Invoiced", self.id)
+    
+        group = self.procurement_group_id
 
-                    invoice = self.env['sale.order'].sudo().action_invoice_create()
-                    if invoice:
-                        _logger.debug(
-                            'Automaticly Created Invoice: %s',(
-                                invoice
-                            )
-                        )
-                        rec.auto_invoiced = True
+        if group and self.auto_invoice in ['yes', 'valid'] and self.order_policy == 'manual':
+            if all([proc.state in ['cancel', 'done'] for proc in group.procurement_ids]):
+                ctx = dict(ctx2, inv_type='out_invoice')
 
-                        if rec.auto_invoice == ['valid']:
-                            _logger.debug('Validating Invoice: %s',(invoice))
-                            workflow.trg_validate(
-                                    self.sudo()._uid,
-                                    'account.invoice',
-                                    invoice,
-                                    'invoice_open',
-                                    self._cr
-                            )
-                    else:
-                        _logger.debug(
-                            'Error automatic Invoice creation for order: %s',(
-                                rec.id
-                            )
-                        )
-                        rec.auto_invoiced = False
+                if self.auto_invoice == 'valid':
+                    self.sudo().with_context(ctx).create_and_validate_invoice(validate=True)
                 else:
-                    rec.auto_invoiced = False
+                    self.sudo().with_context(ctx).create_and_validate_invoice()
+                self.auto_invoiced = True
+
+
+    @api.multi
+    def create_and_validate_invoice(self, validate=False):
+        self.ensure_one()
+        invoices = self.action_invoice_create()
+        _logger.debug("Invoices: %s", invoices)
+
+        if isinstance(invoices, (int, long)):
+            invoices = [invoices]
+
+        if validate:
+            for invoice in invoices:
+                _logger.debug('Validating Invoice: %s',(invoice))
+                workflow.trg_validate(
+                        self.sudo()._uid,
+                        'account.invoice',
+                        invoice,
+                        'invoice_open',
+                        self._cr
+                )
