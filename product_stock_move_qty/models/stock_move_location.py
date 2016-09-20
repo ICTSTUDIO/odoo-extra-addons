@@ -1,22 +1,6 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Copyright© 2016 ICTSTUDIO <http://www.ictstudio.eu>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 
 import logging
@@ -142,8 +126,8 @@ from
         sm.location_dest_id = sl.id
     left join stock_picking sp ON
         sp.id = sm.picking_id
-    left join stock_picking_type spt ON
-        sm.picking_type_id = spt.id
+     left join stock_picking_type spt ON
+        sp.picking_type_id = spt.id
 where sl.usage='internal'
   and sm.state != 'cancel'
   and sm.company_id = sl.company_id
@@ -167,10 +151,11 @@ from
      stock_move sm
      left join stock_location sl ON
      sm.location_id = sl.id
+     left join stock_picking sp ON
+        sp.id = sm.picking_id
      left join stock_picking_type spt ON
-     sm.picking_type_id = spt.id
-left join stock_picking sp ON
-    sp.id = sm.picking_id
+        sp.picking_type_id = spt.id
+
 where sl.usage='internal'
   and sm.state != 'cancel'
   and sm.company_id = sl.company_id
