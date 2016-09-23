@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Products Stock Warehouse',
-    'version': '8.0.0.2.3',
+    'version': '8.0.0.3.0',
     'author': 'ICTSTUDIO, André Schenkels',
     'category': 'Stock Management',
     'website': 'https://www.odoo.com',

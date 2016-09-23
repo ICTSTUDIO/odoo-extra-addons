@@ -80,15 +80,20 @@ class StockWarehouse(models.Model):
 
     product_qty_available = fields.Float(
             compute="_get_product_stock",
-            #inverse="_set_product_stock",
             string="Qty On Hand",
             digits=dp.get_precision('Product Unit of Measure')
     )
     product_id = fields.Integer(
-            #comodel_name="product.product",
             compute="_get_product_stock",
             string="product_id"
     )
+
+    @api.model
+    def _get_free_available(self, product):
+        if 'immediately_usable_qty' in product._fields:
+            return product.immediately_usable_qty
+        else:
+            return product.qty_available-product.outgoing_qty
 
     @api.one
     def _get_product_stock(self):
@@ -110,10 +115,9 @@ class StockWarehouse(models.Model):
         else: 
             return False
 
-
         product = self.env['product.product'].with_context(location=self.lot_stock_id.id).browse(product_id)
         self.product_qty_available = product.qty_available
-        self.product_free_available = product.qty_available-product.outgoing_qty
+        self.product_free_available = self._get_free_available(product)
         self.product_virtual_available = product.virtual_available
         self.product_incoming = product.incoming_qty
         self.product_outgoing = product.outgoing_qty
