@@ -60,10 +60,18 @@ class ProductProduct(models.Model):
         location_id = False
         if self.env.context.get('location_id'):
             location_id = self.env.context.get('location_id')
+        if self.env.context.get('location'):
+            if isinstance(self.env.context.get('location'), (long, int)):
+                location_id = self.env.context.get('location')
+            else:
+                try:
+                    location_id = self.env.context.get('location').id
+                except:
+                    _logger.error("No valid location in context")
 
         self.product_location = '-'
-        if not warehouse_id:
-            warehouse_id = self._get_default_warehouse()
+        # if not warehouse_id:
+        #     warehouse_id = self._get_default_warehouse()
 
         if warehouse_id:
             location = self.locations.filtered(lambda r: r.warehouse_id.id == warehouse_id)
