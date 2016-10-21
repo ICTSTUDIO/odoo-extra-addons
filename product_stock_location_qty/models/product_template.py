@@ -14,6 +14,6 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     stock_product_location_ids = fields.One2many(
-            related='product_variant_ids.barcode_ids',
+            related='product_variant_ids.stock_product_location_ids',
             string='Location Stock'
     )

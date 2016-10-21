@@ -4,5 +4,5 @@
 
 from . import stock_product_location
 from . import product_product
-#from . import product_template
+from . import product_template
 

@@ -4,7 +4,7 @@
 
 {
     'name': 'Product Stock Location Qty',
-    'version': '8.0.1.1.2',
+    'version': '8.0.1.2.1',
     'author': 'ICTSTUDIO, André Schenkels',
     'license': 'AGPL-3',
     'website': 'http://www.ictstudio.eu',
