@@ -16,7 +16,7 @@ class SaleOrderLine(models.Model):
             compute="_get_inv_qty",
             digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Invoiced',
-            store=True,
+            #store=True,
             help="Quantity Invoiced")
 
 
@@ -31,7 +31,7 @@ class SaleOrderLine(models.Model):
     @api.model
     def check_invoice(self, inv_line):
         # Check Invoice states
-        if inv_line.invoice_id.state not in ('open', 'done'):
+        if inv_line.invoice_id.state not in ('draft', 'open', 'done'):
             return False
 
         # Check Date Filters
