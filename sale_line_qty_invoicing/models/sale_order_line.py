@@ -21,11 +21,13 @@ class SaleOrderLine(models.Model):
     @api.model
     def _prepare_order_line_invoice_line(self, line, account_id=False):
         vals = super(SaleOrderLine, self)._prepare_order_line_invoice_line(line, account_id=account_id)
-        if line.order_id.order_policy=='picking' and vals:
+        #Check if qty == 0 if so remove the line so dont return vals
+        if line.order_id.order_policy == 'picking' and vals:
             if not line.invoiced:
-
                 vals['price_unit'] = line.price_unit
-        return vals
+        if vals and vals.get('quantity'):
+            return vals
+        return {}
 
     @api.one
     def _get_invoiced(self):
@@ -39,12 +41,20 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def _get_line_qty(self, line):
-        if line.order_id.order_policy == 'manual':
-            return super(SaleOrderLine, self)._get_line_qty(line)
-        elif line.order_id.order_policy == 'picking':
-            _logger.debug("Qty Invoiced: %s", line.qty_invoiced)
-            _logger.debug("Qty Delivered: %s", line.qty_delivered)
-            qty_to_invoice = line.qty_delivered - line.qty_invoiced
-            _logger.debug("Qty To Invoice: %s", qty_to_invoice)
-            return qty_to_invoice
+        if line.order_id.order_policy == 'picking':
+            if line.product_id.type in ('product', 'consu'):
+                super(SaleOrderLine, self)._get_line_qty(line)
+                _logger.debug("Qty Invoiced: %s", line.qty_invoiced)
+                _logger.debug("Qty Delivered: %s", line.qty_delivered)
+                qty_to_invoice = line.qty_delivered - line.qty_invoiced
+                _logger.debug("Qty To Invoice: %s", qty_to_invoice)
+                return qty_to_invoice
+            elif line.product_id.type == 'service':
+                if line.qty_invoiced < line.product_uom_qty:
+                    qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+                else:
+                    qty_to_invoice = 0
+                return qty_to_invoice
+
+        return super(SaleOrderLine, self)._get_line_qty(line)
 

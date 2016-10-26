@@ -18,6 +18,7 @@ class SaleOrder(models.Model):
         if order.order_policy=='picking':
             inv_obj = self.env['account.invoice']
             inv = self._prepare_invoice(order, lines)
+            _logger.debug(inv)
             invoice = inv_obj.create(inv)
             data = invoice.onchange_payment_term_date_invoice(inv['payment_term'], time.strftime(DEFAULT_SERVER_DATE_FORMAT))
             if data.get('value', False):
