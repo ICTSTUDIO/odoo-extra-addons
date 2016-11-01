@@ -33,4 +33,4 @@ class StockPicking(models.Model):
                 invoice_ids += inv_id
             return invoice_ids
         else:
-            super(StockPicking, self).action_invoice_create(journal_id, group=group, type=type)
+            return super(StockPicking, self).action_invoice_create(journal_id, group=group, type=type)
