@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
 
     qty_invoiced = fields.Float(
             compute="_get_inv_qty",
-            digits_compute=dp.get_precision('Product Unit of Measure'),
+            digits=dp.get_precision('Product Unit of Measure'),
             string='Invoiced',
             #store=True,
             help="Quantity Invoiced")

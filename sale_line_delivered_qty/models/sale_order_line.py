@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
 
     qty_delivered = fields.Float(
             compute="_get_pick_qty",
-            digits_compute=dp.get_precision('Product Unit of Measure'),
+            digits=dp.get_precision('Product Unit of Measure'),
             string='Delivered',
             store=True,
             help="Quantity Delivered"
