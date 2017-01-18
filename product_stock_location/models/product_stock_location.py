@@ -29,14 +29,17 @@ class ProductStockLocation(models.Model):
 
     warehouse_id = fields.Many2one(
             comodel_name="stock.warehouse",
-            string="Warehouse"
+            string="Warehouse",
+            index=True
     )
     product_id = fields.Many2one(
             comodel_name="product.product",
-            string="Product"
+            string="Product",
+            index=True
     )
     location = fields.Char(
-            string="Location"
+            string="Location",
+            index=True
     )
     warehouse_location_id = fields.Many2one(
             comodel_name="stock.location",
