@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_warehouse_transfer
+# 	* stock_warehouse_transfer_product
 #
 msgid ""
 msgstr ""
@@ -16,216 +16,65 @@ msgstr ""
 "Language: nl\n"
 "X-Generator: Poedit 1.8.8\n"
 
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,company_id:0
-msgid "Company"
-msgstr "Bedrijf"
+#. module: stock_warehouse_transfer_products
+#: view:stock.warehouse.transfer.product:stock_warehouse_transfer_products.stock_warehouse_transfer_product_view_form
+msgid "Cancel"
+msgstr "Annuleren"
 
-#. module: stock_warehouse_transfer
-#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
-msgid "Create Picking"
-msgstr "Maak Picking"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,create_uid:0
-#: field:stock.warehouse.transfer.line,create_uid:0
-msgid "Created by"
-msgstr "Gecreëerd door"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,create_date:0
-#: field:stock.warehouse.transfer.line,create_date:0
-msgid "Created on"
-msgstr "Gecreëerd op"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,date:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: stock_warehouse_transfer
-#: help:stock.warehouse.transfer,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Datum van de laatste bericht gepost op het record."
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer.line,dest_location:0
-msgid "Destination Location"
-msgstr "Bestemming"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,dest_warehouse:0
+#. module: stock_warehouse_transfer_products
+#: field:stock.warehouse.transfer.product,dest_warehouse:0
 msgid "Destination Warehouse"
 msgstr "Bestemmings magazijn"
 
-#. module: stock_warehouse_transfer
-#: selection:stock.warehouse.transfer,state:0
-msgid "Done"
-msgstr "Afgewerkt"
+#. module: stock_warehouse_transfer_products
+#: field:stock.warehouse.transfer.product,display_name:0
+msgid "Display Name"
+msgstr "Weergave Naam"
 
-#. module: stock_warehouse_transfer
-#: selection:stock.warehouse.transfer,state:0
-msgid "Draft"
-msgstr "Concept"
+#. module: stock_warehouse_transfer_products
+#: model:ir.actions.act_window,name:stock_warehouse_transfer_products.stock_warehouse_transfer_product_view_action
+#: model:ir.ui.menu,name:stock_warehouse_transfer_products.stock_warehouse_transfer_product_menu
+msgid "Easy Warehouse Transfer"
+msgstr "Hulp interne voorraad verplaatsing"
 
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,message_follower_ids:0
-msgid "Followers"
-msgstr "Volgers"
+#. module: stock_warehouse_transfer_products
+#: selection:stock.warehouse.transfer.product,transfer_type:0
+msgid "Fill to the minimum quantity"
+msgstr "Aanvullen tot de minimale voorraad"
 
-#. module: stock_warehouse_transfer
-#: help:stock.warehouse.transfer,message_summary:0
-msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
-msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+#. module: stock_warehouse_transfer_products
+#: field:stock.warehouse.transfer.product,location_id:0
+msgid "Location Stock"
+msgstr "Voorraad Locatie"
 
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,id:0 field:stock.warehouse.transfer.line,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: stock_warehouse_transfer
-#: help:stock.warehouse.transfer,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Is een volger"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,message_last_post:0
-msgid "Last Message Date"
-msgstr "Last Message Date"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,write_uid:0
-#: field:stock.warehouse.transfer.line,write_uid:0
-msgid "Last Updated by"
-msgstr "Last Updated by"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,write_date:0
-#: field:stock.warehouse.transfer.line,write_date:0
-msgid "Last Updated on"
-msgstr "Last Updated on"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,message_ids:0
-msgid "Messages"
-msgstr "Berichten"
-
-#. module: stock_warehouse_transfer
-#: help:stock.warehouse.transfer,message_ids:0
-msgid "Messages and communication history"
-msgstr "Messages and communication history"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer.line,note:0
-msgid "Note"
-msgstr "Notitie"
-
-#. module: stock_warehouse_transfer
-#: selection:stock.warehouse.transfer,state:0
-msgid "Picking"
-msgstr "Picking"
-
-#. module: stock_warehouse_transfer
-#: model:ir.model,name:stock_warehouse_transfer.model_stock_picking
-msgid "Picking List"
-msgstr "Verzamellijst"
-
-#. module: stock_warehouse_transfer
-#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
-msgid "Pickings"
-msgstr "Pickings"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer.line,product_id:0
-msgid "Product"
-msgstr "Product"
-
-#. module: stock_warehouse_transfer
-#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
+#. module: stock_warehouse_transfer_products
+#: view:stock.warehouse.transfer.product:stock_warehouse_transfer_products.stock_warehouse_transfer_product_view_form
+#: field:stock.warehouse.transfer.product,product_ids:0
 msgid "Products"
 msgstr "Producten"
 
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer.line,product_qty:0
-msgid "Quantity"
-msgstr "Hoeveelheid"
-
-#. module: stock_warehouse_transfer
-#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
-#: field:stock.warehouse.transfer,name:0
-msgid "Reference"
-msgstr "Referentie"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,pickings:0
-msgid "Related Picking"
-msgstr "Related Picking"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer.line,source_location:0
-msgid "Source Location"
-msgstr "Bronlocatie"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,source_warehouse:0
+#. module: stock_warehouse_transfer_products
+#: field:stock.warehouse.transfer.product,source_warehouse:0
 msgid "Source Warehouse"
 msgstr "Bron magazijn"
 
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,state:0
-msgid "Status"
-msgstr "Status"
+#. module: stock_warehouse_transfer_products
+#: model:ir.model,name:stock_warehouse_transfer_products.model_stock_warehouse_transfer_product
+msgid "Stock Warehouse Transfer Product"
+msgstr "Hulp bij Interne voorraad verplaatsing"
 
-#. module: stock_warehouse_transfer
-#: model:ir.actions.act_window,name:stock_warehouse_transfer.stock_warehouse_transfer_action
-#: model:ir.model,name:stock_warehouse_transfer.model_stock_warehouse_transfer
-#: model:ir.ui.menu,name:stock_warehouse_transfer.stock_warehouse_transfer_menu
-msgid "Stock Warehouse Transfer"
-msgstr "Interne voorraadverplaatsing"
+#. module: stock_warehouse_transfer_products
+#: field:stock.warehouse.transfer.product,transfer_type:0
+msgid "Transfer Type"
+msgstr "Soort verplaatsing"
 
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,message_summary:0
-msgid "Summary"
-msgstr "Samenvatting"
+#. module: stock_warehouse_transfer_products
+#: code:addons/stock_warehouse_transfer_products/wizard/stock_warehouse_transfer_product.py:90
+#, python-format
+msgid "Warehouse Transfer"
+msgstr "Interne voorraad verplaatsing"
 
-#. module: stock_warehouse_transfer
-#: field:stock.picking,transfer:0
-#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
-#: field:stock.warehouse.transfer.line,transfer:0
-msgid "Transfer"
-msgstr "Verplaatsing"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,lines:0
-msgid "Transfer Lines"
-msgstr "Verplaatsing details"
-
-#. module: stock_warehouse_transfer
-#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_tree
-msgid "Transfers"
-msgstr "Transfers"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer.line,product_uom_id:0
-msgid "Unit of Measure"
-msgstr "Maateenheid"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,message_unread:0
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
-
-#. module: stock_warehouse_transfer
-#: field:stock.warehouse.transfer,website_message_ids:0
-msgid "Website Messages"
-msgstr "Berichten"
-
-#. module: stock_warehouse_transfer
-#: help:stock.warehouse.transfer,website_message_ids:0
-msgid "Website communication history"
-msgstr "Berichten historie"
+#. module: stock_warehouse_transfer_products
+#: view:stock.warehouse.transfer.product:stock_warehouse_transfer_products.stock_warehouse_transfer_product_view_form
+msgid "or"
+msgstr "of"

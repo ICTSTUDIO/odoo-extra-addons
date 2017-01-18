@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2016 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<openerp>
+    <data>
+
+        <record id="stock_warehouse_transfer_product_view_form" model="ir.ui.view">
+            <field name="name">stock.warehouse.transfer.product.view.form</field>
+            <field name="model">stock.warehouse.transfer.product</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Warehouse Transfer Products">
+                    <group col="4">
+                        <field name="source_warehouse"/>
+                        <newline/>
+                        <field name="dest_warehouse"/>
+                        <newline/>
+                        <field name="transfer_type"/>
+                        <field name="location_id" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="product_ids" context="{'location': location_id, 'search_default_prod':1}"/>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="create_transfer" string="Create" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_warehouse_transfer_product_view_action" model="ir.actions.act_window">
+            <field name="name">Easy Warehouse Transfer</field>
+            <field name="res_model">stock.warehouse.transfer.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="stock_warehouse_transfer_product_view_form"/>
+        </record>
+
+        <menuitem id="stock_warehouse_transfer_product_menu"
+                  action="stock_warehouse_transfer_product_view_action"
+                  parent="stock_warehouse_transfer.stock_warehouse_transfer_main_menu"
+                  sequence="55"/>
+
+    </data>
+</openerp>

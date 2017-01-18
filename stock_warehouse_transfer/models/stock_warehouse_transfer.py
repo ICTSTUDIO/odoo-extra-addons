@@ -28,6 +28,7 @@ class StockWarehouseTransfer(models.Model):
     _name = 'stock.warehouse.transfer'
     _description = 'Stock Warehouse Transfer'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = 'date desc, name desc'
 
     @api.model
     def _get_default_name(self):

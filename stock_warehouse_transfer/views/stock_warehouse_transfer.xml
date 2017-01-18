@@ -70,17 +70,45 @@
             </field>
         </record>
 
+        <record id="stock_warehouse_transfer_view_search" model="ir.ui.view">
+            <field name="name">stock.warehouse.transfer.view.search</field>
+            <field name="model">stock.warehouse.transfer</field>
+            <field name="arch" type="xml">
+                <search string="Search Transfers">
+                    <field name="name"/>
+                    <field name="source_warehouse"/>
+                    <field name="dest_warehouse"/>
+                    <filter name="concept" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="picking" string="Picking" domain="[('state','=','picking')]"/>
+                    <filter name="afgewerkt" string="Done" domain="[('state','=','done')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" context="{'group_by':'state'}"/>
+                        <sperator/>
+                        <filter name="group_by_source_warehouse" string="Source Warehouse" context="{'group_by':'source_warehouse'}"/>
+                        <filter name="group_by_dest_warehouse" string="Destination Warehouse" context="{'group_by':'dest_warehouse'}"/>
+
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="stock_warehouse_transfer_action" model="ir.actions.act_window">
             <field name="name">Stock Warehouse Transfer</field>
             <field name="res_model">stock.warehouse.transfer</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="stock_warehouse_transfer_view_search"/>
         </record>
 
         <menuitem action="stock_warehouse_transfer_action"
-                  id="stock_warehouse_transfer_menu"
+                  id="stock_warehouse_transfer_main_menu"
                   parent="stock.menu_stock_warehouse_mgmt"
+                  sequence="50"/>
+
+        <menuitem action="stock_warehouse_transfer_action"
+                  id="stock_warehouse_transfer_menu"
+                  parent="stock_warehouse_transfer_main_menu"
                   sequence="50"/>
 
     </data>
