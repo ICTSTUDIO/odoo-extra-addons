@@ -64,14 +64,16 @@ class StockWarehouseTransferProduct(models.TransientModel):
     def create_transfer_lines(self, transfer):
         for product in self.product_ids:
             transfer_line = self.env['stock.warehouse.transfer.line']
-            transfer_line.create(
-                    {
-                        'product_id': product.id,
-                        'product_uom_id': product.uom_id and product.uom_id.id,
-                        'product_qty': self.get_product_qty(product),
-                        'transfer': transfer.id
-                    }
-            )
+            product_qty = self.get_product_qty(product)
+            if product_qty:
+                transfer_line.create(
+                        {
+                            'product_id': product.id,
+                            'product_uom_id': product.uom_id and product.uom_id.id,
+                            'product_qty': product_qty,
+                            'transfer': transfer.id
+                        }
+                )
 
     @api.multi
     def create_transfer(self):
