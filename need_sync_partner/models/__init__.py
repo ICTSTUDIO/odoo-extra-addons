@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    OpenERP, Open Source Management Solution
+#
+#    Copyright (c) 2015 ICTSTUDIO (www.ictstudio.eu).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -10,26 +12,12 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Need Synchronization Product Module',
-    'version': '8.0.0.0.3',
-    'category': 'Stock',
-    'author': 'ICTSTUDIO | André Schenkels',
-    'website': 'http://www.ictstudio.eu',
-    'license': 'AGPL-3',
-    'summary': 'Product Specific module for seting need sync',
-    'depends': [
-        'need_sync_base',
-        'stock',
-    ],
-    'data': [
-        'views/product_template.xml'
-    ],
-}
+
+from . import need_sync_model

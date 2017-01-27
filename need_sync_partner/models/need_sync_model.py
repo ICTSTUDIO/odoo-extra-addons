@@ -27,13 +27,13 @@ from openerp import models, fields, api
 _logger = logging.getLogger(__name__)
 
 
-class NeedSyncConnectionModel(models.Model):
-    _name = "need.sync.connection.model"
-    _description = "Need Sync Connection Models"
-    _rec_name = 'model'
+class NeedSyncModel(models.Model):
+    _inherit = "need.sync.model"
 
     def _select_models(self):
-        return self.env['need.sync.model']._select_models()
+        list_models = super(NeedSyncModel, self)._select_models()
+        list_models.append(('res.partner', 'Partner'))
+        return list_models
 
     model = fields.Selection(
             selection=_select_models,
@@ -41,17 +41,21 @@ class NeedSyncConnectionModel(models.Model):
             required=True,
             index=True
     )
-    need_sync_connection = fields.Many2one(
-            comodel_name="need.sync.connection",
-            string="Connection",
-            index=True
-    )
-    auto_create_lines = fields.Boolean(
-            string="Create Sync Lines Automatic",
-            default=False,
-            help="Create a sync line for every product available automaticly"
-    )
 
-    _sql_constraints = {
-        ('connection_model_uniq', 'unique(model, need_sync_connection)', 'Only one model per connection')
-    }
+    @api.multi
+    def get_object_records_changed(self):
+        """
+        Detect Object Changes
+        :return: list of res_id
+        """
+        self.ensure_one()
+
+        changed_records = super(NeedSyncModel, self).get_object_records_changed()
+        if self.model == 'res.partner':
+
+            changed_records = self.env['res.partner'].search(
+                    [
+                        ('write_date', '>', self.last_check_date),
+                    ]
+            )
+        return changed_records

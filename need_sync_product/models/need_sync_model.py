@@ -56,6 +56,35 @@ class NeedSyncModel(models.Model):
                 ]
         )
 
+    def get_products_from_pricelist(self):
+        changed_price_product_records = self.env['product.pricelist.item'].search(
+                [
+                    ('write_date', '>', self.last_check_date),
+                    ('product_id', '!=', False)
+
+                ]
+        )
+        products = changed_price_product_records.mapped('product_id')
+
+        changed_price_product_templ_records = self.env['product.pricelist.item'].search(
+                [
+                    ('write_date', '>', self.last_check_date),
+                    ('product_tmpl_id', '!=', False)
+
+                ]
+        )
+        product_templates = changed_price_product_templ_records.mapped('product_tmpl_id')
+        return products | self.get_products_from_template(product_templates)
+
+    def get_products_from_stock_moves(self):
+        changed_stock_moves = self.env['stock.move'].search(
+                [
+                    ('write_date', '>', self.last_check_date),
+                    ('product_id', '!=', False)
+
+                ]
+        )
+        return changed_stock_moves.mapped('product_id')
 
     @api.multi
     def get_object_records_changed(self):
@@ -66,7 +95,6 @@ class NeedSyncModel(models.Model):
         self.ensure_one()
 
         changed_records = super(NeedSyncModel, self).get_object_records_changed()
-
         if self.model == 'product.product':
             changed_template_records = self.env['product.template'].search(
                     [
@@ -76,19 +104,8 @@ class NeedSyncModel(models.Model):
             if changed_template_records:
                 changed_records = changed_records | self.get_products_from_template(changed_template_records)
 
-            changed_price_product_records = self.env['product_pricelist_item'].search(
-                    [
-                        ('write_date', '>', self.last_check_date),
-                        ('product_id', '!=', False)
+            changed_records = changed_records | self.get_products_from_pricelist()
 
-                    ]
-            )
-            changed_price_product_templ_records = self.env['product_pricelist_item'].search(
-                    [
-                        ('write_date', '>', self.last_check_date),
-                        ('product_tmpl_id', '!=', False)
-
-                    ]
-            )
+            changed_records = changed_records | self.get_products_from_stock_moves()
 
         return changed_records

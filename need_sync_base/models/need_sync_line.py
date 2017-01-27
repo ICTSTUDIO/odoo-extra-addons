@@ -1,24 +1,6 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2015 ICTSTUDIO (www.ictstudio.eu).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Copyright© 2016 ICTSTUDIO <http://www.ictstudio.eu>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
 
@@ -49,13 +31,19 @@ class NeedSyncLine(models.Model):
             related="need_sync.need_sync_date"
     )
     model = fields.Selection(
-            related="need_sync.model"
+            related="need_sync.model",
+            store=True,
+            index=True
     )
     res_id = fields.Integer(
-            related="need_sync.res_id"
+            related="need_sync.res_id",
+            store=True,
+            index=True
     )
     record = fields.Reference(
-            related="need_sync.record"
+            related="need_sync.record",
+            store=True,
+            index=True
     )
     sync_needed = fields.Boolean(
             string="Sync Needed",
@@ -70,6 +58,7 @@ class NeedSyncLine(models.Model):
     confirmed_date = fields.Datetime(
             string="Last Sync Datetime"
     )
+
 
     _sql_constraints = {
         ('connection_need_sync_uniq', 'unique(need_sync, need_sync_connection)', 'Only one need sync per connection')
@@ -106,6 +95,14 @@ class NeedSyncLine(models.Model):
             self.sync_needed = False
 
     @api.multi
+    def _auto_create_need_sync(self, need_sync, need_sync_connection):
+        # Check if auto create lines is activated
+        for allowed_model in need_sync_connection.allowed_models:
+            if allowed_model.model == need_sync.model:
+                if allowed_model.auto_create_lines:
+                    self._create_need_sync(need_sync, need_sync_connection)
+
+    @api.multi
     def _create_need_sync(self, need_sync, need_sync_connection):
         if need_sync and need_sync_connection:
             self.create(
@@ -114,3 +111,30 @@ class NeedSyncLine(models.Model):
                         'need_sync_connection': need_sync_connection.id
                     }
             )
+
+    @api.multi
+    def map_need_sync(self, model, res_ids, need_sync_connection):
+
+        if isinstance(res_ids, (long, int)):
+            res_ids = [res_ids]
+
+        need_sync_lines = self.search(
+                [
+                    ('model', '=', model),
+                    ('res_id', 'in', res_ids),
+                    ('need_sync_connection', '=', need_sync_connection.id)
+                ]
+        )
+
+        need_sync_line_res_ids = [x.res_id for x in need_sync_lines]
+        create_sync_line_ids = list(set(res_ids) - set(need_sync_line_res_ids))
+        if create_sync_line_ids:
+            for res_id in create_sync_line_ids:
+                need_sync = self.env['need.sync'].search(
+                        [
+                            ('model', '=', model),
+                            ('res_id', '=', res_id),
+                        ]
+                )
+                self._create_need_sync(need_sync, need_sync_connection)
+        return True

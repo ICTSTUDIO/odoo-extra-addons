@@ -18,24 +18,16 @@
 #
 ##############################################################################
 {
-    'name': 'Need Synchronization Base',
+    'name': 'Need Synchronization Partner Module',
     'version': '8.0.0.0.3',
-    'category': 'Stock',
+    'category': 'Tools',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
-    'summary': 'Base module for external connections detecting changed models in ODOO',
+    'summary': 'Partner Specific module for seting need sync',
     'depends': [
-        'base',
+        'need_sync_base',
     ],
     'data': [
-        'security/security_groups.xml',
-        'security/ir.model.access.csv',
-        'views/need_sync.xml',
-        'views/need_sync_line.xml',
-        'views/need_sync_connection.xml',
-        'views/need_sync_model.xml',
-        'views/menu.xml',
-        'data/need_sync_model.xml'
     ],
 }

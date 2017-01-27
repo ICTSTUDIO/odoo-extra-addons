@@ -59,6 +59,7 @@
                     <field name="last_sync_date"/>
                     <field name="model"/>
                     <field name="res_id"/>
+                    <field name="record"/>
                     <filter name="filter_sync_needed" string="Synchronization Needed" domain="[('sync_needed','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_sync_needed" string="Synchronization Needed" context="{'group_by':'sync_needed'}"/>

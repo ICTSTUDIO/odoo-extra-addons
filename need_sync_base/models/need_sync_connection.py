@@ -66,3 +66,17 @@ class NeedSyncConnection(models.Model):
             self.name = '%s' % (self.connection.name)
         else:
             self.name = '%s' % ('No Connection Name')
+
+    @api.model
+    def get_need_sync_list(self, model):
+        return self.env['need.sync.line'].search(
+                [
+                    ('need_sync_connection', '=', self.id),
+                    ('model', '=', model),
+                    ('sync_needed', '=', True)
+                ]
+        )
+
+    @api.model
+    def map_need_sync(self, model, res_ids):
+        return self.env['need.sync.line'].map_need_sync(model, res_ids, self)

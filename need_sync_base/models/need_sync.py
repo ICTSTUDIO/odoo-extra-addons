@@ -56,6 +56,7 @@ class NeedSync(models.Model):
             selection=_select_models,
             string="Record",
             compute="_get_record",
+            store=True,
             size=128
     )
     need_sync_date = fields.Datetime(
@@ -67,12 +68,13 @@ class NeedSync(models.Model):
             string="Sync Lines"
     )
 
-
     @api.one
     @api.depends('res_id', 'model')
     def _get_record(self):
         if self.res_id and self.model:
-            self.record = self.env[self.model].browse(self.res_id)
+            print self.res_id
+            print self.model
+            self.record = self.env[str(self.model)].browse(self.res_id)
 
     @api.one
     @api.depends('res_id', 'model')
@@ -132,7 +134,7 @@ class NeedSync(models.Model):
                                 ('model', '=', model)
                             ]
                     ):
-                        self.env['need.sync.line']._create_need_sync(
+                        self.env['need.sync.line']._auto_create_need_sync(
                                 create_need_sync,
                                 connection_model.need_sync_connection
                         )

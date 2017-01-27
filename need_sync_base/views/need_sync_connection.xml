@@ -19,9 +19,11 @@
                                 <field name="allowed_models" >
                                     <tree editable="top">
                                         <field name="model"/>
+                                        <field name="auto_create_lines"/>
                                     </tree>
                                     <form>
                                         <field name="model"/>
+                                        <field name="auto_create_lines"/>
                                     </form>
                                 </field>
                             </page>
