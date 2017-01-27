@@ -35,6 +35,9 @@
                 <xpath expr="//field[@name='product_id']" position="after">
                     <field name="section_id"/>
                 </xpath>
+                <xpath expr="//filter[@string='Status']" position="after">
+                    <filter string="Sales Team" domain="[]"  context="{'group_by':'section_id'}"/>
+                </xpath>
             </field>
         </record>
 
