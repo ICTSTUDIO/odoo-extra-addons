@@ -19,16 +19,17 @@
 ##############################################################################
 {
     'name': 'Products Stock Warehouse',
-    'version': '8.0.0.3.0',
+    'version': '8.0.0.3.1',
     'author': 'ICTSTUDIO, André Schenkels',
-    'category': 'Stock Management',
-    'website': 'https://www.odoo.com',
+    'license': 'AGPL-3',
+    'website': 'http://www.ictstudio.eu',
+    'complexity': 'normal',
+    'summary': "Show Stock Available each Warehouse",
     'depends': [
         'stock',
         'product_stock_move_qty'
     ],
     'demo': [],
-    'summary': "Show Stock Available each Warehouse",
     'data': [
         'views/stock_warehouse.xml',
         'views/product_product.xml',
