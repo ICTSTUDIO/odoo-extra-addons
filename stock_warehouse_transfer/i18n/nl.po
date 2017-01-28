@@ -1,0 +1,169 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* stock_warehouse_transfer
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-01-18 12:28+0000\n"
+"PO-Revision-Date: 2017-01-18 12:28+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer,company_id:0
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
+msgid "Create Picking"
+msgstr "Maak Picking"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer.line,dest_location:0
+msgid "Destination Location"
+msgstr "Bestemming"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_search
+#: field:stock.warehouse.transfer,dest_warehouse:0
+msgid "Destination Warehouse"
+msgstr "Bestemmings magazijn"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer,display_name:0
+#: field:stock.warehouse.transfer.line,display_name:0
+msgid "Display Name"
+msgstr "Display Name"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_search
+#: selection:stock.warehouse.transfer,state:0
+msgid "Done"
+msgstr "Afgewerkt"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_search
+#: selection:stock.warehouse.transfer,state:0
+msgid "Draft"
+msgstr "Concept"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_search
+msgid "Group By"
+msgstr "Groeperen op"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer.line,note:0
+msgid "Note"
+msgstr "Notitie"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_search
+#: selection:stock.warehouse.transfer,state:0
+msgid "Picking"
+msgstr "Picking"
+
+#. module: stock_warehouse_transfer
+#: model:ir.model,name:stock_warehouse_transfer.model_stock_picking
+msgid "Picking List"
+msgstr "Verzamellijst"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
+msgid "Pickings"
+msgstr "Pickings"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer.line,product_id:0
+msgid "Product"
+msgstr "Product"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
+msgid "Products"
+msgstr "Producten"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer.line,product_qty:0
+msgid "Quantity"
+msgstr "Hoeveelheid"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
+#: field:stock.warehouse.transfer,name:0
+msgid "Reference"
+msgstr "Referentie"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer,pickings:0
+msgid "Related Picking"
+msgstr "Gerelateerde Picking"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_search
+msgid "Search Transfers"
+msgstr "Zoek Interne verplaatsingen"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer.line,source_location:0
+msgid "Source Location"
+msgstr "Bronlocatie"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_search
+#: field:stock.warehouse.transfer,source_warehouse:0
+msgid "Source Warehouse"
+msgstr "Bron magazijn"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_search
+#: field:stock.warehouse.transfer,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: stock_warehouse_transfer
+#: model:ir.actions.act_window,name:stock_warehouse_transfer.stock_warehouse_transfer_action
+#: model:ir.model,name:stock_warehouse_transfer.model_stock_warehouse_transfer
+#: model:ir.ui.menu,name:stock_warehouse_transfer.stock_warehouse_transfer_main_menu
+#: model:ir.ui.menu,name:stock_warehouse_transfer.stock_warehouse_transfer_menu
+msgid "Stock Warehouse Transfer"
+msgstr "Interne voorraadverplaatsing"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer,message_summary:0
+msgid "Summary"
+msgstr "Samenvatting"
+
+#. module: stock_warehouse_transfer
+#: field:stock.picking,transfer:0
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_form
+#: field:stock.warehouse.transfer.line,transfer:0
+msgid "Transfer"
+msgstr "Verplaatsing"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer,lines:0
+msgid "Transfer Lines"
+msgstr "Verplaatsing details"
+
+#. module: stock_warehouse_transfer
+#: view:stock.warehouse.transfer:stock_warehouse_transfer.stock_warehouse_transfer_view_tree
+msgid "Transfers"
+msgstr "Interne verplaatsing"
+
+#. module: stock_warehouse_transfer
+#: field:stock.warehouse.transfer.line,product_uom_id:0
+msgid "Unit of Measure"
+msgstr "Maateenheid"

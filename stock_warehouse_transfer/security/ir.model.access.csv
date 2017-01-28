@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_stock_warehouse_transfer_stock_user","user stock_warehouse_transfer","model_stock_warehouse_transfer","stock.group_stock_user",1,1,1,1
+"access_stock_warehouse_transfer_stock_manager","manager stock_warehouse_transfer","model_stock_warehouse_transfer","stock.group_stock_manager",1,1,1,1
+"access_stock_warehouse_transfer_line_stock_user","user stock_warehouse_transfer_line","model_stock_warehouse_transfer_line","stock.group_stock_user",1,1,1,1
+"access_stock_warehouse_transfer_line_stock_manager","manager stock_warehouse_transfer_line","model_stock_warehouse_transfer_line","stock.group_stock_manager",1,1,1,1
