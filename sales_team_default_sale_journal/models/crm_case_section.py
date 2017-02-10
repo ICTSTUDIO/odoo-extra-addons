@@ -18,3 +18,8 @@ class CrmCaseSection(models.Model):
             string="Default Sale Journal",
             domain=[('type', '=', 'sale')]
     )
+    default_sale_refund_journal = fields.Many2one(
+            comodel_name="account.journal",
+            string="Default Sale Refund Journal",
+            domain=[('type', '=', 'sale_refund')]
+    )

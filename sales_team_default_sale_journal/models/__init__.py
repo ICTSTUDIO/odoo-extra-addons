@@ -5,3 +5,4 @@
 from . import crm_case_section
 from . import sale_order
 from . import stock_picking
+from . import account_invoice

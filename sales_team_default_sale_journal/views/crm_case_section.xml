@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='defaults']" position="inside">
                     <field name="default_sale_journal"/>
+                    <field name="default_sale_refund_journal"/>
                 </xpath>
             </field>
         </record>

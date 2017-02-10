@@ -1,67 +1,81 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Copyright© 2015 ICTSTUDIO <http://www.ictstudio.eu>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
 from openerp import api, models, fields, _
 from openerp.exceptions import Warning as UserError
+
 
 _logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    @api.model
-    def _get_refund_journal(self):
-
-        journal = self.env['account.journal'].search(
-                [
-                    ('type', '=', 'out_refund'),
-                    ('company_id', '=', self.env.user.company_id.id)
-                ],
-                limit=1
-        )
-        return journal and journal[0] or False
+    # @api.model
+    # def _get_refund_journal(self):
+    #     journal = self.env['account.journal'].search(
+    #             [
+    #                 ('type', '=', 'sale_refund'),
+    #                 ('company_id', 'child_of', self.env.user.company_id.id)
+    #             ],
+    #             limit=1
+    #     )
+    #     return journal and journal[0] or False
 
     @api.multi
     def action_create_refund(self):
         refunds = self.env['account.invoice']
         if len(self.invoice_ids) == 1 and self.invoice_ids.type == 'out_invoice':
+            refunds=self.env['account.invoice']
             for inv in self.invoice_ids:
-                date = fields.Date.today()
-                period = inv.period_id and inv.period_id.id or False
-                description = inv.internal_number and 'Credit: %s' % inv.internal_number or 'Credit'
-                journal = self._get_refund_journal() or inv.journal_id
+                if inv.state in ['open','done']:
+                    date = fields.Date.today()
+                    period = inv.period_id and inv.period_id.id or False
+                    description = inv.internal_number and 'Credit: %s' % inv.internal_number or 'Credit'
+                    #journal = self._get_refund_journal() or inv.journal_id
 
-                refund = inv.refund(date, period, description, journal.id)
-                #refund = self.env['account.invoice'].browse(refund_id[0])
-                refund.write(
-                        {
-                            'date_due': date,
-                            'check_total': inv.check_total
-                        }
-                )
-                refund.button_compute()
-                refunds += refund
+                    refund = inv.refund(date, period, description)
+
+                    refund.write(
+                            {
+                                'date_due': date,
+                                'check_total': inv.check_total
+                            }
+                    )
+                    refund.button_compute()
+                    refund.signal_workflow('invoice_open')
+                    self.reconcile_invoice_refund(inv, refund)
+                    refunds += refund
+                else:
+                    inv.action_cancel()
             return refunds
 
-    @api.multi
+    @api.model
+    def reconcile_invoice_refund(self, invoice, refund):
+        movelines = invoice.move_id.line_id
+        to_reconcile_ids = {}
+        for line in movelines:
+            print line.product_id
+            if line.account_id.id == invoice.account_id.id:
+                to_reconcile_ids.setdefault(line.account_id.id, []).append(line.id)
+            if line.reconcile_id:
+                line.reconcile_id.unlink()
+
+        for refundline in refund.move_id.line_id:
+            if refundline.account_id.id == invoice.account_id.id:
+                to_reconcile_ids[refundline.account_id.id].append(refundline.id)
+
+        for account in to_reconcile_ids:
+            amls = self.env['account.move.line'].browse(to_reconcile_ids[account])
+            if amls:
+                amls.reconcile(
+                        writeoff_period_id=invoice.period_id.id,
+                        writeoff_journal_id=invoice.journal_id.id,
+                        writeoff_acc_id=invoice.account_id.id
+                )
+
+    @api.one
     def action_advanced_cancel(self):
 
         # Cancel Picking
@@ -89,10 +103,11 @@ class SaleOrder(models.Model):
             )
 
         #Create Refund
-        res = self.action_create_refund()
-        _logger.debug("Create Refund: %s", res)
-
-        line.state = 'cancel'
+        refunds = self.action_create_refund()
+        _logger.debug("Create Refund: %s", refunds)
+        if refunds:
+            for refund in refunds:
+                self.invoice_ids += refund
 
         return True
 
