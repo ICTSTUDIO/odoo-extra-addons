@@ -29,7 +29,7 @@ class SaleOrder(models.Model):
         if len(self.invoice_ids) == 1 and self.invoice_ids.type == 'out_invoice':
             refunds=self.env['account.invoice']
             for inv in self.invoice_ids:
-                if inv.state in ['open','done']:
+                if inv.state in ['open', 'paid']:
                     date = fields.Date.today()
                     period = inv.period_id and inv.period_id.id or False
                     description = inv.internal_number and 'Credit: %s' % inv.internal_number or 'Credit'
@@ -44,7 +44,8 @@ class SaleOrder(models.Model):
                             }
                     )
                     refund.button_compute()
-                    refund.signal_workflow('invoice_open')
+                    if inv.state == 'open':
+                        refund.signal_workflow('invoice_open')
                     self.reconcile_invoice_refund(inv, refund)
                     refunds += refund
                 else:
