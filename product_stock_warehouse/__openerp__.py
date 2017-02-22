@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Products Stock Warehouse',
-    'version': '8.0.0.3.1',
+    'version': '8.0.0.3.2',
     'author': 'ICTSTUDIO, André Schenkels',
     'license': 'AGPL-3',
     'website': 'http://www.ictstudio.eu',

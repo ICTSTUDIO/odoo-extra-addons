@@ -175,8 +175,6 @@ class StockWarehouse(models.Model):
 
     @api.model
     def stock_set(self, product, new_qty):
-        _logger.debug("Set Stock Set")
-
         inventory_obj = self.env['stock.inventory']
         inventory_line_obj = self.env['stock.inventory.line']
 
@@ -206,7 +204,6 @@ class StockWarehouse(models.Model):
         """ Open the Related Stock Moves
         """
         assert len(self) == 1, 'This option should only be used for a single id at a time.'
-        _logger.debug("Product_id: %s", self.product_id)
         ctx = dict(
                 search_default_product_id=self.product_id,
                 search_default_location_id=self.lot_stock_id.id
@@ -230,7 +227,6 @@ class StockWarehouse(models.Model):
         """ Change Stock
         """
         assert len(self) == 1, 'This option should only be used for a single id at a time.'
-        _logger.debug("Product_id: %s", self.product_id)
         ctx = dict(
                 warehouse_product_id=self.product_id,
                 warehouse_location_id=self.lot_stock_id.id,

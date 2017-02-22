@@ -87,6 +87,4 @@ class ProductProduct(models.Model):
 
     def _search_product_location(self, operator, value):
         locations = self.env['product.stock.location']._search_locations(operator, value)
-        _logger.debug("Products: %s", locations)
-        _logger.debug("ProductsIDS: %s", locations.ids)
         return [('locations', 'in', locations.ids)]

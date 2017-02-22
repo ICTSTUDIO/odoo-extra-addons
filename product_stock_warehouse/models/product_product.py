@@ -113,12 +113,8 @@ class ProductProduct(models.Model):
 
     @api.one
     def _set_stock(self):
-
         for warehouse in self.warehouses:
-            _logger.debug("Warehouse: %s", warehouse)
             if warehouse.product_qty_available:
-                _logger.debug("PP Set Stock: Warehouse: %s", warehouse.name)
-                _logger.debug("PP Set Stock: Warehouse Stock: %s", warehouse.product_qty_available)
                 warehouse.stock_set(self, warehouse.product_qty_available)
 
 
