@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2016 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<openerp>
+    <data>
+
+        <record id="product_purchaseprice_import_view_form" model="ir.ui.view">
+            <field name="name">product.purchaseprice.import.form</field>
+            <field name="model">product.purchaseprice.import</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Import File">
+                    <group col="4">
+                        <field name="supplier" required="1"/>
+                        <separator string="Select your file :" colspan="4"/>
+                        <field name="product_purchaseprice_data" filename="stock_level_fname"/>
+                        <field name="product_purchaseprice_fname" readonly="1"/>
+                        <newline/>
+                        <field name="csv_separator"/>
+                        <field name="decimal_separator"/>
+                        <field name="codepage"/>
+                    </group>
+                    <footer>
+                        <button name="product_purchaseprice_import" string="_Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_purchaseprice_import_view_form_result" model="ir.ui.view">
+            <field name="name">product.purchaseprice.import.form.result</field>
+            <field name="model">product.purchaseprice.import</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <form string="Import File">
+                    <separator colspan="4" string="Results :"/>
+                    <field name="note" colspan="4" nolabel="1" width="850" height="400"/>
+                    <footer>
+                        <button string="Close" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_purchaseprice_import_view_action" model="ir.actions.act_window">
+            <field name="name">Import Purchase Price</field>
+            <field name="res_model">product.purchaseprice.import</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="product_purchaseprice_import_view_form"/>
+        </record>
+
+        <menuitem id="product_purchaseprice_import_menu"
+                  action="product_purchaseprice_import_view_action"
+                  parent="price_import_menu"/>
+
+    </data>
+</openerp>
