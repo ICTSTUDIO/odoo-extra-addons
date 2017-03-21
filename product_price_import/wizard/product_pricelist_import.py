@@ -210,6 +210,7 @@ class ProductPricelistImport(models.TransientModel):
 
                 if supplierinfos:
                     create_values['product_tmpl_id'] = supplierinfos[0].product_tmpl_id.id
+                    _logger.debug("Supplierinfos: %s", supplierinfos)
                 else:
                     products = self.env['product.product'].search(
                             [
@@ -219,9 +220,9 @@ class ProductPricelistImport(models.TransientModel):
 
                     if products:
                         create_values['product_id'] = products[0].id
+                        _logger.debug("Products: %s", products)
+
                 _logger.debug("Create PricelistItems: %s", create_values)
-                _logger.debug("Supplierinfos: %s", supplierinfos)
-                _logger.debug("Products: %s", products)
                 if supplierinfos or products:
                     self.env['product.pricelist.item'].create(create_values)
                     _logger.debug("Create PricelistItems: %s", create_values)
