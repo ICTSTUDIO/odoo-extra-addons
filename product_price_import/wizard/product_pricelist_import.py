@@ -23,6 +23,13 @@ class ProductPricelistImport(models.TransientModel):
     _name = 'product.pricelist.import'
     _description = 'Product Pricelist Import'
 
+    def _price_field_get(self):
+        pricetypes = self.env['product.price.type'].search([])
+        result = []
+        for pt in pricetypes:
+            result.append((pt.id, pt.name))
+        return result
+
     pricelist = fields.Many2one(
             comodel_name='product.pricelist',
             string="Pricelist",
@@ -36,6 +43,13 @@ class ProductPricelistImport(models.TransientModel):
     remove_existing = fields.Boolean(
             string="Remove Exisiting Items",
             default=False
+    )
+    base = fields.Selection(
+            selection=_price_field_get,
+            string="Based on",
+            required=True,
+            size=-1,
+            help="Base price for computation."
     )
 
     productcode_options = fields.Selection(
@@ -216,7 +230,7 @@ class ProductPricelistImport(models.TransientModel):
                     'price_surcharge': str2float(
                             line.get('prijs'), self.decimal_separator
                     ),
-                    'base': -2
+                    'base': self.base
                 }
 
                 # min_quantity if used
