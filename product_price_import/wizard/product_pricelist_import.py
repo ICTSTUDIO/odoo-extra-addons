@@ -8,6 +8,7 @@ except ImportError:
     import StringIO
 import base64
 import csv
+import logging
 import time
 from sys import exc_info
 from traceback import format_exception
@@ -15,7 +16,6 @@ from traceback import format_exception
 from openerp import api, fields, models, _
 from openerp.exceptions import Warning as UserError
 
-import logging
 _logger = logging.getLogger(__name__)
 
 
@@ -24,9 +24,9 @@ class ProductPricelistImport(models.TransientModel):
     _description = 'Product Pricelist Import'
 
     pricelist = fields.Many2one(
-        comodel_name='product.pricelist',
-        string="Pricelist",
-        ondelete='cascade'
+            comodel_name='product.pricelist',
+            string="Pricelist",
+            ondelete='cascade'
     )
     pricelist_version = fields.Many2one(
             comodel_name='product.pricelist.version',
@@ -38,24 +38,35 @@ class ProductPricelistImport(models.TransientModel):
             default=False
     )
 
+    productcode_options = fields.Selection(
+            string="Product Code Options",
+            selection=[
+                ('product', 'Only Product Default Code'),
+                ('supplier', 'Only Supplier Product Code'),
+                ('supplier_product',
+                 'First: Supplier Code and Second: Product Default Code'),
+            ],
+            default='product'
+    )
+
     import_data = fields.Binary(string='File', required=True)
     import_fname = fields.Char(string='Filename')
     lines = fields.Binary(
-        compute='_compute_lines', string='Input Lines', required=True)
+            compute='_compute_lines', string='Input Lines', required=True)
     dialect = fields.Binary(
-        compute='_compute_dialect', string='Dialect', required=True)
+            compute='_compute_dialect', string='Dialect', required=True)
     csv_separator = fields.Selection(
-        [(',', ', (comma)'), (';', '; (semicolon)')],
-        string='CSV Separator', required=True)
+            [(',', ', (comma)'), (';', '; (semicolon)')],
+            string='CSV Separator', required=True)
     decimal_separator = fields.Selection(
-        [('.', '. (dot)'), (',', ', (comma)')],
-        string='Decimal Separator',
-        default='.', required=True)
+            [('.', '. (dot)'), (',', ', (comma)')],
+            string='Decimal Separator',
+            default='.', required=True)
     codepage = fields.Char(
-        string='Code Page',
-        default=lambda self: self._default_codepage(),
-        help="Code Page of the system that has generated the csv file."
-             "\nE.g. Windows-1252, utf-8")
+            string='Code Page',
+            default=lambda self: self._default_codepage(),
+            help="Code Page of the system that has generated the csv file."
+                 "\nE.g. Windows-1252, utf-8")
     note = fields.Text('Log')
 
     @api.onchange('pricelist')
@@ -85,7 +96,7 @@ class ProductPricelistImport(models.TransientModel):
         if self.lines:
             try:
                 self.dialect = csv.Sniffer().sniff(
-                    self.lines[:128], delimiters=';,')
+                        self.lines[:128], delimiters=';,')
             except:
                 # csv.Sniffer is not always reliable
                 # in the detection of the delimiter
@@ -125,7 +136,7 @@ class ProductPricelistImport(models.TransientModel):
                 header = ln_lower
         if not header:
             raise UserError(
-                _("No header line found in the input file !"))
+                    _("No header line found in the input file !"))
         output = input.read()
         return output, header
 
@@ -145,18 +156,17 @@ class ProductPricelistImport(models.TransientModel):
 
         return header_fields
 
-
     @api.multi
     def file_import(self):
         time_start = time.time()
         self._err_log = ''
         lines, header = self._remove_leading_lines(self.lines)
         header_fields = csv.reader(
-            StringIO.StringIO(header), dialect=self.dialect).next()
+                StringIO.StringIO(header), dialect=self.dialect).next()
         self._header_fields = self._process_header(header_fields)
         reader = csv.DictReader(
-            StringIO.StringIO(lines), fieldnames=self._header_fields,
-            dialect=self.dialect)
+                StringIO.StringIO(lines), fieldnames=self._header_fields,
+                dialect=self.dialect)
 
         if self.remove_existing:
             existing_items = self.env['product.pricelist.item'].search(
@@ -176,9 +186,9 @@ class ProductPricelistImport(models.TransientModel):
                 except:
                     tb = ''.join(format_exception(*exc_info()))
                     raise UserError(
-                        _("Wrong Code Page"),
-                        _("Error while processing line '%s' :\n%s")
-                        % (line, tb))
+                            _("Wrong Code Page"),
+                            _("Error while processing line '%s' :\n%s")
+                            % (line, tb))
 
             header_reversed = reversed(self._header_fields)
             for i, hf in enumerate(header_reversed):
@@ -189,41 +199,55 @@ class ProductPricelistImport(models.TransientModel):
                     break
 
             ## Import Script
-            if line.get('productcode') and line.get('stuks') and line.get('prijs') and self.pricelist and self.pricelist_version:
+            if line.get('productcode') and line.get('stuks') and line.get(
+                    'prijs') and self.pricelist and self.pricelist_version:
 
                 create_values = {
                     'sequence': 4,
                     'price_version_id': self.pricelist_version.id,
                     'price_discount': -1,
-                    'price_surcharge': str2float(line.get('prijs'),self.decimal_separator)
+                    'price_surcharge': str2float(
+                            line.get('prijs'), self.decimal_separator
+                    ),
+                    'base': -2
                 }
 
                 # min_quantity if used
                 if line.get('stuks'):
-                    create_values['min_quantity'] = str2float(line.get('stuks'), self.decimal_separator)
+                    create_values['min_quantity'] = str2float(
+                            line.get('stuks'), self.decimal_separator
+                    )
 
-                supplierinfos = self.env['product.supplierinfo'].search(
-                        [
-                            ('product_code', '=', line.get('productcode'))
-                        ]
-                )
+                supplierinfos = False
+                products = False
 
-                if supplierinfos:
-                    create_values['product_tmpl_id'] = supplierinfos[0].product_tmpl_id.id
-                    _logger.debug("Supplierinfos: %s", supplierinfos)
-                else:
+                if self.productcode_options in ['supplier', 'supplier_product']:
+                    supplierinfos = self.env['product.supplierinfo'].search(
+                            [
+                                ('product_code', '=', line.get('productcode'))
+                            ]
+                    )
+
+                    if supplierinfos:
+                        create_values['product_tmpl_id'] = supplierinfos[
+                            0].product_tmpl_id.id
+                        _logger.debug("Supplierinfos: %s", supplierinfos)
+                elif self.productcode_options in ['product',
+                                                  'supplier_product']:
                     products = self.env['product.product'].search(
                             [
                                 ('default_code', '=', line.get('productcode'))
                             ]
                     )
 
-                    if products:
+                    if products and not supplierinfos:
                         create_values['product_id'] = products[0].id
                         _logger.debug("Products: %s", products)
 
                 _logger.debug("Create PricelistItems: %s", create_values)
-                if supplierinfos or products:
+
+                if 'product_id' in create_values or \
+                                'product_tmpl_id' in create_values:
                     self.env['product.pricelist.item'].create(create_values)
                     _logger.debug("Create PricelistItems: %s", create_values)
 

@@ -17,6 +17,8 @@
                         <field name="pricelist" required="1"/>
                         <field name="pricelist_version" required="1"/>
                         <field name="remove_existing"/>
+                        <separator/>
+                        <field name="productcode_options" colspan="4"/>
                         <separator string="Select your file :" colspan="4"/>
                         <field name="import_data" filename="import_fname"/>
                         <field name="import_fname" readonly="1"/>
