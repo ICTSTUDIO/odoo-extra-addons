@@ -49,6 +49,13 @@ class ProductPricelistImport(models.TransientModel):
             default='product'
     )
 
+    supplier = fields.Many2one(
+            comodel_name='res.partner',
+            string="Supplier",
+            domain = [('supplier','=',True)],
+            ondelete='cascade'
+    )
+
     import_data = fields.Binary(string='File', required=True)
     import_fname = fields.Char(string='Filename')
     lines = fields.Binary(
@@ -224,6 +231,7 @@ class ProductPricelistImport(models.TransientModel):
                 if self.productcode_options in ['supplier', 'supplier_product']:
                     supplierinfos = self.env['product.supplierinfo'].search(
                             [
+                                ('name', '=', self.supplier.id),
                                 ('product_code', '=', line.get('productcode'))
                             ]
                     )
@@ -243,8 +251,6 @@ class ProductPricelistImport(models.TransientModel):
                     if products and not supplierinfos:
                         create_values['product_id'] = products[0].id
                         _logger.debug("Products: %s", products)
-
-                _logger.debug("Create PricelistItems: %s", create_values)
 
                 if 'product_id' in create_values or \
                                 'product_tmpl_id' in create_values:
