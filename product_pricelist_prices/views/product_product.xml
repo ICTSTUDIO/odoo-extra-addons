@@ -9,7 +9,7 @@
             <field name="arch" type="xml">   
                 <field name="lst_price" position="after">
                     <field name="pricelists" nolabel="1" colspan="2" context="{'product_id': active_id}">
-                        <tree string="Prices" editable="bottom" create="false" delete="false" colors="red:product_price_manual">
+                        <tree string="Sale Prices" editable="bottom" create="false" delete="false" colors="red:product_price_manual">
                             <field name="name" readonly="1"/>
                             <field name="product_price_manual" invisible="1"/>
                             <field name="product_price"/>
@@ -18,7 +18,19 @@
                             />
                         </tree>
                     </field>
-                </field> 
+                </field>
+                <field name="seller_ids" position="after">
+                    <field name="purchase_pricelists" nolabel="1" colspan="2" context="{'product_id': active_id}">
+                        <tree string="Purchase Prices" editable="bottom" create="false" delete="false" colors="red:product_price_manual">
+                            <field name="name" readonly="1"/>
+                            <field name="product_price_manual" invisible="1"/>
+                            <field name="product_price"/>
+                            <button  type="object" icon="STOCK_CLOSE"
+                                     name="remove_price_manual"
+                            />
+                        </tree>
+                    </field>
+                </field>
             </field>
         </record>
 

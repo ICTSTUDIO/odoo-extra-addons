@@ -15,12 +15,28 @@ class ProductTemplate(models.Model):
     def _get_pricelists(self):
         self.pricelists = self.env['product.pricelist'].search(
                 [
-                    ('show_on_products', '=', True)
+                    ('show_on_products', '=', True),
+                    ('type', '=', 'sale')
                 ]
         )
 
     def _set_pricelists(self):
         for pricelist in self.pricelists:
+            if pricelist.product_price:
+                _logger.debug("Updating Price: %s", pricelist.product_price)
+                pricelist.price_set(self, pricelist.product_price)
+
+    @api.one
+    def _get_purchase_pricelists(self):
+        self.purchase_pricelists = self.env['product.pricelist'].search(
+                [
+                    ('show_on_products', '=', True),
+                    ('type', '=', 'purchase')
+                ]
+        )
+
+    def _set_purchase_pricelists(self):
+        for pricelist in self.purchase_pricelists:
             if pricelist.product_price:
                 _logger.debug("Updating Price: %s", pricelist.product_price)
                 pricelist.price_set(self, pricelist.product_price)
@@ -32,3 +48,9 @@ class ProductTemplate(models.Model):
             inverse="_set_pricelists"
     )
 
+    purchase_pricelists = fields.One2many(
+            comodel_name="product.pricelist",
+            string="Purchase Pricelists",
+            compute="_get_purchase_pricelists",
+            inverse="_set_purchase_pricelists"
+    )
