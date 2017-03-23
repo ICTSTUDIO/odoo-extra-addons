@@ -56,7 +56,7 @@ class NeedSyncLine(models.Model):
             string="Last Sync Datetime"
     )
     confirmed_date = fields.Datetime(
-            string="Last Sync Datetime"
+            string="Last Confirm Datetime"
     )
 
 

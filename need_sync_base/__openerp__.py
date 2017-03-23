@@ -19,7 +19,7 @@
 ##############################################################################
 {
     'name': 'Need Synchronization Base',
-    'version': '8.0.0.0.3',
+    'version': '8.0.0.0.4',
     'category': 'Stock',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
