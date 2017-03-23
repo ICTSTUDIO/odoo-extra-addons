@@ -254,7 +254,7 @@ class ProductPricelistImport(models.TransientModel):
                         create_values['product_tmpl_id'] = supplierinfos[
                             0].product_tmpl_id.id
                         _logger.debug("Supplierinfos: %s", supplierinfos)
-                elif self.productcode_options in ['product',
+                if self.productcode_options in ['product',
                                                   'supplier_product']:
                     products = self.env['product.product'].search(
                             [
