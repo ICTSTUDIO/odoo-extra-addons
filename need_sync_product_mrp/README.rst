@@ -1,9 +1,9 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :alt: License: AGPL-3
+:alt: License: AGPL-3
 
-Need Synchronization Partner Module
-===================================
-Partner Specific module for seting need sync
+Need Synchronization Product MRP Module
+=======================================
+Need sync for products will be set if a underlying Product is changed
 
 
 Bug Tracker
