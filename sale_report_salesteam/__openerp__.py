@@ -18,6 +18,5 @@
     ],
     'data': [
         'views/sale_report.xml',
-        'views/product_template.xml',
     ],
 }
