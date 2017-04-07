@@ -3,7 +3,7 @@
 # License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 {
     'name': 'Point of Sale - Accounting Valuation Fix',
-    'version': '8.0.0.0.1',
+    'version': '8.0.0.0.2',
     'category': 'Point of Sale',
     'summary': """Fix the wrong accounting entry when using the Point of Sale system
     """,
@@ -13,8 +13,5 @@
     'depends': [
         'point_of_sale',
         'stock_account'
-    ],
-    'data': [
-        'view/pos_config.xml',
     ],
 }

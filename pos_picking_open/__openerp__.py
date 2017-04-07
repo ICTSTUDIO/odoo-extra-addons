@@ -4,7 +4,7 @@
 
 {
 'name': 'Point of Sale - Leave Picking Open',
-'version': '8.0.0.0.1',
+'version': '8.0.0.0.2',
 'category': 'Point of Sale',
 'summary': """Leave the picking and moves open for the warehouse to deliver
     """,
@@ -15,6 +15,6 @@
                'point_of_sale',
            ],
 'data': [
-            'view/pos_config.xml',
+            'views/pos_config.xml',
         ],
 }
