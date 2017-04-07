@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<openerp>
+	<data>
+
+        <record id="view_order_product_search" model="ir.ui.view">
+            <field name="name">sale.report.search</field>
+            <field name="model">sale.report</field>
+            <field name="inherit_id" ref="sale.view_order_product_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='Customer']" position="after">
+                    <filter string="Salesteam (Qty)" name="sale_report_sales_team_qty"
+                            context="{
+                            'measures': ['product_uom_qty'],
+                            'group_by': ['section_id'],
+                            'col_group_by': ['date:year']
+                            }"/>
+
+                    <filter string="Salesteam (Income)" name="sale_report_sales_team_income"
+                            context="{
+                            'measures': ['price_total'],
+                            'group_by': ['section_id'],
+                            'col_group_by': ['date:year']
+                            }"/>
+
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
