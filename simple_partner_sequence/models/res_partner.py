@@ -47,9 +47,7 @@ class ResPartner(models.Model):
                 )
                 if partner_sequence and partner_sequence.sequence_id:
                     while True:
-                        vals['ref'] = self.env['ir.sequence'].next_by_id(
-                            partner_sequence.sequence_id.id
-                        )
+                        vals['ref'] = partner_sequence.sequence_id.next_by_id()
                         if self.search([('ref', '=', vals['ref'])]):
                             _logger.debug("partner get next by code res.partner"
                                           " code already exists in database")
