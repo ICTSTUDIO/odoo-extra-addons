@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<odoo>
+    <data noupdate="1">
+
+        <record id="ir_sequence_res_partner" model="ir.sequence">
+            <field name="name">Partner</field>
+            <field name="code">res.partner</field>
+            <field name="prefix">PA</field>
+            <field name="padding">5</field>
+        </record>
+
+    </data>
+</odoo>
