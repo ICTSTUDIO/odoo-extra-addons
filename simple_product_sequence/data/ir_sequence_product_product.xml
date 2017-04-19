@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<odoo>
+    <data noupdate="1">
+
+        <record id="ir_sequence_product_product" model="ir.sequence">
+            <field name="name">Product</field>
+            <field name="code">product.product</field>
+            <field name="prefix">PP</field>
+            <field name="padding">6</field>
+        </record>
+
+    </data>
+</odoo>
