@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+		<record id="need_sync_model_view_form" model="ir.ui.view">
+            <field name="name">need.sync.model.form</field>
+            <field name="model">need.sync.model</field>
+            <field name="arch" type="xml">
+                <form string="Sync Model">
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="model"/>
+                            <field name="last_check_date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+	
+		<record id="need_sync_model_view_tree" model="ir.ui.view">
+            <field name="name">need.sync.model.tree</field>
+            <field name="model">need.sync.model</field>
+            <field name="arch" type="xml">
+                <tree string="Sync Models">
+                    <field name="model"/>
+                    <field name="last_check_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="need_sync_model_view_search" model="ir.ui.view">
+            <field name="name">need.sync.model.search</field>
+            <field name="model">need.sync.model</field>
+            <field name="arch" type="xml">
+                <search string="Need Syncs">
+                    <field name="model"/>
+                    <field name="last_check_date"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="need_sync_model_action" model="ir.actions.act_window">
+            <field name="name">Sync Models</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">need.sync.model</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+				<p>
+                <!-- More details about what a user can do with this object will be OK -->
+				</p>
+            </field>
+        </record>
+
+	</data>
+</odoo>

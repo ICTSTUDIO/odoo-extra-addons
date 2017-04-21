@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+		<record id="need_sync_connection_view_form" model="ir.ui.view">
+            <field name="name">need.sync.connection.form</field>
+            <field name="model">need.sync.connection</field>
+            <field name="arch" type="xml">
+                <form string="Need Sync Connection">
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="connection"/>
+                            <field name="use_confirm_date"/>
+                        </group>
+                        <notebook>
+                            <page name="allowed_models_page" string="Allowed Models">
+                                <field name="allowed_models" >
+                                    <tree editable="top">
+                                        <field name="model"/>
+                                        <field name="auto_create_lines"/>
+                                    </tree>
+                                    <form>
+                                        <field name="model"/>
+                                        <field name="auto_create_lines"/>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+	
+		<record id="need_sync_connection_view_tree" model="ir.ui.view">
+            <field name="name">need.sync.connection.tree</field>
+            <field name="model">need.sync.connection</field>
+            <field name="arch" type="xml">
+                <tree string="Need Sync Connections">
+                    <field name="name"/>
+                    <field name="connection"/>
+                    <field name="use_confirm_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="need_sync_connection_view_search" model="ir.ui.view">
+            <field name="name">need.sync.connection.search</field>
+            <field name="model">need.sync.connection</field>
+            <field name="arch" type="xml">
+                <search string="Need Syncs">
+                    <field name="name"/>
+                    <field name="connection"/>
+                    <field name="use_confirm_date"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_connection" string="Connection" context="{'group_by':'connection'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="need_sync_connection_action" model="ir.actions.act_window">
+            <field name="name">Connections</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">need.sync.connection</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+				<p>
+                <!-- More details about what a user can do with this object will be OK -->
+				</p>
+            </field>
+        </record>
+
+	</data>
+</odoo>

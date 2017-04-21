@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="need_sync_menu_main" name="Need Sync" parent="base.menu_administration" sequence="200"/>
+
+        <menuitem id="need_sync_menu"
+                  name="Base"
+                  parent="need_sync_menu_main"
+                  action="need_sync_action"
+                  sequence="100"
+        />
+
+        <menuitem id="need_sync_line_menu"
+                  name="Base Lines"
+                  parent="need_sync_menu_main"
+                  action="need_sync_line_action"
+                  sequence="90"
+        />
+
+        <menuitem id="need_sync_connection_menu"
+                  name="Connections"
+                  parent="need_sync_menu_main"
+                  action="need_sync_connection_action"
+                  sequence="50"
+        />
+
+        <menuitem id="need_sync_model_menu"
+                  name="Models"
+                  parent="need_sync_menu_main"
+                  action="need_sync_model_action"
+                  sequence="60"
+        />
+		
+		
+
+    </data>
+</odoo>

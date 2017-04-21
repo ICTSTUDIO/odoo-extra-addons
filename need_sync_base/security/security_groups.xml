@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+	<record id="need_sync_module_category" model="ir.module.category">
+		<field name="name">Need Sync</field>
+		<field name="description">Need Sync</field>
+		<field name="sequence">10</field>
+    </record>
+	
+	<record id="group_need_sync_user" model="res.groups">
+		<field name="name">User</field>
+		<field name="comment">User Access</field>
+		<field name="category_id" ref="need_sync_module_category"/>
+	</record>
+
+	<record id="group_need_sync_manager" model="res.groups">
+		<field name="name">Manager</field>
+		<field name="comment">Full Access</field>
+		<field name="category_id" ref="need_sync_module_category"/>
+		<field name="users" eval="[(4, ref('base.user_root'))]"/>
+	</record>
+
+</data>
+</odoo>

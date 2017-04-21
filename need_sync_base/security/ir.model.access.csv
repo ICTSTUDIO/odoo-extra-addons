@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_need_sync_user,need.sync,model_need_sync,need_sync_base.group_need_sync_user,1,1,1,0
+access_need_sync_manager,need.sync,model_need_sync,need_sync_base.group_need_sync_manager,1,1,1,1
+access_need_sync_model_user,need.sync.model,model_need_sync_model,need_sync_base.group_need_sync_user,1,1,1,0
+access_need_sync_model_manager,need.sync.model,model_need_sync_model,need_sync_base.group_need_sync_manager,1,1,1,1
+access_need_sync_line_user,need.sync.line,model_need_sync_line,need_sync_base.group_need_sync_user,1,1,1,1
+access_need_sync_line_manager,need.sync.line,model_need_sync_line,need_sync_base.group_need_sync_manager,1,1,1,1
+access_need_sync_connection_user,need.sync.connection,model_need_sync_connection,need_sync_base.group_need_sync_user,1,1,1,0
+access_need_sync_connection_manager,need.sync.connection,model_need_sync_connection,need_sync_base.group_need_sync_manager,1,1,1,1
+access_need_sync_connection_model_user,need.sync.connection.model,model_need_sync_connection_model,need_sync_base.group_need_sync_user,1,1,1,0
+access_need_sync_connection__modelmanager,need.sync.connection.model,model_need_sync_connection_model,need_sync_base.group_need_sync_manager,1,1,1,1

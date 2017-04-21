@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+		<record id="need_sync_line_view_form" model="ir.ui.view">
+            <field name="name">need.sync.line.form</field>
+            <field name="model">need.sync.line</field>
+            <field name="arch" type="xml">
+                <form string="Need Sync Line">
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="need_sync"/>
+                            <field name="need_sync_connection"/>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                            <field name="record"/>
+                        </group>
+                        <group>
+                            <field name="sync_needed"/>
+                            <field name="need_sync_date"/>
+                            <field name="last_sync_date"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+	
+		<record id="need_sync_line_view_tree" model="ir.ui.view">
+            <field name="name">need.sync.line.tree</field>
+            <field name="model">need.sync.line</field>
+            <field name="arch" type="xml">
+                <tree string="Need Sync Lines">
+                    <field name="need_sync" invisible="True"/>
+                    <field name="name" invisible="True"/>
+                    <field name="record"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="need_sync_connection"/>
+                    <field name="need_sync_date"/>
+                    <field name="last_sync_date"/>
+                    <field name="sync_needed"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="need_sync_line_view_search" model="ir.ui.view">
+            <field name="name">need.sync.line.search</field>
+            <field name="model">need.sync.line</field>
+            <field name="arch" type="xml">
+                <search string="Need Syncs">
+                    <field name="name"/>
+                    <field name="sync_needed"/>
+                    <field name="need_sync_connection"/>
+                    <field name="need_sync"/>
+                    <field name="need_sync_date"/>
+                    <field name="last_sync_date"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="record"/>
+                    <filter name="filter_sync_needed" string="Synchronization Needed" domain="[('sync_needed','=',True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_sync_needed" string="Synchronization Needed" context="{'group_by':'sync_needed'}"/>
+                        <filter name="group_by_connection" string="Connection" context="{'group_by':'need_sync_connection'}"/>
+                        <filter name="group_by_model" string="Model" context="{'group_by':'need_sync_model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="need_sync_line_action" model="ir.actions.act_window">
+            <field name="name">Sync Base Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">need.sync.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+				<p>
+                <!-- More details about what a user can do with this object will be OK -->
+				</p>
+            </field>
+        </record>
+
+	</data>
+</odoo>
