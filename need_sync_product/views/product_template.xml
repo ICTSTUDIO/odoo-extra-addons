@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<openerp>
+    <data>
+
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button
+                            class="oe_inline oe_stat_button"
+                            type="object"
+                            name="open_need_sync"
+                            icon="fa-cubes">
+                        <field name="need_sync_count" string="Need Sync" widget="statinfo" />
+                    </button>
+
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
