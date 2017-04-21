@@ -5,7 +5,7 @@
     'name': 'Need Synchronization Partner Module',
     'version': '8.0.0.0.4',
     'category': 'Tools',
-    'author': 'ICTSTUDIO | André Schenkels',
+    'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
     'summary': 'Partner Specific module for seting need sync',

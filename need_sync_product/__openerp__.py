@@ -5,7 +5,7 @@
     'name': 'Need Synchronization Product Module',
     'version': '8.0.0.0.4',
     'category': 'Stock',
-    'author': 'ICTSTUDIO | André Schenkels',
+    'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
     'summary': 'Product Specific module for seting need sync',
