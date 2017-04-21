@@ -18,4 +18,5 @@
         'data/ir_sequence_res_partner.xml',
         'security/ir.model.access.csv'
     ],
+    'installable': True,
 }

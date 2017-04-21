@@ -5,7 +5,7 @@
     'name': 'Need Synchronization Product MRP Module',
     'version': '10.0.0.0.5',
     'category': 'Stock',
-    'author': 'ICTSTUDIO | André Schenkels',
+    'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
     'summary': 'MRP Specific module for seting need sync',
@@ -13,5 +13,7 @@
         'need_sync_product',
         'mrp'
     ],
-    'data': [    ],
+    'data': [
+    ],
+    'installable': True,
 }

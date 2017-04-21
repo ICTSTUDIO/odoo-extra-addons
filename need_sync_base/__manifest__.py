@@ -5,7 +5,7 @@
     'name': 'Need Synchronization Base',
     'version': '10.0.0.0.5',
     'category': 'Stock',
-    'author': 'ICTSTUDIO | André Schenkels',
+    'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
     'summary': 'Base module for external connections detecting changed models in ODOO',
@@ -22,4 +22,5 @@
         'views/menu.xml',
         'data/need_sync_model.xml'
     ],
+    'installable': True,
 }

@@ -6,7 +6,7 @@
     'version': '10.0.0.0.1',
     'category': 'Product Management',
     'description': """Adding Product Sequence to the default_code field""",
-    'author': 'ICTSTUDIO | André Schenkels',
+    'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
     'depends': [

@@ -15,5 +15,6 @@
         'product_stock_warehouse',
         'product_stock_move_qty'
     ],
+    'installable': True,
 }
 
