@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright© 2016 ICTSTUDIO <http://www.ictstudio.eu>
+# Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
 # License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
@@ -20,7 +20,8 @@ class NeedSyncLine(models.Model):
     need_sync = fields.Many2one(
             comodel_name="need.sync",
             string="Need Sync",
-            index=True
+            index=True,
+            ondelete="cascade"
     )
     need_sync_connection = fields.Many2one(
             comodel_name="need.sync.connection",
@@ -93,14 +94,6 @@ class NeedSyncLine(models.Model):
             self.sync_needed = True
         elif self.sync_needed == True:
             self.sync_needed = False
-
-    @api.multi
-    def _auto_create_need_sync(self, need_sync, need_sync_connection):
-        # Check if auto create lines is activated
-        for allowed_model in need_sync_connection.allowed_models:
-            if allowed_model.model == need_sync.model:
-                if allowed_model.auto_create_lines:
-                    self._create_need_sync(need_sync, need_sync_connection)
 
     @api.multi
     def _create_need_sync(self, need_sync, need_sync_connection):

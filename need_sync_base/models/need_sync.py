@@ -1,24 +1,6 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2015 ICTSTUDIO (www.ictstudio.eu).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
 
@@ -72,8 +54,6 @@ class NeedSync(models.Model):
     @api.depends('res_id', 'model')
     def _get_record(self):
         if self.res_id and self.model:
-            print self.res_id
-            print self.model
             self.record = self.env[str(self.model)].browse(self.res_id)
 
     @api.one
@@ -85,6 +65,40 @@ class NeedSync(models.Model):
         else:
             object_name = "No object name defined"
         self.name = '%s' % (object_name)
+
+    @api.model
+    def get_model_allowed_connections(self):
+        syncmodels = self.env['need.sync.connection.model'].search(
+            [
+                ('model', '=', self.model),
+                ('auto_create_lines', '=', True)
+            ]
+        )
+        _logger.debug("Sync Model Connnections: %s", syncmodels)
+        connections = syncmodels.mapped('need_sync_connection')
+        _logger.debug("Sync Connections: %s", connections)
+        return connections
+
+    @api.model
+    def _autocreate_syncline_connection(self, connection):
+        lines = self.sync_lines
+        cline = lines.filtered(lambda l: l.need_sync_connection.id ==connection.id)
+        if not cline:
+            self.env['need.sync.line'].create(
+                {
+                    'need_sync_connection': connection.id,
+                    'need_sync': self.id
+                }
+            )
+
+    @api.one
+    def _autocreate_sync_lines(self):
+        if self.model:
+            connections = self.get_model_allowed_connections()
+            for connection in connections:
+                _logger.debug("Autocreate for Conncetion: %s", connection)
+                self._autocreate_syncline_connection(connection)
+
 
     @api.multi
     def set_need_sync(self, model, res_ids):
@@ -113,12 +127,19 @@ class NeedSync(models.Model):
         # Need sync res_ids list
         need_sync_res_ids = [x.res_id for x in need_syncs]
         create_sync_ids = list(set(res_ids) - set(need_sync_res_ids))
+
         if create_sync_ids:
             _logger.debug("Create new Need sync records")
-            self._create_need_sync(model, create_sync_ids)
+            created_need_syncs = self._create_need_sync(model, create_sync_ids)
+            need_syncs = need_syncs | created_need_syncs
+
+        # Check if all lines exist for autocreate models
+        _logger.debug("Need Syncs Autocreate Check: %s", need_syncs)
+        need_syncs._autocreate_sync_lines()
 
     @api.model
     def _create_need_sync(self, model, res_ids):
+        return_need_syncs = self.env['need.sync']
         if model and res_ids:
             for res_id in res_ids:
                 create_need_sync = self.create(
@@ -128,14 +149,7 @@ class NeedSync(models.Model):
                             'need_sync_date': fields.Datetime.now()
                         }
                 )
-                if create_need_sync:
-                    for connection_model in self.env['need.sync.connection.model'].search(
-                            [
-                                ('model', '=', model)
-                            ]
-                    ):
-                        self.env['need.sync.line']._auto_create_need_sync(
-                                create_need_sync,
-                                connection_model.need_sync_connection
-                        )
+                _logger.debug("Need Sync Created: %s", create_need_sync)
+                return_need_syncs = return_need_syncs | create_need_sync
 
+        return return_need_syncs

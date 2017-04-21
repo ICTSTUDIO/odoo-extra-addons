@@ -8,7 +8,7 @@ Product Specific module for seting need sync
 
 Bug Tracker
 ===========
-Bugs are tracked on `GitHub Issues <https://github.com/ICTSTUDIO/8.0-extra-addons/issues>`_.
+Bugs are tracked on `GitHub Issues <https://github.com/ICTSTUDIO/odoo-extra-addons/issues>`_.
 
 Maintainer
 ==========
