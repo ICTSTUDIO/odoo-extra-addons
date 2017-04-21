@@ -15,7 +15,7 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button class="oe_inline oe_stat_button" type="action" name="%(partner_sale_report.act_res_partner_2_sale_report)d"
                             attrs="{'invisible': [('customer', '=', False)]}"
-                            icon="fa-eye">
+                            icon="fa-eye" string="Analysis">
                     </button>
                 </xpath>
             </field>

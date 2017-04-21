@@ -4,7 +4,7 @@
 
 {
     'name': 'Partner Sale Report',
-    'version': '8.0.0.0.1',
+    'version': '8.0.0.0.2',
     'category': 'Sales & Invoicing',
     'summary': """Direct link from Partner form to Repoorting Invoice Analysis
     """,
