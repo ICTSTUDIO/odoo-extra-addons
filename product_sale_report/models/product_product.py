@@ -12,7 +12,7 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     @api.multi
-    def action_view_sales(self):
+    def action_view_sale_report(self):
         act_obj = self.pool.get('ir.actions.act_window')
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj.xmlid_to_res_id(self._cr, self._uid, 'product_sale_report.act_product_2_sale_report',raise_if_not_found=True)

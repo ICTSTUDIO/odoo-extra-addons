@@ -4,7 +4,7 @@
 
 {
     'name': 'Product Sale Report',
-    'version': '8.0.0.0.1',
+    'version': '8.0.0.0.2',
     'category': 'Sales & Invoicing',
     'summary': """Direct link from product form to Repoorting Invoice Analysis
     """,
@@ -17,5 +17,7 @@
     ],
     'data': [
         'views/sale_report.xml',
+        'views/product_product.xml',
+        'views/product_template.xml',
     ],
 }

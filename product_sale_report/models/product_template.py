@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     @api.multi
-    def action_view_sales(self):
+    def action_view_sale_report(self):
         act_obj = self.pool.get('ir.actions.act_window')
         mod_obj = self.pool.get('ir.model.data')
         product_ids = []
