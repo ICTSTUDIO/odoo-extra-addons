@@ -1,22 +1,6 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Copyright (C) 2016 ICTSTUDIO (<http://www.ictstudio.eu>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Copyright© 2016 ICTSTUDIO <http://www.ictstudio.eu>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
 
@@ -45,7 +29,6 @@ class ProductProduct(models.Model):
                             ('use_for_available_immediately', '=', True)
                         ]
                 ):
-                    ctx = dict(self._context, warehouse_id=warehouse.id)
-                    imm_usable_qty = prod.with_context(ctx).virtual_available - prod.with_context(ctx).incoming_qty
-                _logger.debug("Immediately Usable Qty: %s", imm_usable_qty)
+                    ctx = dict(self._context, warehouse=warehouse.id)
+                    imm_usable_qty += prod.with_context(ctx).virtual_available - prod.with_context(ctx).incoming_qty
                 prod.immediately_usable_qty = imm_usable_qty
