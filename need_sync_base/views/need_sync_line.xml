@@ -18,10 +18,10 @@
                             <field name="record"/>
                         </group>
                         <group>
+                            <field name="published" readonly="1"/>
                             <field name="sync_needed"/>
                             <field name="need_sync_date"/>
                             <field name="last_sync_date"/>
-
                         </group>
                     </sheet>
                 </form>
@@ -42,6 +42,7 @@
                     <field name="need_sync_date"/>
                     <field name="last_sync_date"/>
                     <field name="sync_needed"/>
+                    <field name="published" readonly="1"/>
                 </tree>
             </field>
         </record>
@@ -53,6 +54,7 @@
                 <search string="Need Syncs">
                     <field name="name"/>
                     <field name="sync_needed"/>
+                    <field name="published"/>
                     <field name="need_sync_connection"/>
                     <field name="need_sync"/>
                     <field name="need_sync_date"/>
@@ -63,6 +65,7 @@
                     <filter name="filter_sync_needed" string="Synchronization Needed" domain="[('sync_needed','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_sync_needed" string="Synchronization Needed" context="{'group_by':'sync_needed'}"/>
+                        <filter name="group_by_published" string="Published" context="{'group_by':'published'}"/>
                         <filter name="group_by_connection" string="Connection" context="{'group_by':'need_sync_connection'}"/>
                         <filter name="group_by_model" string="Model" context="{'group_by':'need_sync_model'}"/>
                     </group>

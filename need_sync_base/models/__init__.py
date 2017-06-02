@@ -4,5 +4,6 @@
 from . import need_sync
 from . import need_sync_connection
 from . import need_sync_connection_model
+from . import need_sync_connection_record_exception
 from . import need_sync_line
 from . import need_sync_model

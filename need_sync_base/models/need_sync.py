@@ -153,3 +153,22 @@ class NeedSync(models.Model):
                 return_need_syncs = return_need_syncs | create_need_sync
 
         return return_need_syncs
+
+    @api.model
+    def unlink_records(self, model, res_ids):
+        '''
+        When calling unlink of a used model record, call this method to remove 
+        the linked need syncs.
+        :param model: Model
+        :param res_ids: List of ids 
+        :return: True
+        '''
+        need_syncs = self.search(
+            [
+                ('model', '=', model),
+                ('res_id', 'in', res_ids)
+            ]
+        )
+        if need_syncs:
+            need_syncs.unlink()
+        return True

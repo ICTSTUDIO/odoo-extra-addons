@@ -16,6 +16,11 @@ class ProductTemplate(models.Model):
     need_sync_total = fields.Integer(
             related='product_variant_ids.need_sync_total'
     )
+    need_sync_connections = fields.One2many(
+        comodel_name="need.sync.connection",
+        string="Need Sync Connections",
+        related="product_variant_ids.need_sync_connections"
+    )
 
 
     @api.multi
