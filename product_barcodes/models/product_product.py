@@ -1,24 +1,7 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2015 ERP|OPEN (www.erpopen.nl).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
+# Copyright© 2015-2017 ERP|OPEN <http://www.erpopen.nl>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
 from openerp import models, fields, api, _
@@ -51,6 +34,7 @@ class ProductProduct(models.Model):
             readonly=True,
             store=True
     )
+    barcode_allow_not_unique = fields.Boolean(string="Allow barcode not unique", default=False)
 
     @api.one
     @api.depends('barcode_ids.name')

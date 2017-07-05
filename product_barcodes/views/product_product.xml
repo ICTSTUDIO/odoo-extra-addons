@@ -9,7 +9,7 @@
             <field eval="900" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='default_code']" position="after">
-
+                        <field name="barcode_allow_not_unique"/>
                         <field name="barcode_ids">
                             <form string="Barcode">
                                 <field name="name"/>
