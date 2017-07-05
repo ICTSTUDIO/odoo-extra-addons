@@ -32,3 +32,7 @@ class ProductBarcode(models.Model):
             found_barcodes = self.search([('name', '=', self.name)])
             if len(found_barcodes) > 1:
                 raise ValidationError("The following barcode is not unique: %s. Barcode is used with the following products: %s" % (self.name, found_barcodes.ids))
+
+    _sql_constraints = [
+        ('name_uniq', 'unique(name, product_id)', 'Barcode needs to be unique'),
+    ]
