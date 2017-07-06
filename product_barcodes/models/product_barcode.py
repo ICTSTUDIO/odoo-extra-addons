@@ -19,11 +19,11 @@ class ProductBarcode(models.Model):
         string="Product"
     )
 
-    @api.one
-    @api.constrains('name')
-    def _check_name_length(self):
-        if len(self.name) < 4:
-            raise ValidationError("The following barcode is invalid: %s. Barcodes needs to be larger than 3 numbers" % self.name)
+    # @api.one
+    # @api.constrains('name')
+    # def _check_name_length(self):
+    #     if len(self.name) < 4:
+    #         raise ValidationError("The following barcode is invalid: %s. Barcodes needs to be larger than 3 numbers" % self.name)
 
     @api.one
     @api.constrains('name', 'product_id')

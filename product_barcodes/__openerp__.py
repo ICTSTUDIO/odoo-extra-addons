@@ -4,8 +4,8 @@
 # License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 {
     'name': 'Product Barcodes',
-    'version': '8.0.0.1.0',
-    'category': 'BBA',
+    'version': '8.0.0.1.1',
+    'category': 'Product Management',
     'author': 'ERP|OPEN, ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
