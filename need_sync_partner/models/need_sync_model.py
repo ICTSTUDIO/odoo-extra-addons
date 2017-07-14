@@ -14,7 +14,7 @@ class NeedSyncModel(models.Model):
 
     def _select_models(self):
         list_models = super(NeedSyncModel, self)._select_models()
-        list_models.append(('res.partner', 'Partner'))
+        list_models.append(('res.partner', 'Partners'))
         return list_models
 
     model = fields.Selection(
@@ -23,6 +23,7 @@ class NeedSyncModel(models.Model):
             required=True,
             index=True
     )
+
 
     @api.multi
     def get_object_records_changed(self):
@@ -34,10 +35,15 @@ class NeedSyncModel(models.Model):
 
         changed_records = super(NeedSyncModel, self).get_object_records_changed()
         if self.model == 'res.partner':
+            if changed_records:
+                parent_records = changed_records.mapped('parent_id')
+                changed_records = changed_records | parent_records
+                child_records = self.env['res.partner'].search(
+                        [
+                            ('parent_id', 'in', changed_records.ids),
+                            ('write_date', '>', self.last_check_date)
+                        ]
+                )
+                changed_records | changed_records | child_records
 
-            changed_records = self.env['res.partner'].search(
-                    [
-                        ('write_date', '>', self.last_check_date),
-                    ]
-            )
         return changed_records

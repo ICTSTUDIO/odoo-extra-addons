@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_public_category_form_view" model="ir.ui.view">
+            <field name="model">product.public.category</field>
+            <field name="inherit_id" ref="website_sale.product_public_category_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='image_medium']" position="after">
+                        <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                            <button
+                                    class="oe_inline oe_stat_button"
+                                    type="object"
+                                    name="open_need_sync"
+                                    icon="fa-cubes">
+                                <field name="need_sync_count" string="Need Sync" widget="statinfo" />
+                            </button>
+                        </div>
+                    </xpath>
+                    <xpath expr="//div[@class='oe_left']" position="after">
+                        <notebook>
+                        <page string="Need Sync">
+                            <field name="need_sync_connections" context="{'active_id': active_id,'active_model': active_model}">
+                                <tree editable="botom">
+                                    <field name="name" readonly="True"/>
+                                    <field name="published"/>
+                                    <button  type="object"
+                                             name="manual_publish" string="Publish"
+                                             attrs="{'invisible': [('published', '=', True)]}"
+                                    />
+                                    <button  type="object"
+                                             name="manual_unpublish" string="Unpublish"
+                                             attrs="{'invisible': [('published', '!=', True)]}"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                        </notebook>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@name='buttons']" position="inside">
+                        <button
+                                class="oe_inline oe_stat_button"
+                                type="object"
+                                name="open_need_sync"
+                                icon="fa-cubes">
+                            <field name="need_sync_count" string="Need Sync" widget="statinfo" />
+                        </button>
+
+                    </xpath>
+                    <xpath expr="//notebook" position="inside">
+                        <page string="Need Sync">
+                            <field name="need_sync_connections" context="{'active_id': active_id,'active_model': active_model}">
+                                <tree editable="botom">
+                                    <field name="name" readonly="True"/>
+                                    <field name="published"/>
+                                    <button  type="object"
+                                             name="manual_publish" string="Publish"
+                                             attrs="{'invisible': [('published', '=', True)]}"
+                                    />
+                                    <button  type="object"
+                                             name="manual_unpublish" string="Unpublish"
+                                             attrs="{'invisible': [('published', '!=', True)]}"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>

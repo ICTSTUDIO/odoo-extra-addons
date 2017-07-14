@@ -147,3 +147,18 @@ class NeedSyncConnection(models.Model):
         if self._context.get('active_id') and self._context.get('active_model'):
             dest_model = self.get_dest_model(self._context.get('active_model'))
             self.set_published(self._context.get('active_id'), self._context.get('active_model'), True, dest_model=dest_model)
+
+    @api.multi
+    def set_last_sync_date(self, model, res_ids):
+        need_sync_lines = self.env['need.sync.line'].search(
+            [
+                ('need_sync_connection', '=', self.id),
+                ('res_id', 'in', res_ids),
+                ('model', '=', model)
+            ]
+        )
+        need_sync_lines.write(
+            {
+                'last_sync_date': fields.Datetime.now()
+            }
+        )

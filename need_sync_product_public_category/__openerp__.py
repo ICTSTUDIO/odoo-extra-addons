@@ -2,18 +2,18 @@
 # Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
 # License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 {
-    'name': 'Need Synchronization Partner Module',
+    'name': 'Need Synchronization Product Public Category Module',
     'version': '8.0.0.0.7',
-    'category': 'Partner Management',
+    'category': 'Stock',
     'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
-    'summary': 'Partner Specific module for seting need sync',
+    'summary': 'Product Public Category Specific module for seting need sync',
     'depends': [
         'need_sync_base',
-        'base',
+        'website_sale',
     ],
     'data': [
-        'views/res_partner.xml',
+        'views/product_public_category.xml',
     ],
 }
