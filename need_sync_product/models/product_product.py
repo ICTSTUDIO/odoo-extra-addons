@@ -84,3 +84,8 @@ class ProductProduct(models.Model):
     def unlink(self):
         self.env['need.sync'].unlink_records('product.product', self.ids)
         return super(ProductProduct, self).unlink()
+
+    @api.model
+    def set_sync_date(self):
+        self.env['need.sync'].set_need_sync('product.product', self._context.get('active_ids'))
+

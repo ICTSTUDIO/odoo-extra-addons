@@ -43,3 +43,9 @@ class ProductTemplate(models.Model):
             'ctx': {'search_default_filter_sync_needed':1},
             'domain': filter_domain
         }
+
+    @api.multi
+    def unlink(self):
+        products = self.env['product.product'].browse(self.ids)
+        self.env['need.sync'].unlink_records('product.product', products.ids)
+        return super(ProductTemplate, self).unlink()
