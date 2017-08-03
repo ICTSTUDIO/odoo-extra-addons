@@ -93,85 +93,77 @@ class StockWarehouse(models.Model):
         if 'immediately_usable_qty' in product._fields:
             return product.immediately_usable_qty
         else:
-            return product.qty_available-product.outgoing_qty
+            return product.qty_available - product.outgoing_qty
 
-    @api.one
-    def _get_product_stock(self):
+    @api.model
+    def _get_product_from_context(self):
         if self.env.context.get('product_template_id', False):
             product_tmpl = self.env['product.template'].browse(
                     [self.env.context.get('product_template_id')]
             )
-            product_id = False
             if product_tmpl:
-                product_tmpl_id = product_tmpl[0]
-                if product_tmpl_id and product_tmpl_id.product_variant_ids:
-                    product = product_tmpl_id.product_variant_ids[0]
-                    if product:
-                        product_id = product.id
-            if not product_id:
-                return False
-        elif self.env.context.get('product_id', False):
-            product_id = self.env.context.get('product_id')
-        else: 
+                product = product_tmpl.product_variant_ids[0]
+                if product:
+                    return product.id
             return False
-
-        product = self.env['product.product'].with_context(location=self.lot_stock_id.id).browse(product_id)
-        self.product_qty_available = product.qty_available
-        self.product_free_available = self._get_free_available(product)
-        self.product_virtual_available = product.virtual_available
-        self.product_incoming = product.incoming_qty
-        self.product_outgoing = product.outgoing_qty
-        if product.qty_available+product.outgoing_qty < 0:
-            self.product_backorder = product.qty_available+product.outgoing_qty
         else:
-            self.product_backorder = 0
+            return self.env.context.get('product_id', False)
+
+
+    @api.multi
+    def _get_product_stock(self):
+        product_id = self._get_product_from_context()
+        if not product_id:
+            return
 
         transit_locations = self.env['stock.location'].search([('usage', '=', 'transit')])
-        self.product_transit = 0
-        for transit_location in transit_locations:
-            warehouse = transit_location.get_warehouse(transit_location)
-            if warehouse and warehouse == self.id:
-                product = self.env['product.product'].with_context(location=transit_location.id).browse(product_id)
-                self.product_transit = product.qty_available
 
-        self.product_id = product_id
+        for wh in self:
+            vals = {}
+            product = self.env['product.product'].with_context(location = wh.lot_stock_id.id).browse(product_id)
+            vals['product_qty_available'] = product.qty_available
+            vals['product_free_available'] = ('immediately_usable_qty' in product._fields and product.immediately_usable_qty) or (product.qty_available - product.outgoing_qty)
+            vals['product_virtual_available'] = product.virtual_available
+            vals['product_incoming'] = product.incoming_qty
+            vals['product_outgoing'] = product.outgoing_qty
+            if product.qty_available + product.outgoing_qty < 0:
+                vals['product_backorder'] = product.qty_available + product.outgoing_qty
+            else:
+                vals['product_backorder'] = 0
+
+            vals['product_transit'] = 0
+            for transit_location in transit_locations:
+                warehouse = transit_location.get_warehouse(transit_location)
+                if warehouse and warehouse == wh.id:
+                    product = self.env['product.product'].with_context(location=transit_location.id).browse(product_id)
+                    vals['product_transit'] = product.qty_available
+
+            vals['product_id'] = product_id
+            wh.update(vals)
+        None
 
     @api.one
     def _set_product_stock(self):
         # Real change initiated on product_template and product_product
         _logger.debug("Set Product Stock")
 
-    @api.one
+    @api.multi
     def _get_product_orderpoint(self):
-        if self.env.context.get('product_template_id', False):
-            product_tmpl = self.env['product.template'].browse(
-                    [self.env.context.get('product_template_id')]
+        product_id = self._get_product_from_context()
+        if not product_id:
+            return
+
+        for wh in self:
+            orderpoints = self.env['stock.warehouse.orderpoint'].search(
+                    [
+                        ('product_id', '=', product_id),
+                        ('warehouse_id', '=', wh.id)
+                    ]
             )
-            product_id = False
-            if product_tmpl:
-                product_tmpl_id = product_tmpl[0]
-                if product_tmpl_id and product_tmpl_id.product_variant_ids:
-                    product = product_tmpl_id.product_variant_ids[0]
-                    if product:
-                        product_id = product.id
-            if not product_id:
-                return False
-        elif self.env.context.get('product_id', False):
-            product_id = self.env.context.get('product_id')
-        else:
-            return False
-
-        self.product_id = product_id
-
-        orderpoints = self.env['stock.warehouse.orderpoint'].search(
-                [
-                    ('product_id', '=', product_id),
-                    ('warehouse_id', '=', self.id)
-                ]
-        )
-        if orderpoints and orderpoints[0]:
-            self.orderpoint_min_qty = orderpoints[0].product_min_qty
-            self.orderpoint_qty_multiple = orderpoints[0].qty_multiple
+            if orderpoints and orderpoints[0]:
+                wh.orderpoint_min_qty = orderpoints[0].product_min_qty
+                wh.orderpoint_qty_multiple = orderpoints[0].qty_multiple
+        None
 
     @api.model
     def stock_set(self, product, new_qty):
