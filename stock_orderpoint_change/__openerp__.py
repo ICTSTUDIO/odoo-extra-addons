@@ -29,8 +29,10 @@
     'summary': 'When changing the parameters in the orderpoint the procurements needs to be cancelled and all chained.',
     'depends': [
         'stock',
+        'procurement',
     ],
     'data': [
-        'views/stock_warehouse_orderpoint.xml'
+        'views/stock_warehouse_orderpoint.xml',
+        'views/procurement_rule.xml',
     ],
 }
