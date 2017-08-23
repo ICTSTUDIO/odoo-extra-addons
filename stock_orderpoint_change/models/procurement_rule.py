@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2015 ICTSTUDIO (<http://www.ictstudio.eu>).
+#    OpenERP, Open Source Management Solution
+#
+#    Copyright (c) 2015 ERPOPEN
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -10,14 +12,21 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from . import procurement_order
-from . import stock_warehouse_orderpoint
-from . import procurement_rule
+from openerp import models, fields, api, _
+import logging
+
+_logger = logging.getLogger(__name__)
+
+
+class ProcurementRule(models.Model):
+    _inherit = "procurement.rule"
+
+    prevent_cancel = fields.Boolean('Prevent Cancel')
