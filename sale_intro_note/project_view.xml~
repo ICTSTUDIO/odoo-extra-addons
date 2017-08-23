@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="edit_project_note" model="ir.ui.view">
+            <field name="name">project.edit.note.form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <page string="Other Info" position="after">
+		  <page string="Notes">
+                   <field name="note" nolabel="1"/>
+		 </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="edit_project_task_note" model="ir.ui.view">
+            <field name="name">project.task.note.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <page string="Extra Info" position="after">
+		  <page string="Notes">
+                   <field name="note" nolabel="1"/>
+		 </page>
+                </page>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>
