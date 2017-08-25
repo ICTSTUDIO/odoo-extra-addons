@@ -14,7 +14,7 @@ class NeedSyncModel(models.Model):
 
     def _select_models(self):
         list_models = super(NeedSyncModel, self)._select_models()
-        list_models.append(('ProductPublicCategory', 'Product Public Category'))
+        list_models.append(('product.public.category', 'Product Public Category'))
         return list_models
 
     model = fields.Selection(
