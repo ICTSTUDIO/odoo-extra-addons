@@ -12,7 +12,7 @@ Bugs are tracked on `GitHub Issues <https://github.com/ICTSTUDIO/8.0-extra-addon
 Maintainer
 ==========
 .. image:: https://www.ictstudio.eu/github_logo.png
-:alt: ICTSTUDIO
+   :alt: ICTSTUDIO
    :target: https://www.ictstudio.eu
 
 This module is maintained by the ICTSTUDIO.
