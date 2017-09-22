@@ -47,21 +47,23 @@ class NeedSyncConnectionRecordException(models.Model):
         store=True
     )
 
-    @api.one
+    @api.multi
     @api.depends('res_id', 'model')
     def _get_record(self):
-        if self.res_id and self.model:
-            self.record = self.env[str(self.model)].browse(self.res_id)
+        for rec in self:
+            if rec.res_id and rec.model:
+                rec.record = rec.env[str(rec.model)].browse(rec.res_id)
 
-    @api.one
+    @api.multi
     @api.depends('res_id', 'model')
     def _get_name(self):
-        object = self.env[self.model].browse(self.res_id)
-        if object and 'name' in object._fields:
-            object_name = object.name
-        else:
-            object_name = "No object name defined"
-        self.name = '%s' % (object_name)
+        for rec in self:
+            object = rec.env[rec.model].browse(rec.res_id)
+            if object and 'name' in object._fields:
+                object_name = object.name
+            else:
+                object_name = "No object name defined"
+            rec.name = '%s' % (object_name)
 
     def unlink(self):
         """

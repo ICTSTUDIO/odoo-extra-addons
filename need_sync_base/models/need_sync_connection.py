@@ -71,27 +71,29 @@ class NeedSyncConnection(models.Model):
         else:
             return False
 
-    @api.one
+    @api.multi
     def _get_published(self):
-        _logger.debug("Context: %s", self._context)
-        if self._context.get('active_id') and self._context.get('active_model'):
-            res_id, model = self.check_res_model(self._context.get('active_id'), self._context.get('active_model'))
-            _logger.debug("Res_id: %s, Model: %s", res_id, model)
-            if self.check_unpublished(res_id, model):
-                self.published = False
+        for rec in self:
+            _logger.debug("Context: %s", rec._context)
+            if rec._context.get('active_id') and rec._context.get('active_model'):
+                res_id, model = rec.check_res_model(rec._context.get('active_id'), rec._context.get('active_model'))
+                _logger.debug("Res_id: %s, Model: %s", res_id, model)
+                if rec.check_unpublished(res_id, model):
+                    rec.published = False
+                else:
+                    rec.published = True
             else:
-                self.published = True
-        else:
-            self.published = True
+                rec.published = True
 
 
-    @api.one
+    @api.multi
     @api.depends('connection')
     def _get_name(self):
-        if self.connection and 'name' in self.connection._fields:
-            self.name = '%s' % (self.connection.name)
-        else:
-            self.name = '%s' % ('No Connection Name')
+        for rec in self:
+            if rec.connection and 'name' in rec.connection._fields:
+                rec.name = '%s' % (rec.connection.name)
+            else:
+                rec.name = '%s' % ('No Connection Name')
 
     @api.model
     def get_need_sync_list(self, model):
@@ -136,17 +138,19 @@ class NeedSyncConnection(models.Model):
     def get_dest_model(self, active_model):
         return False
 
-    @api.one
+    @api.multi
     def manual_unpublish(self):
-        if self._context.get('active_id') and self._context.get('active_model'):
-            dest_model = self.get_dest_model(self._context.get('active_model'))
-            self.set_published(self._context.get('active_id'), self._context.get('active_model'), False, dest_model=dest_model)
+        for rec in self:
+            if rec._context.get('active_id') and rec._context.get('active_model'):
+                dest_model = rec.get_dest_model(rec._context.get('active_model'))
+                rec.set_published(rec._context.get('active_id'), rec._context.get('active_model'), False, dest_model=dest_model)
 
-    @api.one
+    @api.multi
     def manual_publish(self):
-        if self._context.get('active_id') and self._context.get('active_model'):
-            dest_model = self.get_dest_model(self._context.get('active_model'))
-            self.set_published(self._context.get('active_id'), self._context.get('active_model'), True, dest_model=dest_model)
+        for rec in self:
+            if rec._context.get('active_id') and rec._context.get('active_model'):
+                dest_model = rec.get_dest_model(rec._context.get('active_model'))
+                rec.set_published(rec._context.get('active_id'), rec._context.get('active_model'), True, dest_model=dest_model)
 
     @api.multi
     def set_last_sync_date(self, model, res_ids):

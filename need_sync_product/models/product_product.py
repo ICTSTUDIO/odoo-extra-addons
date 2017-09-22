@@ -26,38 +26,41 @@ class ProductProduct(models.Model):
         inverse="_set_need_sync_connection"
     )
 
-    @api.one
+    @api.multi
     def _get_need_sync_connection(self):
         """
         Only show connections on Partner with model activated
         :return: 
         """
-        need_sync_connection_models = self.env['need.sync.connection.model'].search(
-            [
-                ('model', '=', 'product.product')
-            ]
-        )
-        self.need_sync_connections = need_sync_connection_models.mapped('need_sync_connection')
-
-    @api.one
-    def _set_need_sync_connection(self):
-        for need_sync_connection in self.need_sync_connections:
-            #need_sync_connection.set_published(self.id, self._model, need_sync_connection.published, 'product.product')
-            _logger.debug("Nothing")
-
-    @api.one
-    def compute_sync_count(self):
-        _logger.debug("Model: %s", self._model)
-        need_sync_lines = self.env['need.sync.line'].search(
+        for rec in self:
+            need_sync_connection_models = rec.env['need.sync.connection.model'].search(
                 [
-                    ('model', '=', str(self._model)),
-                    ('res_id', '=', self.id),
+                    ('model', '=', 'product.product')
                 ]
-        )
-        self.need_sync_count = len(
-                need_sync_lines.filtered(lambda b: b.sync_needed)
-        )
-        self.need_sync_total = len(need_sync_lines)
+            )
+            rec.need_sync_connections = need_sync_connection_models.mapped('need_sync_connection')
+
+    @api.multi
+    def _set_need_sync_connection(self):
+        for rec in self:
+            for need_sync_connection in rec.need_sync_connections:
+                #need_sync_connection.set_published(rec.id, rec._model, need_sync_connection.published, 'product.product')
+                _logger.debug("Nothing")
+
+    @api.multi
+    def compute_sync_count(self):
+        for rec in self:
+            _logger.debug("Model: %s", rec._model)
+            need_sync_lines = rec.env['need.sync.line'].search(
+                    [
+                        ('model', '=', str(rec._model)),
+                        ('res_id', '=', rec.id),
+                    ]
+            )
+            rec.need_sync_count = len(
+                    need_sync_lines.filtered(lambda b: b.sync_needed)
+            )
+            rec.need_sync_total = len(need_sync_lines)
 
     @api.multi
     def open_need_sync(self):

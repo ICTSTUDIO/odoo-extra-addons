@@ -50,21 +50,23 @@ class NeedSync(models.Model):
             string="Sync Lines"
     )
 
-    @api.one
+    @api.multi
     @api.depends('res_id', 'model')
     def _get_record(self):
-        if self.res_id and self.model:
-            self.record = self.env[str(self.model)].browse(self.res_id)
+        for rec in self:
+            if rec.res_id and rec.model:
+                rec.record = rec.env[str(rec.model)].browse(rec.res_id)
 
-    @api.one
+    @api.multi
     @api.depends('res_id', 'model')
     def _get_name(self):
-        object = self.env[self.model].browse(self.res_id)
-        if object and 'name' in object._fields:
-            object_name = object.name
-        else:
-            object_name = "No object name defined"
-        self.name = '%s' % (object_name)
+        for rec in self:
+            object = rec.env[rec.model].browse(rec.res_id)
+            if object and 'name' in object._fields:
+                object_name = object.name
+            else:
+                object_name = "No object name defined"
+            rec.name = '%s' % (object_name)
 
     @api.model
     def get_model_allowed_connections(self):
@@ -91,13 +93,14 @@ class NeedSync(models.Model):
                 }
             )
 
-    @api.one
+    @api.multi
     def _autocreate_sync_lines(self):
-        if self.model:
-            connections = self.get_model_allowed_connections()
-            for connection in connections:
-                _logger.debug("Autocreate for Conncetion: %s", connection)
-                self._autocreate_syncline_connection(connection)
+        for rec in self:
+            if rec.model:
+                connections = rec.get_model_allowed_connections()
+                for connection in connections:
+                    _logger.debug("Autocreate for Conncetion: %s", connection)
+                    rec._autocreate_syncline_connection(connection)
 
 
     @api.multi

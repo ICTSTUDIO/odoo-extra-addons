@@ -17,20 +17,22 @@ class ProductCategory(models.Model):
         inverse="_set_need_sync_connection"
     )
 
-    @api.one
+    @api.multi
     def _get_need_sync_connection(self):
         """
         Only show connections on Partner with model activated
         :return: 
         """
-        need_sync_connection_models = self.env['need.sync.connection.model'].search(
-            [
-                ('model', '=', 'product.product')
-            ]
-        )
-        self.need_sync_connections = need_sync_connection_models.mapped('need_sync_connection')
+        for rec in self:
+            need_sync_connection_models = rec.env['need.sync.connection.model'].search(
+                [
+                    ('model', '=', 'product.product')
+                ]
+            )
+            rec.need_sync_connections = need_sync_connection_models.mapped('need_sync_connection')
 
-    @api.one
+    @api.multi
     def _set_need_sync_connection(self):
-        for need_sync_connection in self.need_sync_connections:
-            need_sync_connection.set_published(self.id, 'product.category', need_sync_connection.published)
+        for rec in self:
+            for need_sync_connection in rec.need_sync_connections:
+                need_sync_connection.set_published(rec.id, 'product.category', need_sync_connection.published)

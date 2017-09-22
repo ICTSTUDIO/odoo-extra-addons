@@ -69,39 +69,41 @@ class NeedSyncLine(models.Model):
         ('connection_need_sync_uniq', 'unique(need_sync, need_sync_connection)', 'Only one need sync per connection')
     }
 
-    @api.one
+    @api.multi
     @api.depends('need_sync.res_id',
                  'need_sync.model',
                  'need_sync_connection.name'
                  )
     def _get_name(self):
-        object = self.env[self.need_sync.model].browse(self.need_sync.res_id)
-        if object and 'name' in object._fields:
-            object_name = object.name
-        else:
-            object_name = "No object name defined"
-        if self.need_sync_connection:
-            connection_name = self.need_sync_connection.name
-        else:
-            connection_name = 'No Connection Name'
-        self.name = '%s (%s)' % (object_name, connection_name)
+        for rec in self:
+            object = rec.env[rec.need_sync.model].browse(rec.need_sync.res_id)
+            if object and 'name' in object._fields:
+                object_name = object.name
+            else:
+                object_name = "No object name defined"
+            if rec.need_sync_connection:
+                connection_name = rec.need_sync_connection.name
+            else:
+                connection_name = 'No Connection Name'
+            rec.name = '%s (%s)' % (object_name, connection_name)
 
-    @api.one
+    @api.multi
     @api.depends('need_sync.need_sync_date',
                  'last_sync_date',
                  'confirmed_date',
                  'published'
                  )
     def _compute_need_sync(self):
-        if self.published == True:
-            if self.need_sync_date > self.last_sync_date:
-                self.sync_needed = True
-            elif self.need_sync_date and not self.last_sync_date:
-                self.sync_needed = True
-            elif self.sync_needed == True:
-                self.sync_needed = False
-        else:
-            self.sync_needed = False
+        for rec in self:
+            if rec.published == True:
+                if rec.need_sync_date > rec.last_sync_date:
+                    rec.sync_needed = True
+                elif rec.need_sync_date and not rec.last_sync_date:
+                    rec.sync_needed = True
+                elif rec.sync_needed == True:
+                    rec.sync_needed = False
+            else:
+                rec.sync_needed = False
 
     @api.multi
     def _create_need_sync(self, need_sync, need_sync_connection):
