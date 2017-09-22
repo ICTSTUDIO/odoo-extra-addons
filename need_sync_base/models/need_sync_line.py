@@ -59,7 +59,11 @@ class NeedSyncLine(models.Model):
     confirmed_date = fields.Datetime(
             string="Last Confirm Datetime"
     )
-
+    published = fields.Boolean(
+        string="Published",
+        default=True,
+        index=True
+    )
 
     _sql_constraints = {
         ('connection_need_sync_uniq', 'unique(need_sync, need_sync_connection)', 'Only one need sync per connection')
@@ -85,14 +89,18 @@ class NeedSyncLine(models.Model):
     @api.one
     @api.depends('need_sync.need_sync_date',
                  'last_sync_date',
-                 'confirmed_date'
+                 'confirmed_date',
+                 'published'
                  )
     def _compute_need_sync(self):
-        if self.need_sync_date > self.last_sync_date:
-            self.sync_needed = True
-        elif self.need_sync_date and not self.last_sync_date:
-            self.sync_needed = True
-        elif self.sync_needed == True:
+        if self.published == True:
+            if self.need_sync_date > self.last_sync_date:
+                self.sync_needed = True
+            elif self.need_sync_date and not self.last_sync_date:
+                self.sync_needed = True
+            elif self.sync_needed == True:
+                self.sync_needed = False
+        else:
             self.sync_needed = False
 
     @api.multi

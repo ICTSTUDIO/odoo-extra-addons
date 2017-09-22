@@ -38,11 +38,14 @@ class NeedSyncModel(models.Model):
         :return: list of res_id
         """
         self.ensure_one()
-        return self.env[self.model].search(
-                [
-                    ('write_date', '>', self.last_check_date)
-                ]
-        )
+        if self.last_check_date:
+            return self.env[self.model].search(
+                    [
+                        ('write_date', '>', self.last_check_date)
+                    ]
+            )
+        else:
+            return self.env[self.model].search([])
 
     @api.multi
     def get_object_ids_changed(self):
