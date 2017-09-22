@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dropship_address_public,dropship.address,model_dropship_address,,1,1,1,0
+
