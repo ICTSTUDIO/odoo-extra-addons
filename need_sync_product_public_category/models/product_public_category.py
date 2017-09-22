@@ -7,12 +7,12 @@ from odoo import models, fields, api, _
 
 _logger = logging.getLogger(__name__)
 
-class ProductProduct(models.Model):
-    _inherit = "product.product"
+class ProductPublicCategory(models.Model):
+    _inherit = "product.public.category"
     
     need_sync_count = fields.Integer(
         compute="compute_sync_count",
-        string="To Sync Products"
+        string="To Sync Public Categories"
     )
     need_sync_total = fields.Integer(
             compute="compute_sync_count",
@@ -34,7 +34,7 @@ class ProductProduct(models.Model):
         """
         need_sync_connection_models = self.env['need.sync.connection.model'].search(
             [
-                ('model', '=', 'product.product')
+                ('model', '=', 'product.public.category')
             ]
         )
         self.need_sync_connections = need_sync_connection_models.mapped('need_sync_connection')
@@ -65,7 +65,7 @@ class ProductProduct(models.Model):
 
         filter_domain = [
             ('res_id', '=', self.id),
-            ('model', '=', 'product.product')
+            ('model', '=', 'product.public.category')
         ]
 
         return {
@@ -74,7 +74,7 @@ class ProductProduct(models.Model):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'need.sync.line',
-            'src_model': 'product.product',
+            'src_model': 'res.partner',
             'target': 'current',
             'ctx': {'search_default_filter_sync_needed':1},
             'domain': filter_domain
@@ -82,10 +82,5 @@ class ProductProduct(models.Model):
 
     @api.multi
     def unlink(self):
-        self.env['need.sync'].unlink_records('product.product', self.ids)
-        return super(ProductProduct, self).unlink()
-
-    @api.model
-    def set_sync_date(self):
-        self.env['need.sync'].set_need_sync('product.product', self._context.get('active_ids'))
-
+        self.env['need.sync'].unlink_records('product.public.category', self.ids)
+        return super(ProductPublicCategory, self).unlink()

@@ -31,10 +31,10 @@ class NeedSyncModel(models.Model):
                 ]
         )
 
-    def get_products_from_template(self, product_templates):
+    def get_products_from_category(self, product_categories):
         return self.env['product.product'].search(
                 [
-                    ('product_tmpl_id', 'in', product_templates.ids)
+                    ('categ_id', 'in', product_categories.ids)
                 ]
         )
 
@@ -56,14 +56,21 @@ class NeedSyncModel(models.Model):
                 ]
         )
         product_templates = changed_price_product_templ_records.mapped('product_tmpl_id')
-        return products | self.get_products_from_template(product_templates)
+
+        changed_price_product_categ_records = self.env['product.pricelist.item'].search(
+                [
+                    ('write_date', '>', self.last_check_date),
+                    ('categ_id', '!=', False)
+                ]
+        )
+        product_categories = changed_price_product_categ_records.mapped('categ_id')
+        return products | self.get_products_from_template(product_templates) | self.get_products_from_category(product_categories)
 
     def get_products_from_stock_moves(self):
         changed_stock_moves = self.env['stock.move'].search(
                 [
                     ('write_date', '>', self.last_check_date),
                     ('product_id', '!=', False)
-
                 ]
         )
         return changed_stock_moves.mapped('product_id')

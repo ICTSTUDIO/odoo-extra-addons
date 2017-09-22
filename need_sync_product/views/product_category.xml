@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_category_form_view" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="after">
+                    <notebook>
+                    <page string="Need Sync">
+                        <field name="need_sync_connections" context="{'active_id': active_id,'active_model': active_model}">
+                            <tree editable="botom">
+                                <field name="name" readonly="True"/>
+                                <field name="published"/>
+                                <button  type="object"
+                                         name="manual_publish" string="Publish"
+                                         attrs="{'invisible': [('published', '=', True)]}"
+                                />
+                                <button  type="object"
+                                         name="manual_unpublish" string="Unpublish"
+                                         attrs="{'invisible': [('published', '!=', True)]}"
+                                />
+                            </tree>
+                        </field>
+                    </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -16,6 +16,11 @@ class ProductTemplate(models.Model):
     need_sync_total = fields.Integer(
             related='product_variant_ids.need_sync_total'
     )
+    need_sync_connections = fields.One2many(
+        comodel_name="need.sync.connection",
+        string="Need Sync Connections",
+        related="product_variant_ids.need_sync_connections"
+    )
 
 
     @api.multi
@@ -38,3 +43,9 @@ class ProductTemplate(models.Model):
             'ctx': {'search_default_filter_sync_needed':1},
             'domain': filter_domain
         }
+
+    @api.multi
+    def unlink(self):
+        products = self.env['product.product'].browse(self.ids)
+        self.env['need.sync'].unlink_records('product.product', products.ids)
+        return super(ProductTemplate, self).unlink()
