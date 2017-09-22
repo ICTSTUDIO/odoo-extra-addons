@@ -44,8 +44,7 @@ class SaleOrder(models.Model):
                             }
                     )
                     refund.button_compute()
-                    if inv.state == 'open':
-                        refund.signal_workflow('invoice_open')
+                    refund.signal_workflow('invoice_open')
                     self.reconcile_invoice_refund(inv, refund)
                     refunds += refund
                 else:
@@ -71,9 +70,9 @@ class SaleOrder(models.Model):
             amls = self.env['account.move.line'].browse(to_reconcile_ids[account])
             if amls:
                 amls.reconcile(
-                        writeoff_period_id=invoice.period_id.id,
-                        writeoff_journal_id=invoice.journal_id.id,
-                        writeoff_acc_id=invoice.account_id.id
+                        writeoff_period_id=False,
+                        writeoff_journal_id=False,
+                        writeoff_acc_id=False
                 )
 
     @api.one
