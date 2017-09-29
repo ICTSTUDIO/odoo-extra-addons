@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<openerp>
+  <data>
+
+    <record id="wiz_export_stock_maingroup_level_view_form" model="ir.ui.view">
+      <field name="name">Generate stock level Main Group report</field>
+      <field name="model">wiz.export.stock.maingroup.level</field>
+      <field name="arch" type="xml">
+        <form string="Export File">
+          <group name="date" col="4">
+            <separator string="Enter the date for the Stock Level export:" colspan="4"/>
+            <field name="stock_level_date"/>
+          </group>
+          <group name="filters" col="4">
+            <separator string="Export Filters" colspan="4"/>
+            <field name="company_id"/>
+            <field name="warehouse_id"
+                   domain="[('company_id', '=', company_id)]"/>
+            <field name="categ_id"/>
+            <newline/>
+            <field name="category_select" invisible="not context.get('active_model') == 'product.category'"/>
+          </group>
+          <footer>
+            <button icon="gtk-execute" name="xls_export" string="Export"
+                    type="object" default_focus="1"
+                    context="{'xls_export': 1}"/>
+            or
+            <button string="Cancel" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="wiz_export_stock_maingroup_level_action" model="ir.actions.act_window">
+      <field name="name">Top Level Stock Export</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">wiz.export.stock.maingroup.level</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="wiz_export_stock_maingroup_level_view_form"/>
+      <field name="target">new</field>
+    </record>
+
+    <record id="wiz_export_stock_maingroup_level_product_category_ir_value" model="ir.values">
+      <field name="key2">client_action_multi</field>
+      <field name="model">product.category</field>
+      <field name="name">Stock Level Export</field>
+      <field eval="'ir.actions.act_window,%d'%wiz_export_stock_maingroup_level_action" name="value"/>
+    </record>
+
+    <menuitem id="wiz_export_stock_maingroup_level_menu"
+              name="Top Level Stock Excel export"
+              parent="stock.menu_stock_inventory_control"
+              action="wiz_export_stock_maingroup_level_action"
+              sequence="50"/>
+
+  </data>
+</openerp>
