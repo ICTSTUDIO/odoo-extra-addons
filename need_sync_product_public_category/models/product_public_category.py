@@ -44,16 +44,16 @@ class ProductPublicCategory(models.Model):
     def _set_need_sync_connection(self):
         for rec in self:
             for need_sync_connection in rec.need_sync_connections:
-                #need_sync_connection.set_published(rec.id, rec._model, need_sync_connection.published, 'product.product')
+                #need_sync_connection.set_published(rec.id, rec._name, need_sync_connection.published, 'product.product')
                 _logger.debug("Nothing")
 
     @api.multi
     def compute_sync_count(self):
         for rec in self:
-            _logger.debug("Model: %s", rec._model)
+            _logger.debug("Model: %s", rec._name)
             need_sync_lines = rec.env['need.sync.line'].search(
                     [
-                        ('model', '=', str(rec._model)),
+                        ('model', '=', str(rec._name)),
                         ('res_id', '=', rec.id),
                     ]
             )

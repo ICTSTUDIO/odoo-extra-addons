@@ -79,8 +79,13 @@ class StockWarehouse(models.Model):
         else:
             return product.qty_available-product.outgoing_qty
 
-    @api.one
+    @api.multi
     def _get_product_stock(self):
+        for rec in self:
+            rec._get_product_stock_product()
+
+    @api.multi
+    def _get_product_stock_product(self):
         if self.env.context.get('product_template_id', False):
             product_tmpl = self.env['product.template'].browse(
                     [self.env.context.get('product_template_id')]
@@ -124,13 +129,23 @@ class StockWarehouse(models.Model):
 
         self.product_id = product_id
 
-    @api.one
+    @api.multi
     def _set_product_stock(self):
+        for rec in self:
+            rec._set_product_stock_product()
+
+    @api.multi
+    def _set_product_stock_product(self):
         # Real change initiated on product_template and product_product
         _logger.debug("Set Product Stock")
 
-    @api.one
+    @api.multi
     def _get_product_orderpoint(self):
+        for rec in self:
+            rec._get_product_orderpoint_product()
+
+    @api.multi
+    def _get_product_orderpoint_product(self):
         if self.env.context.get('product_template_id', False):
             product_tmpl = self.env['product.template'].browse(
                     [self.env.context.get('product_template_id')]
