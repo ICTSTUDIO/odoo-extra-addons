@@ -20,22 +20,31 @@ class StockPicking(models.Model):
          compute='_get_related_pickings_name',
     )
 
-    @api.one
-    @api.depends('group_id')
+    @api.multi
+    @api.depends('move_lines', 'group_id')
     def get_related_pickings(self):
-        group_pickings = self.env['stock.picking']
-        for group in self.group_id:
-            group_pickings = group_pickings | self.search([('group_id', '=', group.id)])
+        for rec in self:
+            related_pickings = rec
+            if rec.group_id:
+                for group in rec.group_id:
+                    related_pickings = related_pickings | self.search(
+                        [
+                            ('group_id', '=', group.id)
+                        ]
+                    )
+            else:
+                orig_pickings = rec.mapped('move_lines.move_orig_ids.picking_id')
+                dest_pickings = rec.mapped('move_lines.move_dest_id.picking_id')
+                related_pickings = orig_pickings | dest_pickings
 
-        related_pickings = group_pickings - self
-        _logger.debug("Related Pickings: %s", related_pickings)
-        if related_pickings:
-            self.related_pickings = related_pickings
+            _logger.debug("Related Pickings: %s", related_pickings)
+            related_pickings = related_pickings - self
+            rec.related_pickings = related_pickings
 
-
-    @api.one
+    @api.multi
     @api.depends('related_pickings')
     def _get_related_pickings_name(self):
-        self.related_pickings_name = ', '.join([rp.name for rp in self.related_pickings])
+        for rec in self:
+            rec.related_pickings_name = ', '.join([rp.name for rp in rec.related_pickings])
 
 
