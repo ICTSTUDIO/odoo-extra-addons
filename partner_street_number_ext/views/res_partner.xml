@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">Add separate fields for street number extension</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="partner_street_number.view_partner_form"/>
+            <field name="arch" type="xml">
+ 
+               <xpath expr="//div[@class='o_address_format']//field[@name='street_number']"
+                       position="after">
+                        <field name="street_number_ext" class="o_address_street_number_ext"
+                          placeholder="Extension..."
+                          attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+                        />
+                </xpath>
+
+                <xpath expr="//div[@name='div_address']//field[@name='street_number']"
+                       position="after">
+
+                    <field name="street_number_ext" class="o_address_street_number_ext"
+                           placeholder="Extension..."
+                    />
+
+                </xpath>
+
+                <xpath expr="//field[@name='child_ids']" position="attributes">
+                    <attribute name="context">{'default_parent_id': active_id, 'default_street_name': street_name, 'default_street_number': street_number, 'default_street_number_ext': street_number_ext, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer}</attribute>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
