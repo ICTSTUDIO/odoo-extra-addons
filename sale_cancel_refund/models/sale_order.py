@@ -6,8 +6,8 @@ import logging
 from openerp import api, models, fields, _
 from openerp.exceptions import Warning as UserError
 
-
 _logger = logging.getLogger(__name__)
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
     def action_create_refund(self):
         refunds = self.env['account.invoice']
         if len(self.invoice_ids) == 1 and self.invoice_ids.type == 'out_invoice':
-            refunds=self.env['account.invoice']
+            refunds = self.env['account.invoice']
             for inv in self.invoice_ids:
                 if inv.state in ['open', 'paid']:
                     date = fields.Date.today()
@@ -26,10 +26,10 @@ class SaleOrder(models.Model):
                     refund = inv.refund(date, period, description)
 
                     refund.write(
-                            {
-                                'date_due': date,
-                                'check_total': inv.check_total
-                            }
+                        {
+                            'date_due': date,
+                            'check_total': inv.check_total
+                        }
                     )
                     refund.button_compute()
                     refund.signal_workflow('invoice_open')
@@ -44,35 +44,42 @@ class SaleOrder(models.Model):
     def reconcile_invoice_refund(self, invoice, refund):
         movelines = invoice.move_id.line_id
         to_reconcile_ids = {}
+
+        # Reconcile lines with reconcile true not payable or receivable
         for line in movelines:
-            if line.account_id.reconcile:
-                to_reconcile_ids.setdefault(line.account_id.id, []).append(line.id)
-            if line.reconcile_id:
+            if line.account_id.reconcile and not line.account_id.type in [
+                'payable', 'receivable']:
+                to_reconcile_ids.setdefault(line.account_id.id, []).append(
+                    line.id)
                 line.reconcile_id.unlink()
 
-        for refundline in refund.move_id.line_id:
-            if refundline.account_id.reconcile:
-                to_reconcile_ids[refundline.account_id.id].append(refundline.id)
+        for rline in refund.move_id.line_id:
+            if rline.account_id.reconcile and not rline.account_id.type in [
+                'payable', 'receivable']:
+                to_reconcile_ids[rline.account_id.id].append(rline.id)
 
         for account in to_reconcile_ids:
-            amls = self.env['account.move.line'].browse(to_reconcile_ids[account])
+            amls = self.env['account.move.line'].browse(
+                to_reconcile_ids[account])
             if amls:
                 amls.reconcile(
-                        writeoff_period_id=False,
-                        writeoff_journal_id=False,
-                        writeoff_acc_id=False
+                    writeoff_period_id=False,
+                    writeoff_journal_id=False,
+                    writeoff_acc_id=False
                 )
 
     @api.one
     def action_advanced_cancel(self):
 
         # Cancel Picking
-        if len(self.picking_ids) == 1 and self.picking_ids.state not in ('done'):
+        if len(self.picking_ids) == 1 and self.picking_ids.state not in (
+                'done'):
             pick = self.picking_ids[0]
             if 'wave_id' in pick._fields and pick.wave_id:
-                raise UserError (
+                raise UserError(
                     _("Order is being picked!"),
-                    _("First pull picking from Picking Wave: %s") % pick.wave_id.name
+                    _(
+                        "First pull picking from Picking Wave: %s") % pick.wave_id.name
                 )
             try:
                 pick.action_cancel()
@@ -86,11 +93,11 @@ class SaleOrder(models.Model):
 
         elif len(self.picking_ids) == 1:
             raise UserError(
-                    _("Order has been picked!"),
-                    _("Unable to cancel a picking already done")
+                _("Order has been picked!"),
+                _("Unable to cancel a picking already done")
             )
 
-        #Create Refund
+        # Create Refund
         refunds = self.action_create_refund()
         _logger.debug("Create Refund: %s", refunds)
         if refunds:
