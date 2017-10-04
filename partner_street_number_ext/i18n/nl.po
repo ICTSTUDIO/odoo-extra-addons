@@ -1,0 +1,26 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * partner_street_number_ext
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-12 22:26+0000\n"
+"PO-Revision-Date: 2015-03-12 22:26+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: partner_street_number_ext
+#: field:res.partner,street_number_ext:0
+msgid "Street number extension"
+msgstr "Toevoeging"
+
+#. module: partner_street_number_ext
+#: view:res.partner:partner_street_number_ext.view_partner_form
+msgid "Extension..."
+msgstr "Toevoeging..."
