@@ -40,9 +40,18 @@ class ProductPricelistImport(models.TransientModel):
             string="Pricelist Version",
             ondelete='cascade'
     )
-    remove_existing = fields.Boolean(
-            string="Remove Exisiting Items",
-            default=False
+    operating_mode = fields.Selection(
+        selection=[
+            ('normal', 'Import file'),
+            ('empty', 'Empty the pricelist, Import file'),
+            ('remove', 'Remove matched items'),
+        ],
+        string="Operating Method",
+        default='normal',
+        help="Choose the operating method: 3 options "
+             "'normal' This wil just add pricelist items for each line in the list"
+             "'empty' This will empty the Pricelist (Version) selected and import the list"
+             "'remove' This will remove pricelistitems on the selected Pricelist (Version) for found items"
     )
     base = fields.Selection(
             selection=_price_field_get,
@@ -178,25 +187,7 @@ class ProductPricelistImport(models.TransientModel):
         return header_fields
 
     @api.multi
-    def file_import(self):
-        time_start = time.time()
-        self._err_log = ''
-        lines, header = self._remove_leading_lines(self.lines)
-        header_fields = csv.reader(
-                StringIO.StringIO(header), dialect=self.dialect).next()
-        self._header_fields = self._process_header(header_fields)
-        reader = csv.DictReader(
-                StringIO.StringIO(lines), fieldnames=self._header_fields,
-                dialect=self.dialect)
-
-        if self.remove_existing:
-            existing_items = self.env['product.pricelist.item'].search(
-                    [
-                        ('price_version_id', '=', self.pricelist_version.id)
-                    ]
-            )
-            existing_items.unlink()
-            _logger.debug("Removing Exisiting Items")
+    def operating_method_normal(self, time_start, lines, header, header_fields, reader):
 
         lines = []
         for line in reader:
@@ -207,9 +198,9 @@ class ProductPricelistImport(models.TransientModel):
                 except:
                     tb = ''.join(format_exception(*exc_info()))
                     raise UserError(
-                            _("Wrong Code Page"),
-                            _("Error while processing line '%s' :\n%s")
-                            % (line, tb))
+                        _("Wrong Code Page"),
+                        _("Error while processing line '%s' :\n%s")
+                        % (line, tb))
 
             header_reversed = reversed(self._header_fields)
             for i, hf in enumerate(header_reversed):
@@ -228,7 +219,7 @@ class ProductPricelistImport(models.TransientModel):
                     'price_version_id': self.pricelist_version.id,
                     'price_discount': -1,
                     'price_surcharge': str2float(
-                            line.get('prijs'), self.decimal_separator
+                        line.get('prijs'), self.decimal_separator
                     ),
                     'base': self.base
                 }
@@ -236,7 +227,7 @@ class ProductPricelistImport(models.TransientModel):
                 # min_quantity if used
                 if line.get('stuks'):
                     create_values['min_quantity'] = str2float(
-                            line.get('stuks'), self.decimal_separator
+                        line.get('stuks'), self.decimal_separator
                     )
 
                 supplierinfos = False
@@ -244,10 +235,10 @@ class ProductPricelistImport(models.TransientModel):
 
                 if self.productcode_options in ['supplier', 'supplier_product']:
                     supplierinfos = self.env['product.supplierinfo'].search(
-                            [
-                                ('name', '=', self.supplier.id),
-                                ('product_code', '=', line.get('productcode'))
-                            ]
+                        [
+                            ('name', '=', self.supplier.id),
+                            ('product_code', '=', line.get('productcode'))
+                        ]
                     )
 
                     if supplierinfos:
@@ -255,11 +246,11 @@ class ProductPricelistImport(models.TransientModel):
                             0].product_tmpl_id.id
                         _logger.debug("Supplierinfos: %s", supplierinfos)
                 if self.productcode_options in ['product',
-                                                  'supplier_product']:
+                                                'supplier_product']:
                     products = self.env['product.product'].search(
-                            [
-                                ('default_code', '=', line.get('productcode'))
-                            ]
+                        [
+                            ('default_code', '=', line.get('productcode'))
+                        ]
                     )
 
                     if products and not supplierinfos:
@@ -270,6 +261,117 @@ class ProductPricelistImport(models.TransientModel):
                                 'product_tmpl_id' in create_values:
                     self.env['product.pricelist.item'].create(create_values)
                     _logger.debug("Create PricelistItems: %s", create_values)
+
+
+    @api.multi
+    def operating_method_empty(self, time_start, lines, header, header_fields, reader):
+        existing_items = self.env['product.pricelist.item'].search(
+            [
+                ('price_version_id', '=', self.pricelist_version.id)
+            ]
+        )
+        existing_items.unlink()
+        _logger.debug("Removing Exisiting Items")
+        self.operating_method_normal(time_start, lines, header, header_fields, reader)
+
+    @api.multi
+    def operating_method_remove(self, time_start, lines, header, header_fields, reader):
+        lines = []
+        for line in reader:
+            # step 1: handle codepage
+            for i, hf in enumerate(self._header_fields):
+                try:
+                    line[hf] = line[hf].decode(self.codepage).strip()
+                except:
+                    tb = ''.join(format_exception(*exc_info()))
+                    raise UserError(
+                        _("Wrong Code Page"),
+                        _("Error while processing line '%s' :\n%s")
+                        % (line, tb))
+
+            header_reversed = reversed(self._header_fields)
+            for i, hf in enumerate(header_reversed):
+                if i == 0 and line[hf] and line[hf][0] == '#':
+                    # lines starting with # are considered as comment lines
+                    break
+                if line[hf] == '':
+                    break
+
+            ## Import Script
+            if line.get('productcode') and \
+                    self.pricelist and self.pricelist_version:
+
+                search_values = [
+                    ('price_version_id', '=', self.pricelist_version.id)
+                ]
+
+                # if stuks is used remove only with the stuks
+                if line.get('stuks'):
+                    search_values.extend(
+                        [
+                            ('min_quantity', '=', str2float(
+                                line.get('stuks'), self.decimal_separator)
+                            )
+                        ]
+                    )
+
+                supplierinfos = False
+                products = False
+
+                if self.productcode_options in ['supplier', 'supplier_product']:
+                    supplierinfos = self.env['product.supplierinfo'].search(
+                        [
+                            ('name', '=', self.supplier.id),
+                            ('product_code', '=', line.get('productcode'))
+                        ]
+                    )
+
+                    if supplierinfos:
+                        search_values.extend([('product_tmpl_id' , '=', supplierinfos[
+                            0].product_tmpl_id.id)])
+                        _logger.debug("Supplierinfos: %s", supplierinfos)
+
+                if self.productcode_options in ['product',
+                                                'supplier_product']:
+                    products = self.env['product.product'].search(
+                        [
+                            ('default_code', '=', line.get('productcode'))
+                        ]
+                    )
+
+                    if products and not supplierinfos:
+                        search_values.extend(
+                            [
+                                ('product_id', '=', products[0].id)
+                            ]
+                        )
+                        _logger.debug("Products: %s", products)
+
+                if products or supplierinfos:
+                    pricelist_items = self.env['product.pricelist.item'].search(search_values)
+                    _logger.debug("To Delete PricelistItems: %s", pricelist_items)
+                    pricelist_items.unlink()
+
+
+
+    @api.multi
+    def file_import(self):
+        time_start = time.time()
+        self._err_log = ''
+        lines, header = self._remove_leading_lines(self.lines)
+        header_fields = csv.reader(
+                StringIO.StringIO(header), dialect=self.dialect).next()
+        self._header_fields = self._process_header(header_fields)
+        reader = csv.DictReader(
+                StringIO.StringIO(lines), fieldnames=self._header_fields,
+                dialect=self.dialect)
+
+        if self.operating_mode == 'empty':
+            self.operating_method_empty(time_start, lines, header, header_fields, reader)
+        elif self.operating_mode == 'remove':
+            self.operating_method_remove(time_start, lines, header, header_fields, reader)
+        else:
+            self.operating_method_normal(time_start, lines, header, header_fields, reader)
 
         return {'type': 'ir.actions.act_window_close'}
 

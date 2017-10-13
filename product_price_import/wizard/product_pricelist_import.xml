@@ -16,7 +16,7 @@
                     <group col="4">
                         <field name="pricelist" required="1" colspan="4"/>
                         <field name="pricelist_version" required="1" colspan="4"/>
-                        <field name="remove_existing" colspan="4"/>
+                        <field name="operating_mode" colspan="4"/>
                         <field name="base" colspan="4"/>
                         <separator colspan="4"/>
                         <field name="productcode_options" colspan="4"/>
@@ -30,7 +30,7 @@
                         <field name="codepage"/>
                     </group>
                     <footer>
-                        <button name="file_import" string="_Import" type="object" class="oe_highlight"/>
+                        <button name="file_import" string="_Start" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
