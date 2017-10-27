@@ -34,7 +34,8 @@ class PurchaseOrderLine(models.Model):
         _logger.debug("Cancel Procurement Orders")
         procurement_ids_to_cancel = self.env['procurement.order'].search(
                 [
-                    ('purchase_line_id', 'in', self.ids)
+                    ('purchase_line_id', 'in', self.ids),
+                    ('state', 'not in', ['cancel','done'])
                 ]
         )
         _logger.debug("Cancel Procurement Orders: %s", procurement_ids_to_cancel)

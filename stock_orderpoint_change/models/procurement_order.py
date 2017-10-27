@@ -48,8 +48,9 @@ class ProcurementOrder(models.Model):
                 if rec.state not in ('cancel', 'done'):
                     _logger.debug("Proc State: %s", rec.state)
                     if rec.rule_id and rec.rule_id.prevent_cancel:
-                        transit_move = self.env['stock.move'].search([('procurement_id','=',rec.id)], limit=1)
+                        transit_move = self.env['stock.move'].search([('procurement_id', '=', rec.id)], limit=1)
                         if transit_move and transit_move.move_dest_id and transit_move.move_dest_id.procurement_id and transit_move.move_dest_id.procurement_id.state == 'done':
+                            _logger.debug("Prevented Cancel: %s", rec)
                             continue
                     rec.cancel()
                     cancel_procurements += rec
