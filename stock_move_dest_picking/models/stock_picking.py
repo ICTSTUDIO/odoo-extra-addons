@@ -39,6 +39,16 @@ class StockPicking(models.Model):
         return super(StockPicking, self).action_assign()
 
     @api.multi
+    def action_done(self):
+        self.create_linked_group()
+        return super(StockPicking, self).action_done()
+
+    @api.multi
+    def action_confirm(self):
+        self.create_linked_group()
+        return super(StockPicking, self).action_confirm()
+
+    @api.multi
     def force_assign(self):
         """ Changes state of picking to available if moves are confirmed or waiting.
         @return: True
