@@ -44,17 +44,26 @@ class ProcurementOrder(models.Model):
         cancel_procurements = self.env['procurement.order']
         for rec in self:
             try:
-
                 if rec.state not in ('cancel', 'done'):
                     _logger.debug("Proc State: %s", rec.state)
-                    if rec.rule_id and rec.rule_id.prevent_cancel:
-                        transit_move = self.env['stock.move'].search([('procurement_id', '=', rec.id)], limit=1)
-                        if transit_move and transit_move.move_dest_id and transit_move.move_dest_id.procurement_id and transit_move.move_dest_id.procurement_id.state == 'done':
-                            _logger.debug("Prevented Cancel: %s", rec)
-                            continue
+                    if rec.check_no_cancel:
+                        _logger.debug("Prevented Cancel: %s", rec)
+                        error_procurements += rec
+                        continue
                     rec.cancel()
                     cancel_procurements += rec
             except:
                 _logger.error("Cancel Procurement Failed: %s", rec)
                 error_procurements += rec
         return cancel_procurements, error_procurements
+
+    @api.multi
+    def check_no_cancel(self):
+        self.ensure_one()
+        no_cancel = super(ProcurementOrder, self).check_no_cancel()
+        if not no_cancel:
+            if self.rule_id and self.rule_id.prevent_cancel:
+                transit_move = self.env['stock.move'].search([('procurement_id', '=', self.id)], limit=1)
+                if transit_move and transit_move.move_dest_id and transit_move.move_dest_id.procurement_id and transit_move.move_dest_id.procurement_id.state == 'done':
+                    no_cancel = True
+        return no_cancel or False

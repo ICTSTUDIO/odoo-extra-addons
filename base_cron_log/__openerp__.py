@@ -1,43 +1,25 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    Author: ElvenStudio
-#    Copyright 2015 elvenstudio.it
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-
-{'name': 'Elvenstudio Cron Log',
- 'license': 'AGPL-3',
- 'version': '0.1.0',
- 'category': 'Tools',
- 'website': 'https://github.com/ElvenStudio/Odoo',
- 'summary': "Cron logger",
- 'author': "ElvenStudio",
- 'license': 'AGPL-3',
- 'website': 'http://www.elvenstudio.it',
-
- 'depends': [
-     'base',
- ],
-
- 'data': [
-     'views/ir_cron.xml',
-     'data/cron.xml'
- ],
-
- 'installable': True,
- 'application': False,
- }
+# Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
+# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+{
+    'name': 'Need Synchronization Base',
+    'version': '8.0.0.0.7',
+    'category': 'Stock',
+    'author': 'ICTSTUDIO, André Schenkels',
+    'website': 'http://www.ictstudio.eu',
+    'license': 'AGPL-3',
+    'summary': 'Base module for external connections detecting changed models in ODOO',
+    'depends': [
+        'base',
+    ],
+    'data': [
+        'security/security_groups.xml',
+        'security/ir.model.access.csv',
+        'views/need_sync.xml',
+        'views/need_sync_line.xml',
+        'views/need_sync_connection.xml',
+        'views/need_sync_model.xml',
+        'views/menu.xml',
+        'data/need_sync_model.xml'
+    ],
+}
