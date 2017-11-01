@@ -19,20 +19,20 @@ class ProcurementOrder(models.Model):
             if 'closed_planner' in self.purchase_id._fields:
                 if self.purchase_id.closed_planner:
                     _logger.debug("Closed Planner: %s", self.purchase_id)
-                    no_cancel = True
+                    return True
         for move in self.move_ids:
             if move.picking_id:
                 #If this works it can be placed in a seperate module orderpoint_merge / warehouse_transfer
                 if 'transfer' in move.picking_id._fields:
                     if move.picking_id.transfer:
                         _logger.debug("Warehouse Transfer: %s", move.picking_id.transfer)
-                        no_cancel = True
+                        return True
                 #If this works it can be placed in a seperate module orderpoint_merge / linked_group for assigned warehouse push
                 if 'linked_group' in move.picking_id._fields:
                     if move.picking_id.linked_group and move.picking_id.group_id:
                         _logger.debug("Linked Group: %s", move.picking_id.group_id)
-                        no_cancel = True
-        return no_cancel or False
+                        return True
+        return False
 
     @api.multi
     def get_chained_procurements(self):
