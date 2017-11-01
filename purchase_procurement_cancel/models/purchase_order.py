@@ -33,6 +33,7 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self).set_order_line_status(status)
 
         for rec in self:
+            _logger.debug("Cancel PO")
             cancel_procurements = rec.order_line.get_cancel_procurements()
             cancel_procurements.write({'state': 'cancel'})
 

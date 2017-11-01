@@ -30,8 +30,8 @@ class ProcurementOrder(models.Model):
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
-        return super(ProcurementOrder, self.with_context(
-                {'no_assign_manual': True})).run_scheduler(
+        ctx = dict(self._context, no_assign_manual=True)
+        return super(ProcurementOrder, self.with_context(ctx)).run_scheduler(
                 use_new_cursor=use_new_cursor,
                 company_id=company_id
         )

@@ -72,7 +72,7 @@ class PurchaseOrderLine(models.Model):
 
         cancel_procurements = self.get_cancel_procurements()
         try:
-            _logger.debug("Cancel Procurements from PO Line")
+            _logger.debug("Cancel Procurements from PO Line: %s", cancel_procurements)
             cancel_procurements.write({'state': 'cancel'})
         except:
             _logger.error("Unable to Cancel Procurements: %s", cancel_procurements)
