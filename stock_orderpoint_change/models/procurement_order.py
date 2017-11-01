@@ -43,18 +43,14 @@ class ProcurementOrder(models.Model):
         error_procurements = self.env['procurement.order']
         cancel_procurements = self.env['procurement.order']
         for rec in self:
-            try:
-                if rec.state not in ('cancel', 'done'):
-                    _logger.debug("Proc State: %s", rec.state)
-                    if rec.check_no_cancel:
-                        _logger.debug("Prevented Cancel: %s", rec)
-                        error_procurements += rec
-                        continue
+            if rec.state not in ('cancel', 'done'):
+                _logger.debug("Proc State: %s", rec.state)
+                if rec.check_no_cancel:
+                    _logger.debug("Prevented Cancel: %s", rec)
+                    error_procurements += rec
+                else:
                     rec.cancel()
                     cancel_procurements += rec
-            except:
-                _logger.error("Cancel Procurement Failed: %s", rec)
-                error_procurements += rec
         return cancel_procurements, error_procurements
 
     @api.multi
