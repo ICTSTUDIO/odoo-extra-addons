@@ -24,5 +24,5 @@ class ProcurementOrder(models.Model):
                     limit=1
                 )
                 if transit_move and transit_move.move_dest_id and transit_move.move_dest_id.procurement_id and transit_move.move_dest_id.procurement_id.state == 'done':
-                    no_cancel = True
-        return no_cancel or False
+                    return True
+        return no_cancel

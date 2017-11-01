@@ -20,7 +20,13 @@ class ProcurementOrder(models.Model):
                 if self.purchase_id.closed_planner:
                     _logger.debug("Closed Planner: %s", self.purchase_id)
                     return True
-        for move in self.move_ids:
+        check_moves = self.move_ids
+        for origmove in self.move_ids:
+            if origmove.move_dest_id:
+                _logger.debug("Found Dest Move: %s", origmove.move_dest_id)
+                check_moves += origmove.move_dest_id
+
+        for move in self.check_moves:
             if move.picking_id:
                 #If this works it can be placed in a seperate module orderpoint_merge / warehouse_transfer
                 if 'transfer' in move.picking_id._fields:
