@@ -41,7 +41,7 @@ class ProcurementOrder(models.Model):
             for move in rec.move_ids:
                 chained_procurements += move.procurement_id
                 chained_procurements += move.move_dest_id.procurement_id.get_chained_procurements()
-            chained_procurements += rec.filtered(lambda p: p.state not in ('cancel', 'done'))
+            chained_procurements = chained_procurements.filtered(lambda p: p.state not in ('cancel', 'done'))
             for chained_procurement in chained_procurements:
                 if chained_procurement.check_no_cancel():
                     _logger.debug("Removing from Chained Proc: %s", chained_procurement)
