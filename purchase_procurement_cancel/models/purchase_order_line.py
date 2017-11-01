@@ -32,29 +32,48 @@ class PurchaseOrderLine(models.Model):
     @api.multi
     def get_cancel_procurements(self):
         _logger.debug("Cancel Procurement Orders")
-        procurement_ids_to_cancel = self.env['procurement.order'].search(
+        procurements_to_cancel = self.env['procurement.order'].search(
                 [
                     ('purchase_line_id', 'in', self.ids),
                     ('state', 'not in', ['cancel','done'])
                 ]
         )
-        _logger.debug("Cancel Procurement Orders: %s", procurement_ids_to_cancel)
+        _logger.debug("Procurement Orders to Cancel: %s", procurements_to_cancel)
+        return procurements_to_cancel
 
-        return procurement_ids_to_cancel
+    @api.multi
+    def get_unlink_procurements(self):
+        _logger.debug("Unlink Procurement Orders")
+        procurements_to_unlink = self.env['procurement.order'].search(
+            [
+                ('purchase_line_id', 'in', self.ids),
+                ('state', 'not in', ['done'])
+            ]
+        )
 
+        return procurements_to_unlink
 
     @api.multi
     def unlink(self):
-        _logger.debug("Call Unlink PO Line")
-        cancel_procurements = self.get_cancel_procurements()
+        _logger.debug("Unlinking PO Line")
+        unlink_procurements = self.get_unlink_procurements()
         res = super(PurchaseOrderLine, self).unlink()
-        cancel_procurements.write({'state': 'cancel'})
+        try:
+            _logger.debug("Unlinking procurements: %s", unlink_procurements)
+            unlink_procurements.unlink()
+        except:
+            _logger.error("Unable to unlink procurements: %s", unlink_procurements)
         return res
 
     @api.multi
     def action_cancel(self):
+        _logger.debug("Cancel PO Lines")
         res = super(PurchaseOrderLine, self).action_cancel()
-        _logger.debug("Call Action Cancel PO Line")
+
         cancel_procurements = self.get_cancel_procurements()
-        cancel_procurements.write({'state': 'cancel'})
+        try:
+            _logger.debug("Cancel Procurements from PO Line")
+            cancel_procurements.write({'state': 'cancel'})
+        except:
+            _logger.error("Unable to Cancel Procurements: %s", cancel_procurements)
         return res
