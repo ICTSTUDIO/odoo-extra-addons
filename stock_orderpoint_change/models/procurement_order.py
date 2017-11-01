@@ -45,7 +45,7 @@ class ProcurementOrder(models.Model):
         for rec in self:
             if rec.state not in ('cancel', 'done'):
                 _logger.debug("Proc State: %s", rec.state)
-                if rec.check_no_cancel:
+                if rec.check_no_cancel():
                     _logger.debug("Prevented Cancel: %s", rec)
                     error_procurements += rec
                 else:
