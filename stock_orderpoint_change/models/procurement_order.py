@@ -32,10 +32,10 @@ class ProcurementOrder(models.Model):
         chained_procurements = self.env['procurement.order']
         for rec in self:
             for move in rec.move_ids:
-                _logger.debug("move.procurement_id: %s", move.procurement_id)
                 chained_procurements += move.procurement_id
                 chained_procurements += move.move_dest_id.procurement_id.get_chained_procurements()
             chained_procurements += rec.filtered(lambda p: p.state not in ('cancel', 'done'))
+        _logger.debug("Chained Procurements (Stock Change): %s", chained_procurements)
         return chained_procurements
 
     @api.multi
@@ -63,7 +63,12 @@ class ProcurementOrder(models.Model):
         no_cancel = super(ProcurementOrder, self).check_no_cancel()
         if not no_cancel:
             if self.rule_id and self.rule_id.prevent_cancel:
-                transit_move = self.env['stock.move'].search([('procurement_id', '=', self.id)], limit=1)
+                transit_move = self.env['stock.move'].search(
+                    [
+                        ('procurement_id', '=', self.id)
+                    ],
+                    limit=1
+                )
                 if transit_move and transit_move.move_dest_id and transit_move.move_dest_id.procurement_id and transit_move.move_dest_id.procurement_id.state == 'done':
                     no_cancel = True
         return no_cancel or False
