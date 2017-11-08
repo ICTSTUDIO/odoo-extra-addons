@@ -42,30 +42,6 @@ class PurchaseOrderLine(models.Model):
         return procurements_to_cancel
 
     @api.multi
-    def get_unlink_procurements(self):
-        _logger.debug("Unlink Procurement Orders")
-        procurements_to_unlink = self.env['procurement.order'].search(
-            [
-                ('purchase_line_id', 'in', self.ids),
-                ('state', 'not in', ['done'])
-            ]
-        )
-
-        return procurements_to_unlink
-
-    @api.multi
-    def unlink(self):
-        _logger.debug("Unlinking PO Line")
-        unlink_procurements = self.get_unlink_procurements()
-        res = super(PurchaseOrderLine, self).unlink()
-        try:
-            _logger.debug("Unlinking procurements: %s", unlink_procurements)
-            unlink_procurements.unlink()
-        except:
-            _logger.error("Unable to unlink procurements: %s", unlink_procurements)
-        return res
-
-    @api.multi
     def action_cancel(self):
         _logger.debug("Cancel PO Lines")
         res = super(PurchaseOrderLine, self).action_cancel()

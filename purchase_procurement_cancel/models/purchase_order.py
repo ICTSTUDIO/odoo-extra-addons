@@ -31,10 +31,10 @@ class PurchaseOrder(models.Model):
     @api.multi
     def set_order_line_status(self, status):
         res = super(PurchaseOrder, self).set_order_line_status(status)
-
-        for rec in self:
-            _logger.debug("Cancel PO")
-            cancel_procurements = rec.order_line.get_cancel_procurements()
-            cancel_procurements.write({'state': 'cancel'})
+        if status == 'cancel':
+            for rec in self:
+                _logger.debug("Cancel PO")
+                cancel_procurements = rec.order_line.get_cancel_procurements()
+                cancel_procurements.write({'state': 'cancel'})
 
         return res

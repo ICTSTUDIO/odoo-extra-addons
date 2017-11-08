@@ -165,6 +165,10 @@ class product_pricelist(models.Model):
         for item in items:
             _logger.debug("Remove Item: %s", item)
             item.unlink()
+
+        prod_templ = self.env['product.template'].browse([product_template_id])
+        prod_templ.write({})
+
         return True
 
 

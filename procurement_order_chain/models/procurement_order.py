@@ -24,9 +24,9 @@ class ProcurementOrder(models.Model):
         for origmove in self.move_ids:
             if origmove.move_dest_id:
                 _logger.debug("Found Dest Move: %s", origmove.move_dest_id)
-                check_moves += origmove.move_dest_id
+                check_moves = check_moves | origmove.move_dest_id
 
-        for move in self.check_moves:
+        for move in check_moves:
             if move.picking_id:
                 #If this works it can be placed in a seperate module orderpoint_merge / warehouse_transfer
                 if 'transfer' in move.picking_id._fields:
@@ -59,10 +59,7 @@ class ProcurementOrder(models.Model):
     def cancel_procurement(self):
         for rec in self:
             _logger.debug("Cancelling Proc: %s", rec)
-            rec.cancel()
-            if rec.purchase_id and rec.purchase_id.state == 'cancel':
-                _logger.debug("Removing Purchase Order: %s", rec.purchase_id)
-                rec.purchase_id.unlink()
+            rec.cancel_chain()
             for move in rec.move_ids:
                 if move.state == 'cancel':
                     _logger.debug("Removing Moves: %s", move)

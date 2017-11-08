@@ -107,7 +107,7 @@ class StockWarehouseTransfer(models.Model):
         return picking_types and picking_types[0]
 
     @api.multi
-    def get_picking_vals(self):
+    def get_transfer_picking_vals(self):
         self.ensure_one()
         picking_type = self.get_transfer_picking_type()
         picking_vals = {
@@ -121,14 +121,15 @@ class StockWarehouseTransfer(models.Model):
     @api.multi
     def action_create_picking(self):
         for rec in self:
-            picking_vals = rec.get_picking_vals()
+
+            picking_vals = rec.get_transfer_picking_vals()
             _logger.debug("Picking Vals: %s", picking_vals)
             picking = rec.pickings.create(picking_vals)
             if not picking:
                 _logger.error("Error Creating Picking")
                 #TODO: Add  Exception
 
-            pc_group = rec._get_procurement_group()
+            pc_group = rec._get_transfer_procurement_group()
 
             for line in rec.lines:
                 move_vals = line.get_move_vals(picking, pc_group)
@@ -137,14 +138,25 @@ class StockWarehouseTransfer(models.Model):
                     self.env['stock.move'].create(move_vals)
 
             picking.action_confirm()
+
+            _logger.debug("Group: %s", pc_group)
+            pickings = self.env['stock.picking']
+            pickings = pickings | picking.mapped('move_lines.move_orig_ids.picking_id')
+            pickings = pickings | picking.mapped('move_lines.move_dest_id.picking_id')
+
+            _logger.debug("Pickings: %s", pickings)
+            for picking in pickings:
+                if picking != rec:
+                    _logger.debug("Setting Transfer on Related Picking: %s", picking)
+                    picking.transfer = self.id
             picking.action_assign()
 
     @api.model
-    def _prepare_procurement_group(self):
+    def _prepare_transfer_procurement_group(self):
         return {'name': self.name}
 
     @api.model
-    def _get_procurement_group(self):
+    def _get_transfer_procurement_group(self):
         pc_groups = self.env['procurement.group'].search(
                 [
                     ('name', '=', self.name)
@@ -153,6 +165,6 @@ class StockWarehouseTransfer(models.Model):
         if pc_groups:
             pc_group = pc_groups[0]
         else:
-            pc_vals = self._prepare_procurement_group()
+            pc_vals = self._prepare_transfer_procurement_group()
             pc_group = self.env['procurement.group'].create(pc_vals)
         return pc_group or False

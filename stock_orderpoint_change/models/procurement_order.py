@@ -15,6 +15,7 @@ class ProcurementOrder(models.Model):
     def check_no_cancel(self):
         self.ensure_one()
         no_cancel = super(ProcurementOrder, self).check_no_cancel()
+        _logger.debug("Check no Cancel Transit")
         if not no_cancel:
             if self.rule_id and self.rule_id.prevent_cancel:
                 transit_move = self.env['stock.move'].search(
@@ -24,5 +25,6 @@ class ProcurementOrder(models.Model):
                     limit=1
                 )
                 if transit_move and transit_move.move_dest_id and transit_move.move_dest_id.procurement_id and transit_move.move_dest_id.procurement_id.state == 'done':
+                    _logger.debug("Check no Cancel Transit: True")
                     return True
         return no_cancel

@@ -30,7 +30,6 @@ class StockMove(models.Model):
 
     @api.multi
     def name_get(self):
-        _logger.debug("NG Context: %s", self.env.context)
         if self.env.context.get('return_line'):
             res = []
             for rec in self:
@@ -48,7 +47,6 @@ class StockMove(models.Model):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        _logger.debug("NS Context: %s", self.env.context)
         if self.env.context.get('return_line'):
             args = args or []
             if name:

@@ -31,11 +31,14 @@ class PurchaseOrder(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=None):
         if self.env.context.get('reuse_empty'):
+            new_args=[]
             for arg in args:
                 if arg[0] == 'state':
-                    arg = ('state', 'in', ['draft', 'cancel'])
+                    new_args.append(('state', 'in', ['draft', 'cancel']))
+                else:
+                    new_args.append(arg)
             return super(PurchaseOrder, self).search(
-                    args,
+                    new_args,
                     offset=offset,
                     limit=limit,
                     order=order,

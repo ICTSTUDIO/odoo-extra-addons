@@ -31,7 +31,6 @@ class StockMove(models.Model):
 
     @api.model
     def get_price_unit(self, move):
-        _logger.debug("Get Price Unit")
         if move.product_id.calc_costprice:
             if move.procurement_id and move.procurement_id.sale_line_id and move.product_id.calc_costprice_factor:
                 return (move.procurement_id.sale_line_id.price_unit) / move.product_id.calc_costprice_factor
