@@ -42,18 +42,22 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def get_chained_procurements(self):
-        chained_procurements = self.env['procurement.order']
+        cps = self
+
+        # Get all chained procurements
         for rec in self:
             for move in rec.move_ids:
-                chained_procurements += move.procurement_id
-                chained_procurements += move.move_dest_id.procurement_id.get_chained_procurements()
-            chained_procurements = chained_procurements.filtered(lambda p: p.state not in ('cancel', 'done'))
-            for chained_procurement in chained_procurements:
-                if chained_procurement.check_no_cancel():
-                    _logger.debug("Removing from Chained Proc: %s", chained_procurement)
-                    chained_procurements -= chained_procurement
-        _logger.debug("Chained Procurements: %s", chained_procurements)
-        return chained_procurements
+                cps = cps | move.procurement_id
+                cps = cps | move.move_dest_id.procurement_id.get_chained_procurements()
+            cps = cps.filtered(lambda p: p.state not in ('cancel', 'done'))
+
+        # Check chained procurements on cancel blocks
+        for chained_procurement in cps:
+            if chained_procurement.check_no_cancel():
+                # If this is true cancellation of this procurement is prohibited so remove from returned procurements
+                cps = cps - chained_procurement
+        _logger.debug("Chained Procurements: %s", cps)
+        return cps
 
     @api.multi
     def cancel_procurement(self):
