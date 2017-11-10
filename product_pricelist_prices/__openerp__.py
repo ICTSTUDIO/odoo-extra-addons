@@ -4,7 +4,7 @@
 
 {
     'name': 'Products Pricelist Prices',
-    'version': '8.0.1.1.3',
+    'version': '8.0.1.1.4',
     'author': 'ICTSTUDIO, André Schenkels',
     'category': 'Sales Management',
     'website': 'https://www.odoo.com',
