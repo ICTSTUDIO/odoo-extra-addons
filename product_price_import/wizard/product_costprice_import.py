@@ -157,7 +157,7 @@ class ProductCostpriceImport(models.TransientModel):
             if line.get('productcode') and line.get('kostprijs'):
                 product = self.env['product.product'].search([('default_code', '=', line.get('productcode'))])
                 if product:
-                    if product.valuation == 'realtime' and product.costmethod in ['standard', 'average']:
+                    if product.valuation == 'real_time' and product.cost_method in ['standard', 'average']:
                         product.do_change_standard_price(str2float(line.get('kostprijs'),self.decimal_separator))
                     else:
                         product.write({'standard_price': str2float(line.get('kostprijs'),self.decimal_separator)})

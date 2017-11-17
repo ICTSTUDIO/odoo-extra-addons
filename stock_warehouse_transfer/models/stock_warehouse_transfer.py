@@ -90,6 +90,35 @@ class StockWarehouseTransfer(models.Model):
             default=lambda self: self.env['res.company']._company_default_get(
                     'stock.warehouse.transfer'))
 
+    pickings_count = fields.Integer(
+        compute="compute_pickings_count",
+        string="Number Related Pickings"
+    )
+
+    @api.multi
+    def compute_pickings_count(self):
+        for rec in self:
+            rec.pickings_count = len(rec.pickings)
+
+    @api.multi
+    def open_pickings(self):
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+
+        filter_domain = [
+            ('transfer', '=', self.id)
+        ]
+
+        return {
+            'name': _('Pickings') + ": %s" % (self.name),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'stock.picking',
+            'src_model': 'stock.warehouse.transfer',
+            'target': 'current',
+            'domain': filter_domain
+        }
+
 
     def get_transfer_picking_type(self):
         self.ensure_one()

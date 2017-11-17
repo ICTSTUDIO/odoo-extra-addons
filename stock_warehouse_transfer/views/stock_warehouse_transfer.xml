@@ -29,6 +29,16 @@
                     </header>
 
                     <sheet>
+                        <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                        <button
+                                class="oe_inline oe_stat_button"
+                                type="object"
+                                name="open_pickings"
+                                icon="fa-cubes">
+                            <field name="pickings_count" string="Pickings" widget="statinfo" />
+                        </button>
+                        </div>
+
                         <h1>
                             <field name="name" required="1" placeholder="Reference" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </h1>
