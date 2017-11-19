@@ -4,7 +4,7 @@
 {
     'name': 'Need Synchronization Base',
     'version': '10.0.0.0.7',
-    'category': 'Stock',
+    'category': 'Tools',
     'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',

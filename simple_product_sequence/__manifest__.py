@@ -5,15 +5,16 @@
     'name': 'Simple Product Sequence',
     'version': '10.0.0.0.1',
     'category': 'Product Management',
-    'description': """Adding Product Sequence to the default_code field""",
     'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
+    'summary': """Simple way of adding automated sequences to partners """,
     'license': 'AGPL-3',
     'depends': [
         'base',
         'product',
                ],
-    'data': ['data/ir_sequence_product_product.xml',
+    'data': [
+        'data/ir_sequence_product_product.xml',
         ],
     
     'installable': True,

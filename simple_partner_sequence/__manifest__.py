@@ -9,6 +9,7 @@
     'author': 'ICTSTUDIO, André Schenkels',
     'license': 'AGPL-3',
     'website': 'http://www.ictstudio.eu',
+    'summary': """Simple way of adding automated sequences to partners """,
     'depends': [
         'base',
         'sale'

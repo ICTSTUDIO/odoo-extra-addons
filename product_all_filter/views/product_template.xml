@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<odoo>
+    <data>
+
+        <record id="product_template_search_view" model="ir.ui.view">
+            <field name="name">product.template.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <filter string="Show All" icon="terp-accessories-archiver" domain="['|', ('active', '=', True), ('active', '!=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
