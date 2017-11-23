@@ -16,10 +16,14 @@ class ProcurementOrder(models.Model):
         self.ensure_one()
         #If this works it can be placed in a seperate module orderpoint_merge / closed_planner
         if self.purchase_id:
+            if self.purchase_id in ['approved', 'except_picking', 'except_invoice','done']:
+                _logger.debug("Purchase Running: %s", self.purchase_id)
+                return True
             if 'closed_planner' in self.purchase_id._fields:
                 if self.purchase_id.closed_planner:
                     _logger.debug("Closed Planner: %s", self.purchase_id)
                     return True
+
         check_moves = self.move_ids
         for origmove in self.move_ids:
             if origmove.move_dest_id:
