@@ -16,7 +16,7 @@ class ProcurementOrder(models.Model):
         self.ensure_one()
         #If this works it can be placed in a seperate module orderpoint_merge / closed_planner
         if self.purchase_id:
-            if self.purchase_id in ['approved', 'except_picking', 'except_invoice','done']:
+            if self.purchase_id and self.purchase_id.state in ['approved', 'except_picking', 'except_invoice','done']:
                 _logger.debug("Purchase Running: %s", self.purchase_id)
                 return True
             if 'closed_planner' in self.purchase_id._fields:
