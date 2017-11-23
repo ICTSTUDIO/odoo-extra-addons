@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">ProductProductViewFormInherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="inside">
+                    <div class="oe_row">
+                        <h3>
+                            <label for="marker_ids"/>
+                            <field name="marker_ids" widget="many2many_tags" placeholder="Markers.." class="oe_inline"/>
+                        </h3>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+       	<record id="product_kanban_view" model="ir.ui.view" >
+            <field name="name">ProductProductViewKanbanInherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='tags']" position="inside">
+                    <ul>
+                        <li><field name="marker_ids"/></li>
+                    </ul>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_search_form_view" model="ir.ui.view">
+            <field name="name">ProductProductViewSearchInherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <field name="categ_id" position="after">
+                    <field name="marker_ids" string="Marker" filter_domain="[('marker_ids','ilike', self)]"/>
+                </field>
+            </field>
+        </record>
+        
+
+    </data>
+</odoo>

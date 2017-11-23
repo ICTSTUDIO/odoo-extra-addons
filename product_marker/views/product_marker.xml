@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+        <record id="product_marker_view_form" model="ir.ui.view">
+            <field name="name">product.marker.view.form</field>
+            <field name="model">product.marker</field>
+            <field name="arch" type="xml">
+                <form string="Marker">
+                    <field name="name"/>
+                    <field name="product_ids" widget="many2many_tags"/>
+                </form>
+            </field>
+        </record>	
+
+        <record id="product_marker_view_tree" model="ir.ui.view">
+            <field name="name">product.marker.view.tree</field>
+            <field name="model">product.marker</field>
+            <field name="arch" type="xml">
+                <tree string="Markers">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_marker_view_search" model="ir.ui.view">
+            <field name="name">product.marker.view.search</field>
+            <field name="model">product.marker</field>
+            <field name="arch" type="xml">
+                <search string="Marker">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="product_marker_action" model="ir.actions.act_window">
+            <field name="name">Product Markers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.marker</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product_marker_view_search"/>
+            <field name="view_id" ref="product_marker_view_tree"/>
+        </record>
+
+        <menuitem
+                id="menu_product_marker_menu"
+                action="product_marker_action"
+                groups="base.group_no_one"
+                parent="stock.menu_product_in_config_stock"
+                sequence="10"
+        />
+
+    </data>
+</odoo>

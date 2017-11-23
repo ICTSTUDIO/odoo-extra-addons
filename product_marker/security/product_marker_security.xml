@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="0">
+        
+        <record model="res.groups" id="group_product_marker_manager">
+            <field name="name">Product Marker Manager</field>
+        </record>
+
+    </data>
+</odoo>
+
