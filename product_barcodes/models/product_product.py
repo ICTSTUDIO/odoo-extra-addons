@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
-# Copyright© 2015-2017 ERP|OPEN <http://www.erpopen.nl>
 # License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 
 import logging
@@ -13,14 +12,15 @@ _logger = logging.getLogger(__name__)
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    @api.one
+    @api.multi
     @api.depends('barcode_ids.name')
-    def _get_barcodes(self):
-        barcode_list=[]
-        for barcode in self.barcode_ids:
-            barcode_list.append(barcode.name)
+    def get_barcodes(self):
+        for rec in self:
+            rec.ean13 = rec._get_barcodes()
 
-        self.ean13=str(barcode_list)
+    @api.multi
+    def _get_barcodes(self):
+        return ', '.join([bc.name for bc in self.barcode_ids])
 
     barcode_ids = fields.One2many(
         comodel_name="product.barcode",
@@ -28,7 +28,7 @@ class ProductProduct(models.Model):
         string='Barcodes'
     )
     ean13 = fields.Char(
-            compute="_get_barcodes",
+            compute="get_barcodes",
             string="Barcodes",
             size=200,
             readonly=True,
@@ -36,14 +36,3 @@ class ProductProduct(models.Model):
     )
     barcode_allow_not_unique = fields.Boolean(string="Allow barcode not unique", default=False)
 
-    @api.one
-    @api.depends('barcode_ids.name')
-    def _get_barcodes(self):
-        barcode_list=''
-        for barcode in self.barcode_ids:
-            if not barcode_list:
-                barcode_list = barcode.name
-            else:
-                barcode_list += ', ' + barcode.name
-
-        self.ean13=str(barcode_list)
