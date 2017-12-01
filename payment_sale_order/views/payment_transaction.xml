@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<openerp>
+    <data>
+
+        <record id="transaction_form" model="ir.ui.view">
+            <field name="model">payment.transaction</field>
+            <field name="inherit_id" ref="payment.transaction_form"/>
+            <field name="arch" type="xml">
+                <field name="acquirer_reference" position="after">
+                    <field name="payment_url" attrs="{'invisible': [('payment_url', '=', False)]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

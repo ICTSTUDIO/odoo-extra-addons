@@ -1,0 +1,28 @@
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<openerp>
+    <data>
+
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="replace">
+                    <label string="Active" for="active" align="1.0"/>
+                    <div>
+                        <field name="active" attrs="{'invisible': [('active', '=', True)]}" nolabel="1"/>
+                        <button  type="object" class="oe_link"
+                                 name="button_deactivate"
+                                 string="Deactivate"
+                                 attrs="{'invisible': [('active', '!=', True)]}"
+                        />
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
