@@ -66,12 +66,15 @@ class ProcurementOrder(models.Model):
     @api.multi
     def cancel_procurement(self):
         for rec in self:
-            _logger.debug("Cancelling Proc: %s", rec)
-            rec.cancel_chain()
+            rec.cancel()
             for move in rec.move_ids:
                 if move.state == 'cancel':
-                    _logger.debug("Removing Moves: %s", move)
                     move.unlink()
+            if rec.purchase_line_id:
+                if rec.purchase_line_id.state == 'cancel':
+                    _logger.debug("Remove Purchase Line: %s", rec.purchase_line_id)
+                    _logger.debug("Remove Purchase Line State: %s", rec.purchase_line_id.state)
+                    rec.purchase_line_id.unlink()
 
     @api.multi
     def cancel_chain(self):
@@ -84,6 +87,6 @@ class ProcurementOrder(models.Model):
                     _logger.debug("Prevented Cancel: %s", rec)
                     error_procurements += rec
                 else:
-                    rec.cancel()
+                    rec.cancel_procurement()
                     cancel_procurements += rec
         return cancel_procurements, error_procurements

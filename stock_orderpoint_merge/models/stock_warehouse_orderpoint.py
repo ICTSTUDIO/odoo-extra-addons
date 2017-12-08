@@ -29,9 +29,5 @@ class StockWarehouseOrderpoint(models.Model):
                 _logger.debug("Cancel Procurement: %s", procurement)
                 procurement.cancel_procurement()
 
-
         qty_after = self.env['procurement.order']._product_virtual_get(orderpoint)
-        _logger.debug("QTY Before: %s", qty_before)
-        _logger.debug("QTY After: %s", qty_after)
-        _logger.debug("Orderpoint: %s", orderpoint)
         return super(StockWarehouseOrderpoint, self).subtract_procurements(orderpoint) + qty_after - qty_before
