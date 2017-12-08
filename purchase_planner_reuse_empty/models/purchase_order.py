@@ -35,8 +35,10 @@ class PurchaseOrder(models.Model):
             for arg in args:
                 if arg[0] == 'state':
                     new_args.append(('state', 'in', ['draft', 'cancel']))
+
                 else:
                     new_args.append(arg)
+            new_args.append(('order_line', '=', False))
             return super(PurchaseOrder, self).search(
                     new_args,
                     offset=offset,
@@ -47,3 +49,11 @@ class PurchaseOrder(models.Model):
         else:
             return super(PurchaseOrder, self).search(
                 args, offset=offset, limit=limit, order=order, count=count)
+
+    @api.multi
+    def write(self, vals):
+        if self.env.context.get('reuse_empty') and len(self) == 1:
+            if vals.get('origin'):
+                vals.update({'state': 'draft'})
+
+        super(PurchaseOrder, self).write(vals)
