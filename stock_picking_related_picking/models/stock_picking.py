@@ -20,6 +20,16 @@ class StockPicking(models.Model):
          compute="get_related_pickings",
     )
 
+    related_pickings_count = fields.Integer(
+        compute="compute_related_pickings_count",
+        string="Number Related Pickings"
+    )
+
+    @api.multi
+    def compute_related_pickings_count(self):
+        for rec in self:
+            rec.related_pickings_count = len(rec.related_pickings)
+
     @api.model
     def _get_related_pickings(self):
         related_pickings = self
@@ -48,6 +58,33 @@ class StockPicking(models.Model):
             rec.related_pickings = rec._get_related_pickings()
             rec.related_pickings_name = rec._get_related_pickings_name()
 
+    @api.multi
+    def open_related_pickings(self):
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
 
-
+        filter_domain = [
+            ('id', 'in', self.related_pickings.ids)
+        ]
+        if self.related_pickings and len(self.related_pickings) >= 1:
+            return {
+                'name': _('Related Pickings') + ": %s" % (self.name),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'stock.picking',
+                'src_model': 'stock.picking',
+                'target': 'current',
+                'domain': filter_domain
+            }
+        elif self.related_pickings and len(self.related_pickings) == 1:
+            return {
+                'name': _('Related Pickings') + ": %s" % (self.name),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form, tree',
+                'res_model': 'stock.picking',
+                'src_model': 'stock.picking',
+                'target': 'current',
+                'domain': filter_domain
+            }
 
