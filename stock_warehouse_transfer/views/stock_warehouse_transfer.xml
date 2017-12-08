@@ -34,7 +34,7 @@
                                 class="oe_inline oe_stat_button"
                                 type="object"
                                 name="open_pickings"
-                                icon="fa-cubes">
+                                icon="fa-external-link">
                             <field name="pickings_count" string="Pickings" widget="statinfo" />
                         </button>
                         </div>
