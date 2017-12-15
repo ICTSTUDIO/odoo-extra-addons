@@ -36,11 +36,12 @@ class PurchaseOrder(models.Model):
     @api.multi
     def close_for_planner(self):
         self.write({'closed_planner': True})
+        self.message_post(_("Closed for Planner"))
 
     @api.multi
     def open_for_planner(self):
         self.write({'closed_planner': False})
-
+        self.message_post(_("Open for Planner"))
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=None):

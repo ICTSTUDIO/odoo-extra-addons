@@ -257,11 +257,85 @@ class ProductPricelistImport(models.TransientModel):
                         create_values['product_id'] = products[0].id
                         _logger.debug("Products: %s", products)
 
-                if 'product_id' in create_values or \
-                                'product_tmpl_id' in create_values:
-                    self.env['product.pricelist.item'].create(create_values)
-                    _logger.debug("Create PricelistItems: %s", create_values)
+                if 'product_id' in create_values or 'product_tmpl_id' in create_values:
+                    self.create_or_modify_item(line, create_values)
 
+    @api.model
+    def create_or_modify_item(self, line, values):
+        update = False
+        pricelist_items = self.search_existing_item(line)
+        min_qty = str2float(
+            line.get('stuks'), self.decimal_separator
+        )
+        if pricelist_items:
+            for pricelist_item in pricelist_items:
+                if pricelist_item.min_quantity == min_qty:
+                    if update == False:
+                        pricelist_item.write(values)
+                        _logger.debug("Update PricelistItem: %s", values)
+                    else:
+                        pricelist_item.unlink()
+                        _logger.debug("Remove Extra Pricelist Items: %s", pricelist_item)
+                    update = True
+        if not update:
+            self.env['product.pricelist.item'].create(values)
+            _logger.debug("Create PricelistItem: %s", values)
+
+    @api.model
+    def search_existing_item(self, line):
+        ## Import Script
+        if line.get('productcode') and \
+                self.pricelist and self.pricelist_version:
+
+            search_values = [
+                ('price_version_id', '=', self.pricelist_version.id)
+            ]
+
+            # if stuks is used remove only with the stuks
+            if line.get('stuks'):
+                search_values.extend(
+                    [
+                        ('min_quantity', '=', str2float(
+                            line.get('stuks'), self.decimal_separator)
+                         )
+                    ]
+                )
+
+            supplierinfos = False
+            products = False
+
+            if self.productcode_options in ['supplier', 'supplier_product']:
+                supplierinfos = self.env['product.supplierinfo'].search(
+                    [
+                        ('name', '=', self.supplier.id),
+                        ('product_code', '=', line.get('productcode'))
+                    ]
+                )
+
+                if supplierinfos:
+                    search_values.extend([('product_tmpl_id' , '=', supplierinfos[
+                        0].product_tmpl_id.id)])
+                    _logger.debug("Supplierinfos: %s", supplierinfos)
+
+            if self.productcode_options in ['product',
+                                            'supplier_product']:
+                products = self.env['product.product'].search(
+                    [
+                        ('default_code', '=', line.get('productcode'))
+                    ]
+                )
+
+                if products and not supplierinfos:
+                    search_values.extend(
+                        [
+                            ('product_id', '=', products[0].id)
+                        ]
+                    )
+                    _logger.debug("Products: %s", products)
+
+            if products or supplierinfos:
+                return self.env['product.pricelist.item'].search(search_values)
+        return self.env['product.pricelist.item']
 
     @api.multi
     def operating_method_empty(self, time_start, lines, header, header_fields, reader):
@@ -298,59 +372,9 @@ class ProductPricelistImport(models.TransientModel):
                     break
 
             ## Import Script
-            if line.get('productcode') and \
-                    self.pricelist and self.pricelist_version:
-
-                search_values = [
-                    ('price_version_id', '=', self.pricelist_version.id)
-                ]
-
-                # if stuks is used remove only with the stuks
-                if line.get('stuks'):
-                    search_values.extend(
-                        [
-                            ('min_quantity', '=', str2float(
-                                line.get('stuks'), self.decimal_separator)
-                            )
-                        ]
-                    )
-
-                supplierinfos = False
-                products = False
-
-                if self.productcode_options in ['supplier', 'supplier_product']:
-                    supplierinfos = self.env['product.supplierinfo'].search(
-                        [
-                            ('name', '=', self.supplier.id),
-                            ('product_code', '=', line.get('productcode'))
-                        ]
-                    )
-
-                    if supplierinfos:
-                        search_values.extend([('product_tmpl_id' , '=', supplierinfos[
-                            0].product_tmpl_id.id)])
-                        _logger.debug("Supplierinfos: %s", supplierinfos)
-
-                if self.productcode_options in ['product',
-                                                'supplier_product']:
-                    products = self.env['product.product'].search(
-                        [
-                            ('default_code', '=', line.get('productcode'))
-                        ]
-                    )
-
-                    if products and not supplierinfos:
-                        search_values.extend(
-                            [
-                                ('product_id', '=', products[0].id)
-                            ]
-                        )
-                        _logger.debug("Products: %s", products)
-
-                if products or supplierinfos:
-                    pricelist_items = self.env['product.pricelist.item'].search(search_values)
-                    _logger.debug("To Delete PricelistItems: %s", pricelist_items)
-                    pricelist_items.unlink()
+            pricelist_items = self.search_existing_item(line)
+            if pricelist_items:
+                pricelist_items.unlink()
 
 
 

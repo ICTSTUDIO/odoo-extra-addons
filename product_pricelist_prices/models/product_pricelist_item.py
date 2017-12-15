@@ -13,11 +13,13 @@ class ProductPricelistItem(models.Model):
 
     @api.multi
     def change_product(self):
+
         for rec in self:
             if rec.product_tmpl_id:
-                rec.product_tmpl_id.write({})
+                rec.product_tmpl_id.write({'write_uid': self._uid})
             if rec.product_id:
-                rec.product_id.write({})
+                rec.product_id.write({'write_uid': self._uid})
+
         return True
 
     @api.multi
@@ -27,10 +29,13 @@ class ProductPricelistItem(models.Model):
 
     @api.multi
     def write(self, vals):
+        ret = super(ProductPricelistItem, self).write(vals)
         self.change_product()
-        return super(ProductPricelistItem, self).write(vals)
+        return ret
 
     @api.model
     def create(self, vals):
-        self.change_product()
-        return super(ProductPricelistItem, self).create(vals)
+        items = super(ProductPricelistItem, self).create(vals)
+        if items:
+            items.change_product()
+        return items
