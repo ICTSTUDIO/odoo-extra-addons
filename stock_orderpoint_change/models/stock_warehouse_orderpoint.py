@@ -21,4 +21,5 @@ class StockWarehouseOrderpoint(models.Model):
                 _logger.debug("Errors: %s", error_procurements)
             if cancel_procurements:
                 _logger.debug("Cancel: %s", cancel_procurements)
+
         return True

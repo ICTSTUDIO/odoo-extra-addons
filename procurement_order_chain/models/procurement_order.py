@@ -13,6 +13,7 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def check_no_cancel(self):
+        _logger.debug("Procurement: %s", self)
         self.ensure_one()
         #If this works it can be placed in a seperate module orderpoint_merge / closed_planner
         if self.purchase_id:
