@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <record model="ir.ui.view" id="view_sales_config">
+        <record id="view_sales_config" model="ir.ui.view">
             <field name="name">sale.config.settings.inherit</field>
             <field name="inherit_id" ref="sale.view_sales_config"/>
             <field name="model">sale.config.settings</field>
