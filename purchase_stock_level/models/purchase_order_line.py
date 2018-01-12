@@ -52,6 +52,8 @@ class PurchaseOrderLine(models.Model):
             product = self.env['product.product'].with_context(
                     {'location': self.order_id.picking_type_id.default_location_dest_id.id}
             ).browse(self.product_id.id)
+        else:
+            product = self.product_id
 
         self.product_stock_stock = product.qty_available
         self.product_stock_incoming = product.incoming_qty
