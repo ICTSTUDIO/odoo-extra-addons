@@ -37,17 +37,18 @@ class ResPartner(models.Model):
                 if match and len(match.group(2)) < 6:
                     street_name = match.group(1)
                     street_number = match.group(2)
-                    street_number_ext = match.group(3)
+                    if match.lastindex > 2:
+                        street_number_ext = match.group(3)
                 else:
                     match = re.search(r'(.+)\s+(\d.*)', rec.street.strip())
                     if match and len(match.group(2)) < 6:
                         street_name = match.group(1)
-                        street_number = match.group(2)
-                        street_number_ext = False
+                        if match.lastindex > 1:
+                            street_number = match.group(2)
 
-            rec.street_name = street_name or False
-            rec.street_number = street_number or False
-            rec.street_number_ext = street_number_ext or False
+            rec.street_name = street_name or ''
+            rec.street_number = street_number or ''
+            rec.street_number_ext = street_number_ext or ''
 
 
     @api.model
