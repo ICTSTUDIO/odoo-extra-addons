@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='categ_id']" position="after">
                     <field name="main_category" readonly="1"/>
+                    <field name="second_category" readonly="1"/>
+                    <field name="third_category" readonly="1"/>
                 </xpath>
             </field>
         </record>
@@ -18,10 +20,14 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='categ_id']" position="after">
                     <field name="main_category"/>
+                    <field name="second_category"/>
+                    <field name="third_category"/>
                 </xpath>
                 <xpath expr="//filter[@name='inactive']" position="after">
                     <filter string="Category" context="{'group_by': 'categ_id'}"/>
                     <filter string="Top Level Category" context="{'group_by': 'main_category'}"/>
+                    <filter string="2nd Level Category" context="{'group_by': 'second_category'}"/>
+                    <filter string="3th Level Category" context="{'group_by': 'third_category'}"/>
                 </xpath>
             </field>
         </record>

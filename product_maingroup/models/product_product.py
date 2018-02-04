@@ -18,3 +18,15 @@ class ProductProduct(models.Model):
         related="product_tmpl_id.main_category",
         store=True
     )
+    second_category = fields.Many2one(
+        comodel_name='product.category',
+        string="2nd Level Category",
+        related="product_tmpl_id.second_category",
+        store=True
+    )
+    third_category = fields.Many2one(
+        comodel_name='product.category',
+        string="Third Level Category",
+        related="product_tmpl_id.third_category",
+        store=True
+    )

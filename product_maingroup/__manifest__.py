@@ -4,7 +4,7 @@
 
 {
     'name': 'Product Main Group',
-    'version': '10.0.0.0.1',
+    'version': '10.0.0.0.2',
     'category': 'Stock',
     'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',

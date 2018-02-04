@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2017 ICTSTUDIO <http://www.ictstudio.eu>
+  ~ License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+  -->
+
+<odoo>
+    <data>
+        <record id="view_account_invoice_report_search" model="ir.ui.view">
+            <field name="model">account.invoice.report</field>
+            <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='supplier']" position="after">
+                    <separator/>
+                    <field name="product_maincategory"/>
+                    <field name="product_secondcategory"/>
+                    <field name="product_thirdcategory"/>
+                </xpath>
+                <xpath expr="//filter[@name='category_product']" position="after">
+                    <filter string="Top Level Category" context="{'group_by':'product_maincategory'}"/>
+                    <filter string="2nd Level Category" context="{'group_by':'product_secondcategory'}"/>
+                    <filter string="3th Level Category" context="{'group_by':'product_thirdcategory'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='parent_id']" position="after">
                         <field name="main_category" />
+                    <field name="second_category" />
+                    <field name="third_category" />
                 </xpath>
             </field>
         </record>

@@ -13,22 +13,35 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     main_category = fields.Many2one(
-            comodel_name='product.category',
-            string="Top Level Category",
-            compute="get_main_category",
-            store=True
+        comodel_name='product.category',
+        string="Top Level Category",
+        compute="get_main_category",
+        store=True
+    )
+
+    second_category = fields.Many2one(
+        comodel_name='product.category',
+        string="2nd Level Category",
+        compute="get_main_category",
+        store=True
+    )
+
+    third_category = fields.Many2one(
+        comodel_name='product.category',
+        string="3th Level Category",
+        compute="get_main_category",
+        store=True
     )
     
-    @api.depends('categ_id', 'categ_id.main_category')
+    @api.depends('categ_id', 'categ_id.main_category', 'categ_id.second_category', 'categ_id.third_category')
     @api.multi
     def get_main_category(self):
         for rec in self:
-            rec.main_category = rec._get_main_category()
-    
-    @api.multi
-    def _get_main_category(self):
-        self.ensure_one()
-        if self.categ_id:
-            return self.categ_id.main_category
-        return False
-        
+            if rec.categ_id:
+                rec.main_category = rec.categ_id.main_category
+                rec.second_category = rec.categ_id.second_category
+                rec.third_category = rec.categ_id.third_category
+            else:
+                rec.main_category = False
+                rec.second_category = False
+                rec.third_category = False
