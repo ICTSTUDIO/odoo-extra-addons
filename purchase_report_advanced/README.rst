@@ -1,9 +1,13 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :alt: License: AGPL-3
+    :alt: License
 
-Product Marker
-==============
-- Provide Multiple Marker on Product
+Purchase Report Advanced - Inheritable
+======================================
+Change the purchase report model to support additions / changes to the fields.
+
+Known issues / Roadmap
+======================
+* None
 
 Bug Tracker
 ===========

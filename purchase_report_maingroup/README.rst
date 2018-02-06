@@ -1,9 +1,14 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :alt: License: AGPL-3
+    :alt: License
 
-Product Marker
-==============
-- Provide Multiple Marker on Product
+Purchase Report - Product Main Group Extension
+==========================================
+
+This module adds the extra columns maningroup, second and third group to the purchase reports.
+
+Known issues / Roadmap
+======================
+* None
 
 Bug Tracker
 ===========
