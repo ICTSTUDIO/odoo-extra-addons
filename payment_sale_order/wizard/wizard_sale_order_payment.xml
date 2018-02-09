@@ -34,15 +34,17 @@
             <field name="view_id" ref="wizard_sale_order_payment_view_form"/>
         </record>
 
-        <act_window id="action_sale_order_create_payment"
-                    multi="True"
-                    key2="client_action_multi" name="Create payment link"
+        <act_window id="action_sale_order_create_payments"
+                    multi="False"
+                    key2="client_action_multi" name="Create payment link(s)"
                     res_model="wizard.sale.order.payment"
                     src_model="sale.order"
                     view_mode="form"
                     target="new"
                     view_type="form"
         />
+
+
 
     </data>
 </openerp>

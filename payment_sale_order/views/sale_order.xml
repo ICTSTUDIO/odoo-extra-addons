@@ -10,6 +10,11 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <button name="cancel" position="after">
+                    <button name="%(action_sale_order_create_payments)d" string="Create Payment Link"
+                        type="action" states="draft" class="oe_highlight" groups="base.group_user"/>
+                </button>
+
                 <group name="sale_pay" position="inside">
                     <field name="payment_url" attrs="{'invisible': [('payment_url', '=', False)]}"/>
                 </group>
