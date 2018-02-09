@@ -80,11 +80,10 @@ class SaleOrder(models.Model):
                 )
                 _logger.debug("Validated Invoice: %s", invoice)
                 
-                if invoice.state == 'open':
+                if invoice and invoice.state == 'open':
                     # Build extra checks
                     reference = self.payment_tx_id.acquirer_reference
-                    journal_id = self.payment_acquirer_id.journal_id and self.payment_acquirer_id.journal_id.id
-                    invoice = self.invoice_ids and self.invoice_ids[0]
+                    journal_id = self.payment_acquirer_id.payment_journal_id and self.payment_acquirer_id.payment_journal_id.id
                     amount = self.payment_tx_id.amount or 0.0
                     self._paymentworkflow_register_payment(invoice, journal_id, amount, reference=reference)
         return res
