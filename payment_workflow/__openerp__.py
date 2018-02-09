@@ -2,18 +2,16 @@
 # Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
 # License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 {
-    'name': 'Payment Url - Invoices',
+    'name': 'Payment - Workflow',
     'version': '8.0.0.0.1',
-    'category': 'Payment Management',
+    'category': 'Payment',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
-    'summary': 'Create Payment URL from Invoice',
+    'summary': 'Add Payment Workflow to Payment Transactions',
     'depends': [
-        'payment',
-        'account'
+        'website_sale',
     ],
-    'data': [
-        'views/account_invoice.xml',
+    'data': ['views/payment_acquirer.xml'
     ],
 }
