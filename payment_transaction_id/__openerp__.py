@@ -3,7 +3,7 @@
 # License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 {
     'name': 'Payment - Base Transaction ID',
-    'version': '8.0.0.0.1',
+    'version': '8.0.0.0.2',
     'category': 'Payment',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',

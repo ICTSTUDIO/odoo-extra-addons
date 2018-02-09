@@ -20,7 +20,7 @@ class PaymentTransaction(models.Model):
     )
 
     @api.multi
-    @api.depends('sale_order_id', 'acquirer_reference')
+    @api.depends('sale_order_id', 'acquirer_reference', 'state')
     def get_base_transaction_state(self):
         for rec in self:
             if rec.order_id and rec.aquirer_reference:

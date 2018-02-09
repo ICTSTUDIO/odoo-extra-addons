@@ -1,12 +1,9 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
    :alt: License: AGPL-3
 
-Product Deactivate
-==================
-Implement a basic check to allow deactivation of products
-Method add to implement check, this can be extended by your own wishes.
-
-* If product has stock deactivation is prohibited
+Payment Transaction ID
+======================
+Glue the payment transaction module with the base transaction module.
 
 
 Bug Tracker
