@@ -4,7 +4,7 @@
 
 {
     'name': 'Products Pricelist Prices',
-    'version': '10.0.1.1.4',
+    'version': '10.0.1.2.0',
     'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'AGPL-3',
