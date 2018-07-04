@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Copyright© 2016 ICTSTUDIO <http://www.ictstudio.eu>
-# License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+# License: LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl)
 
 {
     'name': 'Products Pricelist Prices',
-    'version': '10.0.1.2.0',
+    'version': '10.0.1.2.1',
     'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
-    'license': 'AGPL-3',
+    'license': 'LGPL-3',
     'category': 'Sales Management',
     'depends': ['product'],
     'demo': [],

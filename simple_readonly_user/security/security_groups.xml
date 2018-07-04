@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+	<record id="group_simple_readonly_user" model="res.groups">
+		<field name="name">Readonly User</field>
+		<field name="comment">ReadOnly User Access</field>
+	</record>
+
+</data>
+</odoo>
