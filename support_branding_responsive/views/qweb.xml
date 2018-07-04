@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright© 2018-today  ICTSTUDIO <http://www.ictstudio.eu> -->
+<!-- License: LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl) -->
+
+<odoo>
+    <data>
+        <template
+            id="support_branding_responsive_assets"
+            name="support_branding_responsive assets"
+            inherit_id="web_responsive.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/support_branding_responsive/static/src/js/support_branding_responsive.js"></script>
+                <link rel="stylesheet" href="/support_branding_responsive/static/src/css/support_branding_responsive.css" />
+            </xpath>
+        </template>
+        <template id="menu" inherit_id="web_responsive.menu">
+
+            <xpath expr="//div[@class='panel-body']" position="inside">
+                <div class="app-drawer-title text-center">
+                    <span class="app-drawer-title text-center">Supported by: <a target="_new" t-att-href="request.env['ir.config_parameter'].get_param('support_branding_responsive.company_url')"
+                                                                                t-att-style="'color: ' + request.env['ir.config_parameter'].get_param('support_branding_responsive.company_color')">
+                        <t t-esc="request.env['ir.config_parameter'].get_param('support_branding_responsive.company_name')" />
+                    </a></span>
+                    <div class="app-drawer-title text-center" t-if="request.env['ir.config_parameter'].get_param('support_branding_responsive.release')">
+                        Version <t t-esc="request.env['ir.config_parameter'].get_param('support_branding_responsive.release')" />
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

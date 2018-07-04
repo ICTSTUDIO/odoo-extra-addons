@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="config_parameter_company_name" model="ir.config_parameter">
+            <field name="key">support_branding_responsive.company_name</field>
+            <field name="value">ICTSTUDIO</field>
+        </record>
+        <record id="config_parameter_company_url" model="ir.config_parameter">
+            <field name="key">support_branding_responsive.company_url</field>
+            <field name="value">http://www.ictstudio.eu</field>
+        </record>
+        <record id="config_parameter_company_color" model="ir.config_parameter">
+            <field name="key">support_branding_responsive.company_color</field>
+            <field name="value">#07FFFD</field>
+        </record>
+        <record id="config_parameter_support_email" model="ir.config_parameter">
+            <field name="key">support_branding_responsive.support_email</field>
+            <field name="value">odoo@ictstudio.eu</field>
+        </record>
+        <record id="config_parameter_release" model="ir.config_parameter">
+            <field name="key">support_branding_responsive.release</field>
+            <field name="value">1.0.1</field>
+        </record>
+    </data>
+</openerp>
