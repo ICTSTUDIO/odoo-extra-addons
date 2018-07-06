@@ -140,3 +140,18 @@ class NeedSyncLine(models.Model):
                 self._create_need_sync(need_sync, need_sync_connection)
         return True
 
+    @api.multi
+    def _check_error_line(self):
+        self.ensure_one()
+        ctx = dict(self._context, active_test=False)
+        check_record = self.env[self.model].with_context(ctx).search([('id', '=', self.res_id)])
+        if not check_record:
+            # If record no longer exists remove needsync
+            self.need_sync.unlink()
+
+    @api.multi
+    def check_error_lines(self):
+        for rec in self:
+            rec._check_error_line()
+
+

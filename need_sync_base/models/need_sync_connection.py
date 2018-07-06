@@ -94,13 +94,24 @@ class NeedSyncConnection(models.Model):
             self.name = '%s' % ('No Connection Name')
 
     @api.model
-    def get_need_sync_list(self, model):
-        return self.env['need.sync.line'].search(
+    def get_need_sync_list(self, model, limit=False):
+        if limit:
+            return self.env['need.sync.line'].search(
                 [
                     ('need_sync_connection', '=', self.id),
                     ('model', '=', model),
                     ('sync_needed', '=', True)
-                ]
+                ],
+                order='last_sync_date',
+                limit=limit
+            )
+        return self.env['need.sync.line'].search(
+            [
+                ('need_sync_connection', '=', self.id),
+                ('model', '=', model),
+                ('sync_needed', '=', True)
+            ],
+            order='last_sync_date'
         )
 
     @api.model
