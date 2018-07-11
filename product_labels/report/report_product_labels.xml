@@ -40,9 +40,9 @@
                                 </tr>
                                 <tr style="border: 1px solid black;">
                                     <td colspan="2">
-                                        <span t-if="product.ean13">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', product.ean13, 600, 100)" style="margin-top: 5px; width:270px; height:50px"/>
-                                            <h5><span t-esc="product.ean13" /></h5>
+                                        <span t-if="product.barcode">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('barcode', product.barcode, 600, 100)" style="margin-top: 5px; width:270px; height:50px"/>
+                                            <h5><span t-esc="product.barcode" /></h5>
                                         </span>
                                     </td>
                                 </tr>

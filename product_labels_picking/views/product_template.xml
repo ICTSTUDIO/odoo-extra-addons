@@ -7,7 +7,7 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='general']" position="after">
+                <xpath expr="//group[@name='group_general']" position="after">
                     <group name="label_picking" attrs="{'invisible': [('product_variant_count', '>', 1)]}">
                         <group>
                             <field name="label_incoming"/>

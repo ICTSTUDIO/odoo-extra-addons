@@ -60,5 +60,5 @@ class ProductProductLabelLine(models.TransientModel):
             'label_id': self.label_id.id,
             'name': self.product_id.name,
             'code': self.product_id.default_code or False,
-            'barcode': self.product_id.ean13 or False,
+            'barcode': self.product_id.barcode or False,
         }
