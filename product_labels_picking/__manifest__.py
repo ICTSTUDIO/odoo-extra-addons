@@ -14,7 +14,6 @@
         'product_labels'
     ],
     'data': [
-        'views/product_product.xml',
         'views/product_template.xml',
         'wizard/product_product_label_print.xml'
     ],
