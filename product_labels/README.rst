@@ -1,9 +1,10 @@
-.. image:: https://img.shields.io/badge/License-LGPL%20v3-blue.svg
+.. image:: image:: https://img.shields.io/badge/License-LGPL%20v3-blue.svg
    :alt: License: LGPL-3
 
-Products Pricelist Prices - Margin Extension
-============================================
-This is an extension to the Product Pricelist Prices module to show the margin after the price
+Product Labels
+==============
+Be able to print product labels from product
+
 
 Bug Tracker
 ===========

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="stock_picking_action_product_product_label" model="ir.values">
+            <field name="model_id" ref="stock.model_stock_picking" />
+            <field name="name">Product Labels</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('product_labels.product_product_label_view_action'))" />
+            <field name="key">action</field>
+            <field name="model">stock.picking</field>
+        </record>
+
+    </data>
+</odoo>
