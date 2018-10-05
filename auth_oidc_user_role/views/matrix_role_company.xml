@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="view_matrix_role_company_form" model="ir.ui.view">
+            <field name="name">matrix.role.company.form</field>
+            <field name="model">matrix.role.company</field>
+            <field name="arch" type="xml">
+                <form string="arch">
+                    <sheet>
+                        <group>
+                            <field name="role_name"/>
+                            <field name="role"/>
+                            <field name="company"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_matrix_role_company_tree" model="ir.ui.view">
+            <field name="name">matrix.role.company.tree</field>
+            <field name="model">matrix.role.company</field>
+            <field name="arch" type="xml">
+                <tree string="arch">
+                    <field name="role_name"/>
+                    <field name="role"/>
+                    <field name="company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_matrix_role_company" model="ir.actions.act_window">
+            <field name="name">Role Matching</field>
+            <field name="res_model">matrix.role.company</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_matrix_role_companys" name="Role Matching"
+            parent="base.menu_users" sequence="90"
+            action="action_matrix_role_company" groups="base.group_no_one"/>
+</odoo>
