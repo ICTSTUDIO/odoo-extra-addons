@@ -14,6 +14,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'views/matrix_role_company.xml'
     ],
     'installable': True,
 }
