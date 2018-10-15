@@ -40,6 +40,20 @@ class ProductProductLabel(models.TransientModel):
                                              'product_labels.product_product_label'
                                              )
 
+    @api.multi
+    def print_labels_medium(self):
+        records = self
+        return self.env['report'].get_action(records,
+                                             'product_labels.product_product_label_medium'
+                                             )
+
+    @api.multi
+    def print_labels_small(self):
+        records = self
+        return self.env['report'].get_action(records,
+                                             'product_labels.product_product_label_small'
+                                             )
+
 
 class ProductProductLabelLine(models.TransientModel):
     _name = "product.product.label.line"

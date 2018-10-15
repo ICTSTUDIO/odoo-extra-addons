@@ -14,7 +14,9 @@
                             </tree>
                         </field>
                     <footer>
-                        <button string="Print" name="print_labels" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Large" name="print_labels" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Medium" name="print_labels_medium" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Small" name="print_labels_small" type="object" default_focus="1" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>

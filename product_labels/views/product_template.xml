@@ -8,7 +8,9 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
-                        <button class="oe_highlight" type="object" string="Print Label" name="print_labels"/>
+                        <button class="oe_highlight" type="object" string="Label Large" name="print_labels"/>
+                        <button class="oe_highlight" type="object" string="Label Medium" name="print_labels_medium"/>
+                        <button class="oe_highlight" type="object" string="Label Small" name="print_labels_small"/>
                 </xpath>
             </field>
         </record>
