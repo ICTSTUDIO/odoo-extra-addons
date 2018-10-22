@@ -3,7 +3,7 @@
 # License: LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl)
 {
     'name': 'Product Labels',
-    'version': '10.0.0.0.1',
+    'version': '10.0.0.0.2',
     'category': 'Stock',
     'author': 'ICTSTUDIO, André Schenkels',
     'website': 'http://www.ictstudio.eu',
@@ -14,7 +14,6 @@
     ],
     'data': [
         'report/report_product_labels.xml',
-        'report/report_product_labels_wizard.xml',
         'views/product_template.xml',
         'wizard/product_product_label_print.xml'
     ],

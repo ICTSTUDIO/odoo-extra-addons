@@ -12,8 +12,12 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def print_labels(self):
-        self.ensure_one()
-        return self.env['report'].get_action(
-                self.product_variant_ids,
-                'product_labels.product_label'
-        )
+        return self.product_variant_ids.print_labels()
+
+    @api.multi
+    def print_labels_medium(self):
+        return self.product_variant_ids.print_labels_medium()
+
+    @api.multi
+    def print_labels_small(self):
+        return self.product_variant_ids.print_labels_small()
