@@ -17,5 +17,5 @@
         'data/ir_sequence_product_product.xml',
         ],
     
-    'installable': True,
+    'installable': False,
     }

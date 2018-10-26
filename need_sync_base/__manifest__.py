@@ -22,5 +22,5 @@
         'views/menu.xml',
         'data/need_sync_model.xml'
     ],
-    'installable': True,
+    'installable': False,
 }

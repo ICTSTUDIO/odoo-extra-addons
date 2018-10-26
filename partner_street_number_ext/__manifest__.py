@@ -15,6 +15,6 @@
         'views/assets.xml',
         'views/res_partner.xml',
         ],
-    'installable': True,
+    'installable': False,
     'license': 'AGPL-3',
 }

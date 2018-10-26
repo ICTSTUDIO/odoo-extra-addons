@@ -21,6 +21,6 @@
         'views/product_template.xml',
         'wizard/warehouse_change_product_qty.xml'
     ],
-    'installable': True,
+    'installable': False,
 }
 

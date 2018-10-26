@@ -15,5 +15,5 @@
     'data': [
         'report/purchase_report.xml',
         ],
-    'installable': True,
+    'installable': False,
 }
