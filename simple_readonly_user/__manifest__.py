@@ -15,4 +15,5 @@
     'data': [
         'security/security_groups.xml',
     ],
+    'installable': False,
 }

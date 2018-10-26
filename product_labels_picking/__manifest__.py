@@ -17,4 +17,5 @@
         'views/product_template.xml',
         'wizard/product_product_label_print.xml'
     ],
+    'installable': False,
 }

@@ -22,4 +22,5 @@ Allow users to login through OpenID Connect Provider.
     'data': [
         'views/auth_oauth_provider.xml',
     ],
+    'installable': False,
 }

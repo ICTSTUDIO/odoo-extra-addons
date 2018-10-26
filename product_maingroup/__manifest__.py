@@ -17,4 +17,5 @@
         'views/product_template.xml',
         'views/product_category.xml',
     ],
+    'installable': False,
 }

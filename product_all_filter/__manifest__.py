@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
 # License: LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl)
 {
     'name': 'Show All Products',
-    'version': '10.0.0.0.2',
+    'version': '11.0.0.0.1',
     'category': 'Product Management',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
@@ -15,4 +14,5 @@
     'data': [
         'views/product_template.xml',
     ],
+    'installable': True,
 }

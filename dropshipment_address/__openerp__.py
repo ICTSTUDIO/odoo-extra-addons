@@ -17,4 +17,5 @@
         'views/sale_order.xml',
         'views/stock_picking.xml',
     ],
+    'installable': False,
 }
