@@ -2,7 +2,7 @@
 # License: LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl)
 {
     'name': 'Show All Products',
-    'version': '11.0.0.0.1',
+    'version': '12.0.0.0.1',
     'category': 'Product Management',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
