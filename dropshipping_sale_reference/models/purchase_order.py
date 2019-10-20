@@ -19,7 +19,7 @@ class PurchaseOrder(models.Model):
     }
 
     dest_address_ref = fields.Char(
-        string='Drop Ship Reference',
+        string='Dropship reference',
         states=READONLY_STATES,
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company."
