@@ -1,0 +1,12 @@
+tasks:
+  - init: echo "Replace me with a build script for the project."
+    command: echo "Replace me with something that should run on every start, or just
+      remove me entirely."
+image:
+  file: .gitpod.Dockerfile
+
+vscode:
+  extensions:
+    - mhutchie.git-graph@1.22.0:AwBE485Ar8KGvm79rHyw/A==
+    - vsls-contrib.gistfs@0.0.67:7+4ec/WKGvtvbWJGbsMOLw==
+    - ms-python.python@2020.5.78807:8JXFBceVJ9dP8l5p40H0gw==
