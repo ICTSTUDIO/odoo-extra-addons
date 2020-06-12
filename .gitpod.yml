@@ -5,6 +5,10 @@ tasks:
 image:
   file: .gitpod.Dockerfile
 
+ports:
+  - port: 8069
+    onOpen: open-preview
+
 vscode:
   extensions:
     - mhutchie.git-graph@1.22.0:AwBE485Ar8KGvm79rHyw/A==
